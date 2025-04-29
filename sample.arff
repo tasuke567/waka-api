@@ -1,0 +1,879 @@
+@RELATION smartphone
+
+@ATTRIBUTE Gender {Female, LGBTQ+, Male}
+@ATTRIBUTE Age_range {18-25, 26-32, 26-35, 33-40, 36-45, 46-55, 56+, 60+}
+@ATTRIBUTE Status {Married, Single, Student, Working, แยกกันอยู่}
+@ATTRIBUTE Top3_smartphone_activities {'Art photography, Video editing, Upload stories', 'Chat with family, Read e-books, Listen to radio', 'Cloud apps, Communication / meetings, Social media', 'Communication / meetings, Social media', 'Communication, Take photos, Social media', 'Email, ข่าวสาร, Finance', 'GPS navigation, Check car condition, ฟังพอดแคสต์', 'Online meetings, Schedule management, Email', 'Online shopping, Social media, Finance', 'Online shopping, Track delivery, แชทลูกค้า', 'Play esports, Stream games, แชทชุมชน', 'Play games', 'Play games, Streaming, Social media', 'Play games, Streaming, ถ่ายรูปถ่ายวีดีโอ', 'Play games, Take photos, Watch movies', 'Play games, Take photos/videos', 'Play games, Take photos/videos, Cloud apps', 'Play games, Take photos/videos, Social media', 'Play games, Watch movies, Take photos', 'Product photography, Edit reviews, Online marketplace', 'Read news, Check stocks, Finance', 'Social media, ถ่ายรูปถ่ายวีดีโอ, ดูหนัง/ฟังเพลง', 'Streaming, ถ่ายรูปถ่ายวีดีโอ, Edit video', 'Take photos, Listen to music, Social media', 'Take photos/videos, Communication / meetings, Social media', 'Track delivery, แชทลูกค้า, Email', 'Watch movies / listen to music', 'Watch movies / listen to music, Communication / meetings, Social media', 'Watch movies / listen to music, Play games', 'Watch movies / listen to music, Play games, Cloud apps', 'Watch movies / listen to music, Play games, Communication / meetings', 'Watch movies / listen to music, Play games, Social media', 'Watch movies / listen to music, Play games, Take photos', 'Watch movies / listen to music, Play games, Take photos/videos', 'Watch movies / listen to music, Social media', 'Watch movies / listen to music, Take photos/videos', 'Watch movies / listen to music, Take photos/videos, Communication / meetings', 'Watch movies / listen to music, Take photos/videos, Social media', 'Watch movies, Listen to music, Take photos', 'Watch movies, Play games, Take photos', 'Watch movies, Take photos, Listen to music', 'ติดต่อสื่อสาร/ประชุมงาน, Email, Finance', 'ติ๊กต็อก, Livestream, Search information', 'ถ่ายรูปถ่ายวีดีโอ, ดูหนัง/ฟังเพลง, Online shopping'}
+@ATTRIBUTE Frequent_apps {CapCut, Discord, Facebook, 'Facebook Messenger', 'Facebook, Facebook Messenger, Line', 'Facebook, Facebook Messenger, Spotify', 'Facebook, Facebook Messenger, Spotify, TikTok', 'Facebook, TikTok, Line', 'Facebook, YouTube', 'Facebook, YouTube, Facebook Messenger', 'Facebook, YouTube, Facebook Messenger, Spotify', 'Facebook, YouTube, Facebook Messenger, TikTok', Gmail, 'Google Maps', Instagram, 'Instagram, Facebook Messenger, TikTok', 'Instagram, Facebook, Facebook Messenger, Spotify, TikTok', 'Instagram, Facebook, Facebook Messenger, TikTok', 'Instagram, Facebook, Facebook Messenger, TikTok, LINE', 'Instagram, Facebook, Facebook Messenger, TikTok, Telegram', 'Instagram, Facebook, TikTok', 'Instagram, Facebook, YouTube', 'Instagram, Facebook, YouTube, Facebook Messenger', 'Instagram, Facebook, YouTube, Facebook Messenger, Spotify', 'Instagram, Facebook, YouTube, Facebook Messenger, Spotify, TikTok', 'Instagram, Facebook, YouTube, Facebook Messenger, Spotify, TikTok, Telegram', 'Instagram, Facebook, YouTube, Facebook Messenger, Spotify, WhatsApp, TikTok, Telegram', 'Instagram, Facebook, YouTube, Facebook Messenger, Telegram', 'Instagram, Facebook, YouTube, Facebook Messenger, TikTok', 'Instagram, Facebook, YouTube, Facebook Messenger, TikTok, Line', 'Instagram, Facebook, YouTube, Facebook Messenger, TikTok, Line, X', 'Instagram, Facebook, YouTube, Facebook Messenger, TikTok, Telegram', 'Instagram, Facebook, YouTube, Snapchat, Facebook Messenger, Spotify, TikTok', 'Instagram, Facebook, YouTube, Snapchat, Facebook Messenger, Spotify, WhatsApp, TikTok', 'Instagram, Facebook, YouTube, Snapchat, Facebook Messenger, Spotify, WhatsApp, TikTok, Telegram', 'Instagram, Facebook, YouTube, Spotify, TikTok', 'Instagram, Facebook, YouTube, TikTok', 'Instagram, Spotify, TikTok', 'Instagram, TikTok', 'Instagram, YouTube, Facebook Messenger, Spotify, TikTok', 'Instagram, YouTube, Facebook Messenger, TikTok', 'Instagram, YouTube, Spotify, Telegram', 'Instagram, YouTube, Spotify, TikTok', 'Instagram, YouTube, TikTok', LINE, 'Microsoft Teams', SET, Shopee, Telegram, TikTok, VSCO, WhatsApp, YouTube, 'YouTube, Facebook Messenger, Discord, Wise', 'YouTube, TikTok'}
+@ATTRIBUTE Daily_usage_duration {'0-1 hours', '1-3 hours', '3-5 hours', '5-6 hours', '>5 hours'}
+@ATTRIBUTE Smartphone_importance {Essential, 'Highly essential', 'Not important', 'Not necessary', 'Somewhat important'}
+@ATTRIBUTE Key_factor_online_purchase {Battery, Brand, Camera, Design, Durability, Ecosystem, Features, Performance, Price, 'Product features', 'Product reviews', Reliability, 'Sensor quality', Simplicity, Stability, 'Value for money'}
+@ATTRIBUTE Brand_satisfaction NUMERIC
+@ATTRIBUTE Purchase_problem {'Cannot physically inspect product', 'Delivery delays/issues', 'High price', 'Payment security concerns', 'Uncertainty about warranty/service', กล้องไม่คมชัด, การคืนสินค้ายุ่งยาก, การจัดส่งล่าช้า, การรับประกันไม่ครอบคลุม, การเปรียบเทียบราคายาก, ความกังวลด้านการรับประกัน, ความกังวลเกี่ยวกับความปลอดภัย, ความกังวลเรื่องความปลอดภัย, ความกังวลเรื่องบริการหลังการขาย, ความซับซ้อนในการชำระเงิน, ความไม่แน่นอนของการรับประกัน, ความไม่แน่นอนเกี่ยวกับบริการหลังการขาย, ความไม่แน่นอนในการรับประกัน, คุณภาพสินค้าไม่ตรงตามที่โฆษณา, ปัญหาการทดลองสินค้า, ปัญหาการบริการหลังการขาย, ปัญหาด้านการชำระเงิน, ปัญหาด้านการทดลองสินค้า, ปัญหาด้านความปลอดภัยของการชำระเงิน, ปัญหาด้านบริการหลังการขาย, ปัญหาบริการหลังการขาย, พื้นที่เก็บข้อมูลไม่พอ, ระบบค้างบ่อย, ระบบล้าสมัย, หน้าจอมีจุดตาย, เครื่องร้อนบ่อย, ไม่มี, ไม่มีปัญหา, ไม่สามารถทดลองสินค้าได้, ไม่สามารถสัมผัสสินค้าก่อนซื้อได้, ไม่สามารถสัมผัสสินค้าได้จริง, ไม่แน่นอนเกี่ยวกับการรับประกัน}
+@ATTRIBUTE Monthly_income {'100,001-150,000 THB', '15,001-20,000 THB', '20,001-30,000 THB', '25,001-35,000 THB', '30,001-40,000 THB', '30,001-50,000 THB', '50,001-100,000 THB', '<15,000 THB', 'มากกว่า 50,001 บาทขึ้นไป'}
+@ATTRIBUTE Occupation {Artist, 'Business owner', 'Civil servant', 'Content creator', 'Delivery staff', Employee, 'Factory worker', Freelancer, Housewife, Investor, 'Logistics staff', Manager, 'Office worker', 'Online seller', 'Private company employee', Retired, Student}
+@ATTRIBUTE Current_brand {Apple, Calculator, Huawei, Infinix, Oppo, Other, Realme, 'Realme 7 5G', Redmi, Samsung, Vivo, Xiaomi}
+
+@DATA
+Male,18-25,Student,'Watch movies / listen to music, Play games, Take photos/videos',TikTok,'0-1 hours','Highly essential',Price,5,'Payment security concerns','<15,000 THB',Student,Apple
+Female,18-25,Student,'Watch movies / listen to music, Play games, Take photos/videos',Instagram,'>5 hours','Highly essential','Product features',4,'Payment security concerns','<15,000 THB',Student,Apple
+Female,18-25,Single,'Communication / meetings, Social media',Instagram,'1-3 hours',Essential,'Product features',4,'Uncertainty about warranty/service','15,001-20,000 THB',Student,Apple
+Female,18-25,Single,'Communication / meetings, Social media',Instagram,'1-3 hours',Essential,'Product features',4,'Cannot physically inspect product','15,001-20,000 THB',Student,Apple
+LGBTQ+,18-25,Single,'Watch movies / listen to music, Take photos/videos, Social media',Instagram,'3-5 hours','Highly essential','Product reviews',4,'Cannot physically inspect product','<15,000 THB',Student,Xiaomi
+Female,18-25,Single,'Watch movies / listen to music, Play games, Communication / meetings',TikTok,'>5 hours','Highly essential',Price,5,'Uncertainty about warranty/service','<15,000 THB',Student,Samsung
+Female,18-25,Single,'Watch movies / listen to music, Communication / meetings, Social media','Facebook Messenger','>5 hours','Highly essential','Product reviews',5,'Cannot physically inspect product','<15,000 THB',Student,Samsung
+Female,18-25,Single,'Watch movies / listen to music, Play games, Cloud apps',Instagram,'3-5 hours',Essential,'Product features',3,'Payment security concerns','<15,000 THB',Student,Samsung
+Male,18-25,Single,'Watch movies / listen to music',YouTube,'1-3 hours',Essential,Price,3,'Uncertainty about warranty/service','20,001-30,000 THB','Private company employee',Apple
+LGBTQ+,18-25,Single,'Watch movies / listen to music, Take photos/videos, Social media',Instagram,'3-5 hours','Highly essential','Product features',5,'Uncertainty about warranty/service','20,001-30,000 THB',Student,Apple
+Male,18-25,Single,'Watch movies / listen to music, Play games, Social media',Instagram,'>5 hours','Highly essential','Product features',4,'Cannot physically inspect product','<15,000 THB',Student,Apple
+Female,18-25,Single,'Watch movies / listen to music, Play games, Social media',Facebook,'3-5 hours','Highly essential','Product reviews',4,'Uncertainty about warranty/service','<15,000 THB',Student,Samsung
+Male,18-25,Single,'Watch movies / listen to music, Take photos/videos, Communication / meetings',Instagram,'3-5 hours','Highly essential','Product features',4,'Uncertainty about warranty/service','15,001-20,000 THB',Student,Apple
+Female,18-25,Single,'Watch movies / listen to music, Social media','Facebook Messenger','>5 hours','Highly essential','Product features',4,'Cannot physically inspect product','<15,000 THB',Student,Apple
+Female,18-25,Single,'Watch movies / listen to music, Play games, Social media',Instagram,'3-5 hours','Highly essential','Product features',5,'Cannot physically inspect product','15,001-20,000 THB',Student,Apple
+Male,18-25,Single,'Watch movies / listen to music, Play games, Take photos/videos',Facebook,'>5 hours','Highly essential','Product features',5,'Uncertainty about warranty/service','<15,000 THB',Student,Realme
+Female,18-25,Single,'Watch movies / listen to music, Play games, Communication / meetings',Instagram,'>5 hours',Essential,'Product features',3,'Cannot physically inspect product','<15,000 THB',Student,Apple
+Male,18-25,Single,'Watch movies / listen to music, Play games, Social media',YouTube,'3-5 hours',Essential,'Product features',1,'Cannot physically inspect product','<15,000 THB',Student,Samsung
+Female,18-25,Single,'Watch movies / listen to music, Take photos/videos, Communication / meetings',TikTok,'3-5 hours','Highly essential','Product features',4,'Uncertainty about warranty/service','<15,000 THB',Student,Vivo
+Male,18-25,Single,'Watch movies / listen to music, Play games, Social media',YouTube,'3-5 hours','Highly essential','Product reviews',5,'Uncertainty about warranty/service','<15,000 THB',Student,Apple
+Male,18-25,Single,'Watch movies / listen to music, Play games, Social media',Facebook,'>5 hours','Highly essential',Price,5,'Delivery delays/issues','<15,000 THB',Student,Redmi
+Male,18-25,Single,'Play games',Instagram,'>5 hours',Essential,'Product features',5,'Payment security concerns','มากกว่า 50,001 บาทขึ้นไป',Student,Apple
+Male,18-25,Single,'Watch movies / listen to music, Communication / meetings, Social media',YouTube,'3-5 hours','Highly essential','Product features',4,'Uncertainty about warranty/service','<15,000 THB',Student,Vivo
+Male,18-25,Single,'Watch movies / listen to music, Play games, Social media',YouTube,'>5 hours','Highly essential',Price,3,'Delivery delays/issues','<15,000 THB',Student,Oppo
+Male,18-25,Single,'Watch movies / listen to music, Take photos/videos, Communication / meetings',Facebook,'>5 hours','Highly essential','Product reviews',4,'Uncertainty about warranty/service','<15,000 THB',Student,Samsung
+Male,18-25,Single,'Play games, Take photos/videos, Cloud apps',Telegram,'>5 hours',Essential,Price,4,'Uncertainty about warranty/service','<15,000 THB',Student,Oppo
+Male,18-25,Single,'Watch movies / listen to music, Communication / meetings, Social media',YouTube,'3-5 hours',Essential,'Product features',4,'Cannot physically inspect product','15,001-20,000 THB',Student,Samsung
+Male,18-25,Single,'Watch movies / listen to music, Play games, Communication / meetings',Facebook,'3-5 hours',Essential,'Product features',3,'Cannot physically inspect product','<15,000 THB',Student,Oppo
+Male,18-25,Single,'Watch movies / listen to music, Play games, Communication / meetings',YouTube,'>5 hours',Essential,Price,4,'Uncertainty about warranty/service','<15,000 THB',Student,Vivo
+Male,18-25,Single,'Watch movies / listen to music, Play games, Cloud apps',YouTube,'>5 hours',Essential,'Product features',4,'Uncertainty about warranty/service','<15,000 THB',Student,Apple
+Female,18-25,Single,'Watch movies / listen to music, Communication / meetings, Social media','Facebook Messenger','3-5 hours',Essential,'Product reviews',4,'Delivery delays/issues','<15,000 THB',Student,Apple
+Female,18-25,Single,'Watch movies / listen to music, Social media',YouTube,'>5 hours',Essential,'Product features',4,'Uncertainty about warranty/service','<15,000 THB',Student,Apple
+Male,26-32,Married,'Play games',YouTube,'>5 hours','Highly essential',Price,5,'Cannot physically inspect product','30,001-40,000 THB','Business owner',Apple
+Female,18-25,Single,'Play games, Take photos/videos, Social media',Instagram,'>5 hours',Essential,'Product reviews',5,'Delivery delays/issues','<15,000 THB',Student,Samsung
+Male,18-25,Single,'Watch movies / listen to music, Play games',Instagram,'>5 hours','Highly essential',Price,5,'Delivery delays/issues','<15,000 THB',Student,Vivo
+Male,18-25,Single,'Watch movies / listen to music, Play games, Social media',Instagram,'3-5 hours','Highly essential','Product reviews',4,'Payment security concerns','<15,000 THB',Student,Xiaomi
+Male,18-25,Single,'Watch movies / listen to music',YouTube,'3-5 hours','Highly essential',Price,3,'Payment security concerns','<15,000 THB',Student,Xiaomi
+Female,18-25,Single,'Watch movies / listen to music, Play games, Take photos/videos',YouTube,'>5 hours','Highly essential','Product reviews',3,'Cannot physically inspect product','<15,000 THB',Student,Xiaomi
+Female,18-25,Single,'Watch movies / listen to music, Play games, Social media',YouTube,'>5 hours','Highly essential','Product features',4,'Uncertainty about warranty/service','<15,000 THB',Student,Apple
+Female,18-25,Single,'Watch movies / listen to music, Take photos/videos, Social media',TikTok,'3-5 hours','Highly essential','Product reviews',3,'Uncertainty about warranty/service','<15,000 THB',Student,Apple
+Male,18-25,Single,'Watch movies / listen to music, Play games, Social media',TikTok,'>5 hours','Highly essential','Product features',5,'Payment security concerns','<15,000 THB',Student,Samsung
+Male,18-25,Single,'Watch movies / listen to music, Play games, Social media',Facebook,'3-5 hours','Highly essential',Price,5,'Uncertainty about warranty/service','<15,000 THB',Student,Apple
+Female,18-25,Single,'Watch movies / listen to music, Communication / meetings, Social media','Instagram, YouTube, TikTok','>5 hours','Highly essential','Product features',5,'Cannot physically inspect product','<15,000 THB',Student,Apple
+Female,18-25,Single,'Cloud apps, Communication / meetings, Social media','Instagram, YouTube, Facebook Messenger, TikTok','>5 hours','Highly essential','Product reviews',5,'Cannot physically inspect product','<15,000 THB',Student,Apple
+Female,18-25,Single,'Watch movies / listen to music, Take photos/videos, Communication / meetings','Instagram, YouTube, Spotify, Telegram','3-5 hours','Highly essential','Product features',4,'Cannot physically inspect product','<15,000 THB',Student,Apple
+Female,18-25,Single,'Cloud apps, Communication / meetings, Social media','Instagram, Facebook, Facebook Messenger, TikTok','3-5 hours','Highly essential','Product features',4,'Payment security concerns','15,001-20,000 THB','Civil servant',Apple
+Male,18-25,Single,'Watch movies / listen to music, Play games, Social media','Instagram, Facebook, YouTube, Facebook Messenger, TikTok','>5 hours',Essential,'Product features',5,'Cannot physically inspect product','<15,000 THB',Student,Apple
+Male,18-25,Single,'Watch movies / listen to music, Play games','YouTube, TikTok','>5 hours','Highly essential',Price,3,'Delivery delays/issues','<15,000 THB',Student,Samsung
+Male,18-25,Single,'Watch movies / listen to music, Play games, Social media','Facebook, YouTube, Facebook Messenger, TikTok','3-5 hours','Highly essential',Price,4,'Uncertainty about warranty/service','<15,000 THB',Student,Oppo
+Female,26-32,Married,'Watch movies / listen to music, Communication / meetings, Social media','Instagram, Facebook, YouTube, Facebook Messenger','3-5 hours','Highly essential',Price,5,'Cannot physically inspect product','20,001-30,000 THB','Business owner',Apple
+Male,18-25,Single,'Watch movies / listen to music, Play games, Communication / meetings','Instagram, Facebook, YouTube, Facebook Messenger, TikTok','0-1 hours',Essential,'Product features',5,'Cannot physically inspect product','<15,000 THB',Student,Xiaomi
+Male,18-25,Single,'Watch movies / listen to music, Take photos/videos, Social media','Instagram, Facebook, YouTube, Facebook Messenger, Spotify, TikTok','1-3 hours',Essential,'Product reviews',5,'Cannot physically inspect product','<15,000 THB',Student,Apple
+Male,18-25,Single,'Watch movies / listen to music, Play games, Take photos/videos','Instagram, YouTube, Facebook Messenger, Spotify, TikTok','1-3 hours',Essential,'Product features',5,'Uncertainty about warranty/service','<15,000 THB',Student,Realme
+Male,18-25,Single,'Watch movies / listen to music, Play games','Instagram, Facebook, YouTube, Facebook Messenger, TikTok','>5 hours','Highly essential','Product features',5,'Cannot physically inspect product','<15,000 THB',Student,Apple
+Male,18-25,Single,'Watch movies / listen to music, Communication / meetings, Social media','Instagram, Facebook, YouTube, Facebook Messenger, TikTok','1-3 hours','Highly essential',Price,4,'Cannot physically inspect product','<15,000 THB',Student,Apple
+Male,18-25,Single,'Watch movies / listen to music, Play games, Social media','Instagram, Facebook, YouTube, Snapchat, Facebook Messenger, Spotify, TikTok','0-1 hours',Essential,Price,4,'Uncertainty about warranty/service','<15,000 THB',Student,Apple
+Male,18-25,Single,'Play games, Take photos/videos, Social media','Instagram, Facebook, YouTube, Facebook Messenger, TikTok','>5 hours','Highly essential','Product reviews',5,'Uncertainty about warranty/service','<15,000 THB',Student,Apple
+Male,18-25,Single,'Watch movies / listen to music, Play games','Instagram, Facebook, YouTube, Facebook Messenger, TikTok','>5 hours',Essential,'Product reviews',4,'Payment security concerns','<15,000 THB',Student,Realme
+Male,18-25,Single,'Watch movies / listen to music, Play games, Social media','Instagram, Facebook, YouTube, Facebook Messenger, Spotify, WhatsApp, TikTok, Telegram','>5 hours','Highly essential',Price,4,'Payment security concerns','<15,000 THB',Student,Apple
+Male,18-25,Single,'Watch movies / listen to music, Play games, Social media','Instagram, Facebook, YouTube, Facebook Messenger, TikTok','>5 hours','Highly essential','Product features',5,'Delivery delays/issues','<15,000 THB',Student,Realme
+Male,18-25,Single,'Play games, Take photos/videos, Cloud apps','Instagram, Facebook, YouTube, Facebook Messenger, Spotify, TikTok, Telegram','1-3 hours',Essential,'Product reviews',5,'Uncertainty about warranty/service','<15,000 THB',Student,Apple
+Male,18-25,Single,'Take photos/videos, Communication / meetings, Social media','Instagram, Facebook, Facebook Messenger, TikTok, Telegram','>5 hours','Highly essential',Price,4,'Cannot physically inspect product','<15,000 THB',Student,Apple
+Male,18-25,Single,'Watch movies / listen to music, Play games, Social media','Instagram, Facebook, YouTube, Facebook Messenger, TikTok','>5 hours',Essential,'Product reviews',5,'Uncertainty about warranty/service','<15,000 THB',Student,Apple
+Female,18-25,Married,'Watch movies / listen to music, Take photos/videos, Social media','Instagram, Facebook, Facebook Messenger, Spotify, TikTok','>5 hours','Highly essential',Price,5,'Cannot physically inspect product','<15,000 THB',Student,Huawei
+Male,18-25,Single,'Watch movies / listen to music, Play games, Social media','Facebook, YouTube, Facebook Messenger, Spotify','3-5 hours',Essential,Price,4,'Cannot physically inspect product','<15,000 THB',Student,Apple
+Female,18-25,Single,'Watch movies / listen to music, Communication / meetings, Social media','Instagram, Facebook, YouTube, Facebook Messenger','>5 hours','Highly essential','Product reviews',2,'Uncertainty about warranty/service','<15,000 THB',Student,Xiaomi
+Male,26-32,Married,'Play games, Take photos/videos, Social media','Instagram, Facebook, YouTube, Facebook Messenger, TikTok','>5 hours','Highly essential','Product features',5,'Uncertainty about warranty/service','30,001-40,000 THB','Civil servant',Apple
+Female,18-25,Single,'Watch movies / listen to music, Play games, Social media','Instagram, Facebook, YouTube, Facebook Messenger, Spotify, TikTok','>5 hours','Highly essential','Product reviews',4,'Payment security concerns','<15,000 THB',Student,Samsung
+Female,18-25,Single,'Watch movies / listen to music, Play games, Social media','Instagram, Facebook Messenger, TikTok','>5 hours','Highly essential','Product features',3,'Cannot physically inspect product','<15,000 THB',Student,Xiaomi
+Female,18-25,Single,'Watch movies / listen to music, Take photos/videos','Instagram, Facebook, YouTube, Facebook Messenger, Spotify, TikTok','>5 hours','Highly essential',Price,4,'Uncertainty about warranty/service','<15,000 THB',Student,Apple
+Female,18-25,Single,'Watch movies / listen to music, Play games, Social media',TikTok,'3-5 hours',Essential,'Product reviews',4,'Payment security concerns','<15,000 THB',Student,Apple
+Male,18-25,Single,'Watch movies / listen to music, Play games, Social media','Instagram, Spotify, TikTok','>5 hours',Essential,'Product reviews',4,'Payment security concerns','<15,000 THB',Student,Apple
+Female,18-25,Single,'Watch movies / listen to music, Play games, Social media','Instagram, Facebook, YouTube','3-5 hours','Highly essential','Product features',4,'Cannot physically inspect product','<15,000 THB',Student,Apple
+Male,18-25,Single,'Watch movies / listen to music, Play games, Take photos/videos','Instagram, Facebook, YouTube, Facebook Messenger, TikTok','>5 hours','Highly essential','Product features',4,'Uncertainty about warranty/service','<15,000 THB',Student,Apple
+Female,18-25,Single,'Watch movies / listen to music, Take photos/videos, Social media','Instagram, YouTube, TikTok','>5 hours','Highly essential','Product features',4,'Cannot physically inspect product','<15,000 THB',Student,Apple
+Male,18-25,Single,'Watch movies / listen to music, Play games, Social media','Instagram, Facebook, YouTube, Facebook Messenger, TikTok','3-5 hours',Essential,'Product features',4,'Cannot physically inspect product','<15,000 THB',Student,Apple
+Male,18-25,Single,'Watch movies / listen to music, Communication / meetings, Social media','Instagram, Facebook, YouTube, Facebook Messenger, TikTok','>5 hours','Highly essential','Product reviews',4,'Cannot physically inspect product','<15,000 THB',Student,Samsung
+Male,18-25,Single,'Watch movies / listen to music, Play games','Facebook, YouTube','>5 hours','Highly essential','Product features',3,'Cannot physically inspect product','<15,000 THB',Student,Huawei
+Male,18-25,Single,'Watch movies / listen to music, Play games, Social media','Instagram, Facebook, YouTube, Facebook Messenger, Spotify, TikTok','>5 hours',Essential,'Product features',4,'Payment security concerns','<15,000 THB',Student,Vivo
+Female,18-25,Single,'Watch movies / listen to music, Take photos/videos, Communication / meetings','Instagram, YouTube, Facebook Messenger, TikTok','3-5 hours','Highly essential',Price,5,'Payment security concerns','15,001-20,000 THB','Business owner',Apple
+Female,18-25,Single,'Watch movies / listen to music','Instagram, YouTube, TikTok','3-5 hours','Highly essential','Product features',4,'Payment security concerns','<15,000 THB',Student,Apple
+Female,18-25,Single,'Watch movies / listen to music',Instagram,'>5 hours','Highly essential','Product features',5,'Cannot physically inspect product','<15,000 THB',Student,Realme
+Male,18-25,Single,'Watch movies / listen to music, Communication / meetings, Social media','Instagram, Facebook, YouTube, Facebook Messenger, Spotify, TikTok, Telegram','1-3 hours','Highly essential','Product features',5,'Payment security concerns','15,001-20,000 THB',Student,Calculator
+Male,18-25,Single,'Watch movies / listen to music, Play games, Social media','Instagram, Facebook, YouTube, Facebook Messenger, Spotify','>5 hours',Essential,'Product reviews',4,'Cannot physically inspect product','<15,000 THB',Student,Samsung
+Male,18-25,Single,'Watch movies / listen to music, Play games, Social media','Instagram, Facebook, YouTube, Facebook Messenger, TikTok','>5 hours',Essential,'Product features',3,'Cannot physically inspect product','<15,000 THB',Student,Xiaomi
+Male,18-25,Single,'Watch movies / listen to music, Play games, Social media','Facebook, YouTube, Facebook Messenger','3-5 hours',Essential,Price,4,'Payment security concerns','<15,000 THB',Student,Samsung
+Female,33-40,Married,'Watch movies / listen to music, Take photos/videos, Communication / meetings','Facebook, YouTube, Facebook Messenger, TikTok','>5 hours','Highly essential','Product features',4,'Cannot physically inspect product','20,001-30,000 THB','Private company employee',Huawei
+Male,18-25,Single,'Watch movies / listen to music, Play games, Social media','Instagram, Facebook, Facebook Messenger, TikTok, Telegram','>5 hours',Essential,'Product features',3,'Uncertainty about warranty/service','<15,000 THB',Student,Oppo
+Male,18-25,Single,'Watch movies / listen to music, Play games, Communication / meetings','Instagram, Facebook, YouTube, Facebook Messenger, TikTok, Telegram','>5 hours','Highly essential','Product features',2,'Uncertainty about warranty/service','<15,000 THB',Student,Xiaomi
+Female,18-25,Single,'Watch movies / listen to music, Communication / meetings, Social media','Instagram, Facebook, YouTube, Facebook Messenger, Spotify, TikTok','>5 hours',Essential,'Product reviews',4,'Uncertainty about warranty/service','<15,000 THB',Student,Samsung
+Male,18-25,Single,'Watch movies / listen to music, Play games, Social media','Instagram, Facebook, YouTube, Facebook Messenger, TikTok','>5 hours','Highly essential','Product features',5,'Uncertainty about warranty/service','<15,000 THB',Student,Apple
+Female,18-25,Single,'Watch movies / listen to music, Take photos/videos, Social media','Instagram, YouTube, Spotify, TikTok','3-5 hours','Highly essential','Product features',5,'Payment security concerns','<15,000 THB',Student,Apple
+Female,18-25,Single,'Watch movies / listen to music, Take photos/videos, Social media','Instagram, TikTok','>5 hours','Highly essential','Product reviews',5,'Cannot physically inspect product','<15,000 THB',Student,Apple
+Female,18-25,Single,'Watch movies / listen to music, Take photos/videos, Social media','Instagram, Facebook, YouTube, Facebook Messenger, Spotify, TikTok','>5 hours',Essential,'Product features',4,'Payment security concerns','<15,000 THB',Student,Apple
+Female,26-35,Single,'Online meetings, Schedule management, Email','Microsoft Teams','3-5 hours','Highly essential',Ecosystem,5,'High price','50,001-100,000 THB',Manager,Apple
+Male,18-25,Student,'Play esports, Stream games, แชทชุมชน',Discord,'>5 hours','Highly essential',Performance,4,เครื่องร้อนบ่อย,'<15,000 THB',Student,Realme
+Female,36-45,Married,'Online shopping, Track delivery, แชทลูกค้า',LINE,'1-3 hours',Essential,Reliability,4,การคืนสินค้ายุ่งยาก,'30,001-50,000 THB',Housewife,Samsung
+LGBTQ+,18-25,Single,'Art photography, Video editing, Upload stories',VSCO,'5-6 hours','Highly essential','Sensor quality',5,ไม่มี,'20,001-30,000 THB',Artist,Vivo
+Male,46-55,Married,'Read news, Check stocks, Finance',SET,'0-1 hours','Not important',Simplicity,3,ระบบล้าสมัย,'100,001-150,000 THB',Investor,Oppo
+Female,56+,Married,'Chat with family, Read e-books, Listen to radio',Facebook,'0-1 hours','Not important',Price,2,ไม่มี,'<15,000 THB',Retired,Other
+Male,26-35,Single,'Product photography, Edit reviews, Online marketplace',Shopee,'3-5 hours',Essential,'Value for money',4,กล้องไม่คมชัด,'25,001-35,000 THB','Online seller',Xiaomi
+Female,18-25,Student,'ติ๊กต็อก, Livestream, Search information',TikTok,'>5 hours','Highly essential',Brand,5,พื้นที่เก็บข้อมูลไม่พอ,'<15,000 THB',Student,Apple
+Male,36-45,Married,'GPS navigation, Check car condition, ฟังพอดแคสต์','Google Maps','1-3 hours',Essential,Durability,4,หน้าจอมีจุดตาย,'50,001-100,000 THB','Delivery staff',Samsung
+Female,18-25,Single,'Watch movies / listen to music, Take photos/videos, Social media','Instagram, TikTok','>5 hours','Highly essential','Product reviews',4,'Payment security concerns','<15,000 THB',Student,Apple
+Female,18-25,Single,'Watch movies / listen to music, Play games, Social media','Instagram, Facebook, YouTube, Facebook Messenger, TikTok, Line','>5 hours',Essential,'Product reviews',5,'Cannot physically inspect product','<15,000 THB',Student,Oppo
+Female,18-25,Single,'Cloud apps, Communication / meetings, Social media','Instagram, Facebook, Facebook Messenger, TikTok, LINE','>5 hours','Highly essential',Price,5,'Cannot physically inspect product','20,001-30,000 THB',Student,Apple
+Female,18-25,Single,'Watch movies / listen to music, Play games, Social media','Instagram, Facebook, YouTube, Facebook Messenger, Spotify, TikTok','>5 hours','Highly essential','Product features',5,'Uncertainty about warranty/service','<15,000 THB',Student,Samsung
+Female,26-32,Single,'Watch movies / listen to music, Play games, Take photos/videos','Instagram, Facebook, YouTube, Facebook Messenger, TikTok','1-3 hours',Essential,'Product reviews',4,'Payment security concerns','<15,000 THB','Business owner',Apple
+Female,26-32,Single,'Take photos/videos, Communication / meetings, Social media','Instagram, Facebook, YouTube, Facebook Messenger, Spotify, TikTok','>5 hours',Essential,'Product reviews',4,'Cannot physically inspect product','20,001-30,000 THB','Business owner',Apple
+Male,18-25,Single,'Watch movies / listen to music, Play games, Social media','Instagram, Facebook, YouTube, Facebook Messenger, Telegram','3-5 hours',Essential,Price,4,'Uncertainty about warranty/service','<15,000 THB',Student,Xiaomi
+Female,18-25,Single,'Watch movies / listen to music, Take photos/videos','Instagram, Facebook, YouTube, TikTok','>5 hours','Highly essential',Price,4,'Payment security concerns','<15,000 THB',Student,Apple
+Female,18-25,Single,'Watch movies / listen to music, Play games, Social media','Instagram, Facebook, YouTube, Facebook Messenger, Spotify, TikTok','3-5 hours','Highly essential','Product reviews',5,'Cannot physically inspect product','<15,000 THB',Student,Apple
+Male,18-25,Single,'Watch movies / listen to music, Play games, Social media','Instagram, Facebook Messenger, TikTok','1-3 hours',Essential,'Product reviews',4,'Cannot physically inspect product','15,001-20,000 THB','Business owner',Vivo
+Male,18-25,Single,'Watch movies / listen to music, Play games, Social media','Instagram, Facebook, YouTube, Facebook Messenger, Spotify, TikTok, Telegram','>5 hours','Highly essential',Price,4,'Uncertainty about warranty/service','<15,000 THB',Student,Xiaomi
+Male,18-25,Single,'Watch movies / listen to music, Take photos/videos','Instagram, Facebook, YouTube, Facebook Messenger, TikTok','>5 hours',Essential,Price,4,'Uncertainty about warranty/service','<15,000 THB',Student,Apple
+Female,18-25,Single,'Watch movies / listen to music, Communication / meetings, Social media','Instagram, Facebook, YouTube, Facebook Messenger, TikTok','>5 hours','Highly essential','Product features',4,'Payment security concerns','<15,000 THB',Student,Apple
+Female,18-25,Single,'Watch movies / listen to music, Play games, Take photos/videos','Instagram, Facebook, YouTube, Facebook Messenger, Spotify, TikTok','>5 hours','Highly essential',Price,5,'Uncertainty about warranty/service','<15,000 THB',Student,Samsung
+Male,18-25,Single,'Watch movies / listen to music, Play games, Social media','Instagram, Facebook, YouTube, Facebook Messenger, TikTok, Telegram','>5 hours','Highly essential','Product features',5,'Cannot physically inspect product','<15,000 THB',Student,Apple
+Male,26-32,Single,'Watch movies / listen to music, Communication / meetings, Social media','Instagram, Facebook, YouTube, Facebook Messenger, TikTok','>5 hours',Essential,'Product features',4,'Uncertainty about warranty/service','30,001-40,000 THB','Business owner',Samsung
+Male,18-25,Single,'Watch movies / listen to music, Play games, Social media','Instagram, Facebook, YouTube, Facebook Messenger, TikTok','>5 hours','Highly essential','Product reviews',3,'Uncertainty about warranty/service','<15,000 THB',Student,Samsung
+Male,26-32,Single,'Watch movies / listen to music, Play games',YouTube,'>5 hours',Essential,'Product features',4,'Payment security concerns','15,001-20,000 THB','Business owner',Apple
+Male,18-25,Single,'Watch movies / listen to music, Play games','Instagram, Facebook, YouTube, Facebook Messenger, TikTok','>5 hours','Highly essential','Product features',5,'Cannot physically inspect product','<15,000 THB',Student,Apple
+Male,18-25,Single,'Watch movies / listen to music, Play games, Take photos/videos','Instagram, Facebook, TikTok','>5 hours','Highly essential','Product features',4,'Cannot physically inspect product','<15,000 THB',Student,Apple
+Male,18-25,Single,'Watch movies / listen to music, Play games, Take photos/videos','Instagram, Facebook, YouTube, Facebook Messenger, Spotify, TikTok','3-5 hours',Essential,Price,5,'Payment security concerns','<15,000 THB',Student,Apple
+Male,18-25,Single,'Take photos/videos, Communication / meetings, Social media','Instagram, Facebook, YouTube, Facebook Messenger, Spotify, TikTok, Telegram','>5 hours',Essential,'Product features',5,'Cannot physically inspect product','<15,000 THB',Student,Apple
+Male,18-25,Single,'Watch movies / listen to music, Play games, Social media','Instagram, Facebook Messenger, TikTok','>5 hours',Essential,'Product features',4,'Payment security concerns','<15,000 THB',Student,Apple
+Female,18-25,Single,'Watch movies / listen to music, Play games, Social media','Instagram, Facebook, YouTube, Facebook Messenger, TikTok, Line, X','>5 hours','Highly essential','Product features',5,'Payment security concerns','<15,000 THB',Student,Vivo
+Male,18-25,Single,'Watch movies / listen to music, Take photos/videos, Communication / meetings','Instagram, Facebook, YouTube, Facebook Messenger, Telegram','1-3 hours',Essential,'Product features',3,'Payment security concerns','<15,000 THB',Student,'Realme 7 5G'
+Male,18-25,Single,'Watch movies / listen to music, Play games, Take photos/videos','Instagram, Facebook, YouTube, Facebook Messenger, Spotify, TikTok','1-3 hours',Essential,'Product reviews',4,'Uncertainty about warranty/service','<15,000 THB',Student,Xiaomi
+Male,18-25,Single,'Watch movies / listen to music','Instagram, Facebook, YouTube, Snapchat, Facebook Messenger, Spotify, WhatsApp, TikTok','3-5 hours','Highly essential',Price,3,'Payment security concerns','<15,000 THB',Student,Apple
+Male,18-25,Single,'Watch movies / listen to music, Play games, Social media','Instagram, Facebook, YouTube, Facebook Messenger','>5 hours','Highly essential',Price,3,'Payment security concerns','<15,000 THB',Student,Samsung
+Male,18-25,Single,'Watch movies / listen to music','YouTube, Facebook Messenger, Discord, Wise','>5 hours',Essential,'Product features',4,'Cannot physically inspect product','มากกว่า 50,001 บาทขึ้นไป','Business owner',Apple
+Female,18-25,Single,'Watch movies / listen to music, Play games, Communication / meetings','Instagram, Facebook, YouTube, Spotify, TikTok','>5 hours','Highly essential',Price,4,'Cannot physically inspect product','<15,000 THB',Student,Apple
+Male,18-25,Single,'Watch movies / listen to music, Take photos/videos, Communication / meetings','Instagram, Facebook, YouTube, Facebook Messenger, Spotify','>5 hours','Highly essential',Price,4,'Uncertainty about warranty/service','<15,000 THB',Student,Oppo
+Female,18-25,Single,'Watch movies / listen to music, Communication / meetings, Social media','Instagram, Facebook, YouTube, Facebook Messenger, TikTok','>5 hours','Highly essential','Product features',5,'Payment security concerns','<15,000 THB',Student,Realme
+Male,18-25,Single,'Watch movies / listen to music, Play games, Social media','Facebook, YouTube, Facebook Messenger','1-3 hours',Essential,Price,4,'Cannot physically inspect product','<15,000 THB',Student,Oppo
+Male,18-25,Married,'Watch movies / listen to music, Social media','Instagram, Facebook, YouTube, Facebook Messenger, TikTok','1-3 hours','Highly essential','Product reviews',4,'Payment security concerns','<15,000 THB','Factory worker',Samsung
+Female,26-32,Single,'Watch movies / listen to music, Play games, Communication / meetings','Facebook, Facebook Messenger, Spotify','>5 hours','Highly essential','Product features',3,'Cannot physically inspect product','<15,000 THB','Private company employee',Apple
+Male,18-25,Single,'Watch movies / listen to music, Take photos/videos, Social media','Instagram, Facebook, YouTube, Facebook Messenger','3-5 hours',Essential,'Product features',4,'Uncertainty about warranty/service','<15,000 THB',Student,Samsung
+Female,18-25,Single,'Watch movies / listen to music','Instagram, Facebook, Facebook Messenger, TikTok','1-3 hours','Highly essential','Product reviews',3,'Uncertainty about warranty/service','<15,000 THB',Student,Oppo
+Male,18-25,Single,'Watch movies / listen to music, Play games, Social media','Instagram, Facebook, YouTube, Facebook Messenger, Spotify, TikTok','>5 hours','Highly essential','Product features',4,'Uncertainty about warranty/service','<15,000 THB',Student,Infinix
+Male,60+,แยกกันอยู่,'Play games, Take photos/videos','Instagram, Facebook, YouTube, Snapchat, Facebook Messenger, Spotify, WhatsApp, TikTok, Telegram','>5 hours','Not necessary','Product features',4,'Delivery delays/issues','มากกว่า 50,001 บาทขึ้นไป',Student,Apple
+Male,18-25,Single,'Play games',WhatsApp,'0-1 hours','Not necessary','Product features',2,'Delivery delays/issues','มากกว่า 50,001 บาทขึ้นไป','Factory worker',Samsung
+Female,18-25,Single,'Watch movies / listen to music','Instagram, Facebook, TikTok','>5 hours','Highly essential','Product features',4,'Payment security concerns','<15,000 THB',Student,Apple
+Male,18-25,Student,'Play games, Take photos, Watch movies',TikTok,'0-1 hours',Essential,Price,3,ไม่สามารถสัมผัสสินค้าก่อนซื้อได้,'<15,000 THB',Student,Xiaomi
+Female,26-35,Single,'Watch movies, Take photos, Listen to music',Facebook,'1-3 hours',Essential,'Product features',2,ความไม่แน่นอนในการรับประกัน,'15,001-20,000 THB','Office worker',Xiaomi
+Male,26-35,Single,'Play games, Streaming, ถ่ายรูปถ่ายวีดีโอ',YouTube,'3-5 hours','Highly essential',Features,4,'Cannot physically inspect product','20,001-30,000 THB','Office worker',Vivo
+Female,18-25,Student,'Social media, ถ่ายรูปถ่ายวีดีโอ, ดูหนัง/ฟังเพลง',Instagram,'>5 hours',Essential,Design,5,'Payment security concerns','<15,000 THB',Student,Vivo
+Female,36-45,Married,'ติดต่อสื่อสาร/ประชุมงาน, Email, Finance',LINE,'1-3 hours','Somewhat important',Price,3,การเปรียบเทียบราคายาก,'30,001-50,000 THB','Business owner',Oppo
+Male,18-25,Student,'Play games, Streaming, Social media',TikTok,'>5 hours','Highly essential',Performance,4,การจัดส่งล่าช้า,'<15,000 THB',Student,Realme
+Female,26-35,Single,'ถ่ายรูปถ่ายวีดีโอ, ดูหนัง/ฟังเพลง, Online shopping',Shopee,'3-5 hours',Essential,'Value for money',5,คุณภาพสินค้าไม่ตรงตามที่โฆษณา,'15,001-20,000 THB',Freelancer,Xiaomi
+LGBTQ+,18-25,Single,'Streaming, ถ่ายรูปถ่ายวีดีโอ, Edit video',CapCut,'5-6 hours','Highly essential',Camera,4,การรับประกันไม่ครอบคลุม,'<15,000 THB','Content creator',Vivo
+Male,46-55,Married,'Email, ข่าวสาร, Finance',Gmail,'0-1 hours','Not important',Durability,2,ไม่มีปัญหา,'50,001-100,000 THB','Civil servant',Oppo
+Female,26-35,Married,'Online shopping, Social media, Finance',Facebook,'1-3 hours','Somewhat important',Battery,4,การคืนสินค้ายุ่งยาก,'20,001-30,000 THB',Housewife,Realme
+Female,36-45,Married,'Track delivery, แชทลูกค้า, Email',Shopee,'1-3 hours',Essential,Stability,3,ระบบค้างบ่อย,'15,001-20,000 THB','Logistics staff',Oppo
+Female,18-25,Single,'Take photos/videos, Communication / meetings, Social media','Facebook, Facebook Messenger, Line','3-5 hours','Highly essential','Product features',5,'Uncertainty about warranty/service','30,001-40,000 THB','Business owner',Apple
+Male,18-25,Student,'Play games, Take photos, Watch movies',TikTok,'0-1 hours',Essential,Price,3,ไม่สามารถสัมผัสสินค้าก่อนซื้อได้,'<15,000 THB',Student,Xiaomi
+Female,26-35,Single,'Watch movies, Take photos, Listen to music',Facebook,'1-3 hours',Essential,'Product features',2,ความไม่แน่นอนในการรับประกัน,'15,001-20,000 THB','Office worker',Xiaomi
+Male,26-35,Single,'Play games, Streaming, ถ่ายรูปถ่ายวีดีโอ',YouTube,'3-5 hours','Highly essential',Features,4,'Cannot physically inspect product','20,001-30,000 THB','Office worker',Vivo
+Female,18-25,Student,'Social media, ถ่ายรูปถ่ายวีดีโอ, ดูหนัง/ฟังเพลง',Instagram,'>5 hours',Essential,Design,5,'Payment security concerns','<15,000 THB',Student,Vivo
+Female,36-45,Married,'ติดต่อสื่อสาร/ประชุมงาน, Email, Finance',LINE,'1-3 hours','Somewhat important',Price,3,การเปรียบเทียบราคายาก,'30,001-50,000 THB','Business owner',Oppo
+Male,18-25,Student,'Play games, Streaming, Social media',TikTok,'>5 hours','Highly essential',Performance,4,การจัดส่งล่าช้า,'<15,000 THB',Student,Realme
+Female,26-35,Single,'ถ่ายรูปถ่ายวีดีโอ, ดูหนัง/ฟังเพลง, Online shopping',Shopee,'3-5 hours',Essential,'Value for money',5,คุณภาพสินค้าไม่ตรงตามที่โฆษณา,'15,001-20,000 THB',Freelancer,Xiaomi
+LGBTQ+,18-25,Single,'Streaming, ถ่ายรูปถ่ายวีดีโอ, Edit video',CapCut,'5-6 hours','Highly essential',Camera,4,การรับประกันไม่ครอบคลุม,'<15,000 THB','Content creator',Vivo
+Male,46-55,Married,'Email, ข่าวสาร, Finance',Gmail,'0-1 hours','Not important',Durability,2,ไม่มีปัญหา,'50,001-100,000 THB','Civil servant',Oppo
+Female,26-35,Married,'Online shopping, Social media, Finance',Facebook,'1-3 hours','Somewhat important',Battery,4,การคืนสินค้ายุ่งยาก,'20,001-30,000 THB',Housewife,Realme
+Female,36-45,Married,'Track delivery, แชทลูกค้า, Email',Shopee,'1-3 hours',Essential,Stability,3,ระบบค้างบ่อย,'15,001-20,000 THB','Logistics staff',Oppo
+Male,26-32,Single,'Take photos/videos, Communication / meetings, Social media','Facebook, Facebook Messenger, Line','3-5 hours','Highly essential','Product features',5,'Uncertainty about warranty/service','30,001-40,000 THB','Business owner',Apple
+Male,26-32,Single,'Take photos/videos, Communication / meetings, Social media','Facebook, Facebook Messenger, Line','3-5 hours','Highly essential','Product features',5,'Uncertainty about warranty/service','30,001-40,000 THB','Business owner',Apple
+Male,18-25,Student,'Play games, Take photos, Watch movies',TikTok,'0-1 hours',Essential,Price,3,ไม่สามารถสัมผัสสินค้าก่อนซื้อได้,'<15,000 THB',Student,Xiaomi
+Female,26-35,Single,'Watch movies, Take photos, Listen to music',Facebook,'1-3 hours',Essential,'Product features',2,ความไม่แน่นอนในการรับประกัน,'15,001-20,000 THB','Office worker',Xiaomi
+Male,26-35,Single,'Play games, Streaming, ถ่ายรูปถ่ายวีดีโอ',YouTube,'3-5 hours','Highly essential',Features,4,'Cannot physically inspect product','20,001-30,000 THB','Office worker',Vivo
+Female,18-25,Student,'Social media, ถ่ายรูปถ่ายวีดีโอ, ดูหนัง/ฟังเพลง',Instagram,'>5 hours',Essential,Design,5,'Payment security concerns','<15,000 THB',Student,Vivo
+Female,36-45,Married,'ติดต่อสื่อสาร/ประชุมงาน, Email, Finance',LINE,'1-3 hours','Somewhat important',Price,3,การเปรียบเทียบราคายาก,'30,001-50,000 THB','Business owner',Oppo
+Male,18-25,Student,'Play games, Streaming, Social media',TikTok,'>5 hours','Highly essential',Performance,4,การจัดส่งล่าช้า,'<15,000 THB',Student,Realme
+Female,26-35,Single,'ถ่ายรูปถ่ายวีดีโอ, ดูหนัง/ฟังเพลง, Online shopping',Shopee,'3-5 hours',Essential,'Value for money',5,คุณภาพสินค้าไม่ตรงตามที่โฆษณา,'15,001-20,000 THB',Freelancer,Xiaomi
+LGBTQ+,18-25,Single,'Streaming, ถ่ายรูปถ่ายวีดีโอ, Edit video',CapCut,'5-6 hours','Highly essential',Camera,4,การรับประกันไม่ครอบคลุม,'<15,000 THB','Content creator',Vivo
+Male,46-55,Married,'Email, ข่าวสาร, Finance',Gmail,'0-1 hours','Not important',Durability,2,ไม่มีปัญหา,'50,001-100,000 THB','Civil servant',Oppo
+Female,26-35,Married,'Online shopping, Social media, Finance',Facebook,'1-3 hours','Somewhat important',Battery,4,การคืนสินค้ายุ่งยาก,'20,001-30,000 THB',Housewife,Realme
+Female,36-45,Married,'Track delivery, แชทลูกค้า, Email',Shopee,'1-3 hours',Essential,Stability,3,ระบบค้างบ่อย,'15,001-20,000 THB','Logistics staff',Oppo
+Female,26-32,Single,'Take photos/videos, Communication / meetings, Social media','Facebook, Facebook Messenger, Line','3-5 hours','Highly essential','Product features',5,'Uncertainty about warranty/service','30,001-40,000 THB','Business owner',Apple
+Female,26-32,Single,'Take photos/videos, Communication / meetings, Social media','Facebook, Facebook Messenger, Line','3-5 hours','Highly essential','Product features',5,'Uncertainty about warranty/service','30,001-40,000 THB','Business owner',Apple
+Male,18-25,Student,'Play games, Take photos, Watch movies',TikTok,'0-1 hours',Essential,Price,3,ไม่สามารถสัมผัสสินค้าก่อนซื้อได้,'<15,000 THB',Student,Xiaomi
+Female,26-35,Single,'Watch movies, Take photos, Listen to music',Facebook,'1-3 hours',Essential,'Product features',2,ความไม่แน่นอนในการรับประกัน,'15,001-20,000 THB','Office worker',Xiaomi
+Male,26-35,Single,'Play games, Streaming, ถ่ายรูปถ่ายวีดีโอ',YouTube,'3-5 hours','Highly essential',Features,4,'Cannot physically inspect product','20,001-30,000 THB','Office worker',Vivo
+Female,18-25,Student,'Social media, ถ่ายรูปถ่ายวีดีโอ, ดูหนัง/ฟังเพลง',Instagram,'>5 hours',Essential,Design,5,'Payment security concerns','<15,000 THB',Student,Vivo
+Female,36-45,Married,'ติดต่อสื่อสาร/ประชุมงาน, Email, Finance',LINE,'1-3 hours','Somewhat important',Price,3,การเปรียบเทียบราคายาก,'30,001-50,000 THB','Business owner',Oppo
+Male,18-25,Student,'Play games, Streaming, Social media',TikTok,'>5 hours','Highly essential',Performance,4,การจัดส่งล่าช้า,'<15,000 THB',Student,Realme
+Female,26-35,Single,'ถ่ายรูปถ่ายวีดีโอ, ดูหนัง/ฟังเพลง, Online shopping',Shopee,'3-5 hours',Essential,'Value for money',5,คุณภาพสินค้าไม่ตรงตามที่โฆษณา,'15,001-20,000 THB',Freelancer,Xiaomi
+LGBTQ+,18-25,Single,'Streaming, ถ่ายรูปถ่ายวีดีโอ, Edit video',CapCut,'5-6 hours','Highly essential',Camera,4,การรับประกันไม่ครอบคลุม,'<15,000 THB','Content creator',Vivo
+Male,46-55,Married,'Email, ข่าวสาร, Finance',Gmail,'0-1 hours','Not important',Durability,2,ไม่มีปัญหา,'50,001-100,000 THB','Civil servant',Oppo
+Female,26-35,Married,'Online shopping, Social media, Finance',Facebook,'1-3 hours','Somewhat important',Battery,4,การคืนสินค้ายุ่งยาก,'20,001-30,000 THB',Housewife,Realme
+Female,36-45,Married,'Track delivery, แชทลูกค้า, Email',Shopee,'1-3 hours',Essential,Stability,3,ระบบค้างบ่อย,'15,001-20,000 THB','Logistics staff',Oppo
+Female,26-32,Single,'Take photos/videos, Communication / meetings, Social media','Facebook, Facebook Messenger, Line','3-5 hours','Highly essential','Product features',5,'Uncertainty about warranty/service','30,001-40,000 THB','Business owner',Apple
+Female,26-32,Single,'Take photos/videos, Communication / meetings, Social media','Facebook, Facebook Messenger, Line','3-5 hours','Highly essential','Product features',5,'Uncertainty about warranty/service','30,001-40,000 THB','Business owner',Apple
+Male,18-25,Single,'Play games, Take photos/videos, Social media','Facebook, Facebook Messenger, Spotify, TikTok','3-5 hours','Highly essential','Product features',5,'Cannot physically inspect product','20,001-30,000 THB',Student,Apple
+Male,18-25,Student,'Play games, Take photos, Watch movies',TikTok,'0-1 hours',Essential,Price,3,ไม่สามารถสัมผัสสินค้าก่อนซื้อได้,'<15,000 THB',Student,Xiaomi
+Female,26-35,Single,'Watch movies, Take photos, Listen to music',Facebook,'1-3 hours',Essential,'Product features',2,ความไม่แน่นอนในการรับประกัน,'15,001-20,000 THB','Office worker',Xiaomi
+Male,26-35,Single,'Play games, Streaming, ถ่ายรูปถ่ายวีดีโอ',YouTube,'3-5 hours','Highly essential',Features,4,'Cannot physically inspect product','20,001-30,000 THB','Office worker',Vivo
+Female,18-25,Student,'Social media, ถ่ายรูปถ่ายวีดีโอ, ดูหนัง/ฟังเพลง',Instagram,'>5 hours',Essential,Design,5,'Payment security concerns','<15,000 THB',Student,Vivo
+Female,36-45,Married,'ติดต่อสื่อสาร/ประชุมงาน, Email, Finance',LINE,'1-3 hours','Somewhat important',Price,3,การเปรียบเทียบราคายาก,'30,001-50,000 THB','Business owner',Oppo
+Male,18-25,Student,'Play games, Streaming, Social media',TikTok,'>5 hours','Highly essential',Performance,4,การจัดส่งล่าช้า,'<15,000 THB',Student,Realme
+Female,26-35,Single,'ถ่ายรูปถ่ายวีดีโอ, ดูหนัง/ฟังเพลง, Online shopping',Shopee,'3-5 hours',Essential,'Value for money',5,คุณภาพสินค้าไม่ตรงตามที่โฆษณา,'15,001-20,000 THB',Freelancer,Xiaomi
+LGBTQ+,18-25,Single,'Streaming, ถ่ายรูปถ่ายวีดีโอ, Edit video',CapCut,'5-6 hours','Highly essential',Camera,4,การรับประกันไม่ครอบคลุม,'<15,000 THB','Content creator',Vivo
+Male,46-55,Married,'Email, ข่าวสาร, Finance',Gmail,'0-1 hours','Not important',Durability,2,ไม่มีปัญหา,'50,001-100,000 THB','Civil servant',Oppo
+Female,26-35,Married,'Online shopping, Social media, Finance',Facebook,'1-3 hours','Somewhat important',Battery,4,การคืนสินค้ายุ่งยาก,'20,001-30,000 THB',Housewife,Realme
+Female,36-45,Married,'Track delivery, แชทลูกค้า, Email',Shopee,'1-3 hours',Essential,Stability,3,ระบบค้างบ่อย,'15,001-20,000 THB','Logistics staff',Oppo
+Male,18-25,Single,'Play games, Take photos/videos, Social media','Facebook, Facebook Messenger, Spotify, TikTok','3-5 hours','Highly essential','Product features',5,'Cannot physically inspect product','20,001-30,000 THB',Student,Apple
+Male,18-25,Single,'Play games, Take photos/videos, Social media','Facebook, Facebook Messenger, Spotify, TikTok','3-5 hours','Highly essential','Product features',5,'Cannot physically inspect product','20,001-30,000 THB',Student,Apple
+Male,18-25,Single,'Play games, Take photos/videos, Social media','Facebook, Facebook Messenger, Spotify, TikTok','3-5 hours','Highly essential','Product features',5,'Cannot physically inspect product','20,001-30,000 THB',Student,Apple
+LGBTQ+,18-25,Single,'Watch movies / listen to music, Take photos/videos, Social media','Instagram, Facebook, Facebook Messenger, Spotify, TikTok','>5 hours','Highly essential','Product features',5,'Cannot physically inspect product','15,001-20,000 THB',Student,Apple
+Male,18-25,Student,'Play games, Take photos, Watch movies',TikTok,'0-1 hours',Essential,Price,3,ไม่สามารถสัมผัสสินค้าก่อนซื้อได้,'<15,000 THB',Student,Xiaomi
+Female,26-35,Single,'Watch movies, Take photos, Listen to music',Facebook,'1-3 hours',Essential,'Product features',2,ความไม่แน่นอนในการรับประกัน,'15,001-20,000 THB','Office worker',Xiaomi
+Male,26-35,Single,'Play games, Streaming, ถ่ายรูปถ่ายวีดีโอ',YouTube,'3-5 hours','Highly essential',Features,4,'Cannot physically inspect product','20,001-30,000 THB','Office worker',Vivo
+Female,18-25,Student,'Social media, ถ่ายรูปถ่ายวีดีโอ, ดูหนัง/ฟังเพลง',Instagram,'>5 hours',Essential,Design,5,'Payment security concerns','<15,000 THB',Student,Vivo
+Female,36-45,Married,'ติดต่อสื่อสาร/ประชุมงาน, Email, Finance',LINE,'1-3 hours','Somewhat important',Price,3,การเปรียบเทียบราคายาก,'30,001-50,000 THB','Business owner',Oppo
+Male,18-25,Student,'Play games, Streaming, Social media',TikTok,'>5 hours','Highly essential',Performance,4,การจัดส่งล่าช้า,'<15,000 THB',Student,Realme
+Female,26-35,Single,'ถ่ายรูปถ่ายวีดีโอ, ดูหนัง/ฟังเพลง, Online shopping',Shopee,'3-5 hours',Essential,'Value for money',5,คุณภาพสินค้าไม่ตรงตามที่โฆษณา,'15,001-20,000 THB',Freelancer,Xiaomi
+LGBTQ+,18-25,Single,'Streaming, ถ่ายรูปถ่ายวีดีโอ, Edit video',CapCut,'5-6 hours','Highly essential',Camera,4,การรับประกันไม่ครอบคลุม,'<15,000 THB','Content creator',Vivo
+Male,46-55,Married,'Email, ข่าวสาร, Finance',Gmail,'0-1 hours','Not important',Durability,2,ไม่มีปัญหา,'50,001-100,000 THB','Civil servant',Oppo
+Female,26-35,Married,'Online shopping, Social media, Finance',Facebook,'1-3 hours','Somewhat important',Battery,4,การคืนสินค้ายุ่งยาก,'20,001-30,000 THB',Housewife,Realme
+Female,36-45,Married,'Track delivery, แชทลูกค้า, Email',Shopee,'1-3 hours',Essential,Stability,3,ระบบค้างบ่อย,'15,001-20,000 THB','Logistics staff',Oppo
+LGBTQ+,18-25,Single,'Watch movies / listen to music, Take photos/videos, Social media','Instagram, Facebook, Facebook Messenger, Spotify, TikTok','>5 hours','Highly essential','Product features',5,'Cannot physically inspect product','15,001-20,000 THB',Student,Apple
+LGBTQ+,18-25,Single,'Watch movies / listen to music, Take photos/videos, Social media','Instagram, Facebook, Facebook Messenger, Spotify, TikTok','>5 hours','Highly essential','Product features',5,'Cannot physically inspect product','15,001-20,000 THB',Student,Apple
+Female,33-40,Married,'Take photos/videos, Communication / meetings, Social media','Facebook, TikTok, Line','3-5 hours',Essential,'Product reviews',5,'Payment security concerns','30,001-40,000 THB','Civil servant',Samsung
+Male,18-25,Student,'Play games, Take photos, Watch movies',TikTok,'0-1 hours',Essential,Price,3,ไม่สามารถสัมผัสสินค้าก่อนซื้อได้,'<15,000 THB',Student,Xiaomi
+Female,26-35,Single,'Watch movies, Take photos, Listen to music',Facebook,'1-3 hours',Essential,'Product features',2,ความไม่แน่นอนในการรับประกัน,'15,001-20,000 THB','Office worker',Xiaomi
+Male,26-35,Single,'Play games, Streaming, ถ่ายรูปถ่ายวีดีโอ',YouTube,'3-5 hours','Highly essential',Features,4,'Cannot physically inspect product','20,001-30,000 THB','Office worker',Vivo
+Female,18-25,Student,'Social media, ถ่ายรูปถ่ายวีดีโอ, ดูหนัง/ฟังเพลง',Instagram,'>5 hours',Essential,Design,5,'Payment security concerns','<15,000 THB',Student,Vivo
+Female,36-45,Married,'ติดต่อสื่อสาร/ประชุมงาน, Email, Finance',LINE,'1-3 hours','Somewhat important',Price,3,การเปรียบเทียบราคายาก,'30,001-50,000 THB','Business owner',Oppo
+Male,18-25,Student,'Play games, Streaming, Social media',TikTok,'>5 hours','Highly essential',Performance,4,การจัดส่งล่าช้า,'<15,000 THB',Student,Realme
+Female,26-35,Single,'ถ่ายรูปถ่ายวีดีโอ, ดูหนัง/ฟังเพลง, Online shopping',Shopee,'3-5 hours',Essential,'Value for money',5,คุณภาพสินค้าไม่ตรงตามที่โฆษณา,'15,001-20,000 THB',Freelancer,Xiaomi
+LGBTQ+,18-25,Single,'Streaming, ถ่ายรูปถ่ายวีดีโอ, Edit video',CapCut,'5-6 hours','Highly essential',Camera,4,การรับประกันไม่ครอบคลุม,'<15,000 THB','Content creator',Vivo
+Male,46-55,Married,'Email, ข่าวสาร, Finance',Gmail,'0-1 hours','Not important',Durability,2,ไม่มีปัญหา,'50,001-100,000 THB','Civil servant',Oppo
+Female,26-35,Married,'Online shopping, Social media, Finance',Facebook,'1-3 hours','Somewhat important',Battery,4,การคืนสินค้ายุ่งยาก,'20,001-30,000 THB',Housewife,Realme
+Female,36-45,Married,'Track delivery, แชทลูกค้า, Email',Shopee,'1-3 hours',Essential,Stability,3,ระบบค้างบ่อย,'15,001-20,000 THB','Logistics staff',Oppo
+Female,33-40,Married,'Take photos/videos, Communication / meetings, Social media','Facebook, TikTok, Line','3-5 hours',Essential,'Product reviews',5,'Payment security concerns','30,001-40,000 THB','Civil servant',Samsung
+Female,18-25,Single,'Watch movies / listen to music, Communication / meetings, Social media','Instagram, Facebook, YouTube, Facebook Messenger, TikTok','1-3 hours',Essential,'Product features',3,'Payment security concerns','<15,000 THB','Private company employee',Apple
+Male,18-25,Student,'Play games, Take photos, Watch movies',Instagram,'1-3 hours',Essential,'Product features',4,ไม่สามารถสัมผัสสินค้าก่อนซื้อได้,'<15,000 THB',Student,Oppo
+Female,18-25,Single,'Watch movies / listen to music, Play games, Take photos',TikTok,'0-1 hours','Highly essential',Price,3,'Payment security concerns','<15,000 THB',Student,Oppo
+Male,26-35,Working,'Watch movies, Play games, Take photos',Facebook,'1-3 hours',Essential,'Product features',2,ความซับซ้อนในการชำระเงิน,'15,001-20,000 THB',Employee,Other
+Female,26-35,Working,'Communication, Take photos, Social media',Instagram,'1-3 hours',Essential,Price,3,ปัญหาการบริการหลังการขาย,'15,001-20,000 THB',Employee,Other
+Female,18-25,Single,'Take photos, Listen to music, Social media',Instagram,'1-3 hours',Essential,'Product features',4,ไม่แน่นอนเกี่ยวกับการรับประกัน,'15,001-20,000 THB',Student,Realme
+Male,18-25,Student,'Play games, Take photos, Watch movies',TikTok,'0-1 hours',Essential,Price,3,ความไม่แน่นอนในการรับประกัน,'<15,000 THB',Student,Realme
+Male,26-35,Working,'Play games, Watch movies, Take photos',TikTok,'>5 hours',Essential,Price,3,ไม่สามารถสัมผัสสินค้าได้จริง,'15,001-20,000 THB',Employee,Vivo
+Female,26-35,Working,'Watch movies, Take photos, Listen to music',Facebook,'1-3 hours',Essential,'Product features',4,ความกังวลเรื่องบริการหลังการขาย,'15,001-20,000 THB',Employee,Vivo
+Female,18-25,Student,'Watch movies / listen to music, Play games, Take photos',Instagram,'0-1 hours','Highly essential','Product features',2,ความไม่แน่นอนเกี่ยวกับบริการหลังการขาย,'<15,000 THB',Student,Xiaomi
+Male,18-25,Student,'Play games, Take photos, Watch movies',TikTok,'1-3 hours',Essential,Price,3,ไม่สามารถสัมผัสสินค้าก่อนซื้อได้,'<15,000 THB',Student,Xiaomi
+Male,18-25,Student,'Play games, Take photos, Watch movies',TikTok,'1-3 hours',Essential,'Product features',4,ไม่สามารถสัมผัสสินค้าก่อนซื้อได้,'<15,000 THB',Student,Oppo
+Female,18-25,Single,'Watch movies, Listen to music, Take photos',Instagram,'0-1 hours','Highly essential',Price,3,ความกังวลเรื่องความปลอดภัย,'<15,000 THB',Student,Oppo
+Male,26-35,Working,'Play games, Take photos, Watch movies',Facebook,'1-3 hours',Essential,'Product features',4,ปัญหาด้านการทดลองสินค้า,'15,001-20,000 THB',Employee,Oppo
+Female,18-25,Student,'Watch movies, Take photos, Listen to music',TikTok,'0-1 hours',Essential,Price,3,ความไม่แน่นอนของการรับประกัน,'<15,000 THB',Student,Oppo
+Male,18-25,Single,'Play games, Watch movies, Take photos',Instagram,'1-3 hours',Essential,'Product features',4,ความซับซ้อนในการชำระเงิน,'<15,000 THB',Student,Oppo
+Female,26-35,Working,'Watch movies, Take photos, Listen to music',Facebook,'1-3 hours',Essential,Price,3,ไม่สามารถทดลองสินค้าได้,'15,001-20,000 THB',Employee,Oppo
+Male,26-35,Working,'Play games, Take photos, Watch movies',TikTok,'>5 hours',Essential,'Product features',4,ความกังวลเรื่องบริการหลังการขาย,'15,001-20,000 THB',Employee,Oppo
+Female,18-25,Student,'Watch movies, Listen to music, Take photos',Instagram,'0-1 hours','Highly essential',Price,3,ไม่สามารถสัมผัสสินค้าก่อนซื้อได้,'<15,000 THB',Student,Oppo
+Male,26-35,Working,'Play games, Take photos, Watch movies',Facebook,'1-3 hours',Essential,'Product features',4,ปัญหาด้านความปลอดภัยของการชำระเงิน,'15,001-20,000 THB',Employee,Oppo
+Female,26-35,Working,'Watch movies, Take photos, Listen to music',TikTok,'1-3 hours',Essential,Price,3,ความไม่แน่นอนของการรับประกัน,'15,001-20,000 THB',Employee,Oppo
+Female,18-25,Single,'Watch movies, Listen to music, Take photos',Instagram,'1-3 hours',Essential,'Product features',4,ไม่แน่นอนเกี่ยวกับการรับประกัน,'15,001-20,000 THB',Student,Realme
+Male,18-25,Student,'Play games, Take photos, Watch movies',TikTok,'0-1 hours',Essential,Price,3,ปัญหาการทดลองสินค้า,'<15,000 THB',Student,Realme
+Female,26-35,Working,'Watch movies, Take photos, Listen to music',Facebook,'1-3 hours',Essential,'Product features',4,ความไม่แน่นอนในการรับประกัน,'15,001-20,000 THB',Employee,Realme
+Male,18-25,Student,'Play games, Watch movies, Take photos',Instagram,'0-1 hours',Essential,Price,3,ไม่สามารถสัมผัสสินค้าก่อนซื้อได้,'<15,000 THB',Student,Realme
+Female,18-25,Single,'Watch movies, Listen to music, Take photos',TikTok,'1-3 hours',Essential,'Product features',4,ความกังวลด้านการรับประกัน,'15,001-20,000 THB',Student,Realme
+Male,26-35,Working,'Play games, Take photos, Watch movies',Facebook,'>5 hours',Essential,Price,3,ปัญหาด้านการชำระเงิน,'15,001-20,000 THB',Employee,Realme
+Female,18-25,Student,'Watch movies, Take photos, Listen to music',Instagram,'0-1 hours',Essential,'Product features',4,ไม่สามารถทดลองสินค้าได้,'<15,000 THB',Student,Realme
+Male,26-35,Working,'Play games, Watch movies, Take photos',TikTok,'1-3 hours',Essential,Price,3,ความไม่แน่นอนในการรับประกัน,'15,001-20,000 THB',Employee,Realme
+Female,26-35,Working,'Watch movies, Take photos, Listen to music',Facebook,'1-3 hours',Essential,'Product features',4,ความกังวลเรื่องบริการหลังการขาย,'15,001-20,000 THB',Employee,Realme
+Male,18-25,Student,'Play games, Take photos, Watch movies',Instagram,'0-1 hours',Essential,Price,3,ไม่สามารถสัมผัสสินค้าก่อนซื้อได้,'<15,000 THB',Student,Realme
+Male,26-35,Working,'Play games, Watch movies, Take photos',TikTok,'>5 hours',Essential,Price,3,ไม่สามารถสัมผัสสินค้าก่อนซื้อได้,'15,001-20,000 THB',Employee,Vivo
+Female,26-35,Working,'Watch movies, Take photos, Listen to music',Facebook,'1-3 hours',Essential,'Product features',4,ปัญหาบริการหลังการขาย,'15,001-20,000 THB',Employee,Vivo
+Male,18-25,Student,'Play games, Take photos, Watch movies',Instagram,'0-1 hours',Essential,Price,3,ความกังวลเกี่ยวกับความปลอดภัย,'<15,000 THB',Student,Vivo
+Female,18-25,Single,'Watch movies, Listen to music, Take photos',TikTok,'1-3 hours',Essential,'Product features',4,ไม่สามารถทดลองสินค้าได้,'<15,000 THB',Student,Vivo
+Male,26-35,Working,'Play games, Take photos, Watch movies',Facebook,'>5 hours',Essential,Price,3,ปัญหาด้านการชำระเงิน,'15,001-20,000 THB',Employee,Vivo
+Female,26-35,Working,'Watch movies, Take photos, Listen to music',Instagram,'1-3 hours',Essential,'Product features',4,ความไม่แน่นอนในการรับประกัน,'15,001-20,000 THB',Employee,Vivo
+Male,18-25,Student,'Play games, Take photos, Watch movies',TikTok,'0-1 hours',Essential,Price,3,ไม่สามารถสัมผัสสินค้าก่อนซื้อได้,'<15,000 THB',Student,Vivo
+Female,26-35,Working,'Watch movies, Take photos, Listen to music',Facebook,'1-3 hours',Essential,'Product features',4,ปัญหาด้านบริการหลังการขาย,'15,001-20,000 THB',Employee,Vivo
+Male,26-35,Working,'Play games, Take photos, Watch movies',Instagram,'>5 hours',Essential,Price,3,ความไม่แน่นอนของการรับประกัน,'15,001-20,000 THB',Employee,Vivo
+Female,18-25,Student,'Watch movies, Listen to music, Take photos',TikTok,'1-3 hours',Essential,'Product features',4,ไม่สามารถทดลองสินค้าได้,'<15,000 THB',Student,Vivo
+Male,26-35,Working,'Play games, Take photos, Watch movies',Facebook,'1-3 hours',Essential,Price,3,ปัญหาด้านการชำระเงิน,'15,001-20,000 THB',Employee,Vivo
+Female,18-25,Student,'Watch movies, Listen to music, Take photos',Instagram,'0-1 hours',Essential,'Product features',2,ปัญหาบริการหลังการขาย,'<15,000 THB',Student,Xiaomi
+Male,18-25,Student,'Play games, Take photos, Watch movies',TikTok,'1-3 hours',Essential,Price,3,ไม่สามารถสัมผัสสินค้าก่อนซื้อได้,'<15,000 THB',Student,Xiaomi
+Female,26-35,Working,'Watch movies, Take photos, Listen to music',Facebook,'1-3 hours',Essential,'Product features',2,ความไม่แน่นอนในการรับประกัน,'15,001-20,000 THB',Employee,Xiaomi
+Male,26-35,Working,'Play games, Take photos, Watch movies',Instagram,'>5 hours',Essential,Price,3,ปัญหาด้านการชำระเงิน,'15,001-20,000 THB',Employee,Xiaomi
+Female,18-25,Student,'Watch movies, Listen to music, Take photos',TikTok,'0-1 hours',Essential,'Product features',2,ไม่สามารถทดลองสินค้าได้,'<15,000 THB',Student,Xiaomi
+Male,26-35,Working,'Play games, Take photos, Watch movies',Facebook,'1-3 hours',Essential,Price,3,ความไม่แน่นอนของการรับประกัน,'15,001-20,000 THB',Employee,Xiaomi
+Female,26-35,Working,'Watch movies, Take photos, Listen to music',Instagram,'1-3 hours',Essential,'Product features',2,ปัญหาบริการหลังการขาย,'15,001-20,000 THB',Employee,Xiaomi
+Male,18-25,Student,'Play games, Take photos, Watch movies',TikTok,'0-1 hours',Essential,Price,3,ไม่สามารถสัมผัสสินค้าก่อนซื้อได้,'<15,000 THB',Student,Xiaomi
+Female,26-35,Single,'Watch movies, Take photos, Listen to music',Facebook,'1-3 hours',Essential,'Product features',2,ความไม่แน่นอนในการรับประกัน,'15,001-20,000 THB','Office worker',Xiaomi
+Male,26-35,Single,'Play games, Streaming, ถ่ายรูปถ่ายวีดีโอ',YouTube,'3-5 hours','Highly essential',Features,4,'Cannot physically inspect product','20,001-30,000 THB','Office worker',Vivo
+Female,18-25,Student,'Social media, ถ่ายรูปถ่ายวีดีโอ, ดูหนัง/ฟังเพลง',Instagram,'>5 hours',Essential,Design,5,'Payment security concerns','<15,000 THB',Student,Vivo
+Female,36-45,Married,'ติดต่อสื่อสาร/ประชุมงาน, Email, Finance',LINE,'1-3 hours','Somewhat important',Price,3,การเปรียบเทียบราคายาก,'30,001-50,000 THB','Business owner',Oppo
+Male,18-25,Student,'Play games, Streaming, Social media',TikTok,'>5 hours','Highly essential',Performance,4,การจัดส่งล่าช้า,'<15,000 THB',Student,Realme
+Female,26-35,Single,'ถ่ายรูปถ่ายวีดีโอ, ดูหนัง/ฟังเพลง, Online shopping',Shopee,'3-5 hours',Essential,'Value for money',5,คุณภาพสินค้าไม่ตรงตามที่โฆษณา,'15,001-20,000 THB',Freelancer,Xiaomi
+LGBTQ+,18-25,Single,'Streaming, ถ่ายรูปถ่ายวีดีโอ, Edit video',CapCut,'5-6 hours','Highly essential',Camera,4,การรับประกันไม่ครอบคลุม,'<15,000 THB','Content creator',Vivo
+Male,46-55,Married,'Email, ข่าวสาร, Finance',Gmail,'0-1 hours','Not important',Durability,2,ไม่มีปัญหา,'50,001-100,000 THB','Civil servant',Oppo
+Female,26-35,Married,'Online shopping, Social media, Finance',Facebook,'1-3 hours','Somewhat important',Battery,4,การคืนสินค้ายุ่งยาก,'20,001-30,000 THB',Housewife,Realme
+Female,36-45,Married,'Track delivery, แชทลูกค้า, Email',Shopee,'1-3 hours',Essential,Stability,3,ระบบค้างบ่อย,'15,001-20,000 THB','Logistics staff',Oppo
+Male,18-25,Student,'Play games, Take photos, Watch movies',TikTok,'0-1 hours',Essential,Price,3,ไม่สามารถสัมผัสสินค้าก่อนซื้อได้,'<15,000 THB',Student,Xiaomi
+Female,26-35,Single,'Watch movies, Take photos, Listen to music',Facebook,'1-3 hours',Essential,'Product features',2,ความไม่แน่นอนในการรับประกัน,'15,001-20,000 THB','Office worker',Xiaomi
+Male,26-35,Single,'Play games, Streaming, ถ่ายรูปถ่ายวีดีโอ',YouTube,'3-5 hours','Highly essential',Features,4,'Cannot physically inspect product','20,001-30,000 THB','Office worker',Vivo
+Female,18-25,Student,'Social media, ถ่ายรูปถ่ายวีดีโอ, ดูหนัง/ฟังเพลง',Instagram,'>5 hours',Essential,Design,5,'Payment security concerns','<15,000 THB',Student,Vivo
+Female,36-45,Married,'ติดต่อสื่อสาร/ประชุมงาน, Email, Finance',LINE,'1-3 hours','Somewhat important',Price,3,การเปรียบเทียบราคายาก,'30,001-50,000 THB','Business owner',Oppo
+Male,18-25,Student,'Play games, Streaming, Social media',TikTok,'>5 hours','Highly essential',Performance,4,การจัดส่งล่าช้า,'<15,000 THB',Student,Realme
+Female,26-35,Single,'ถ่ายรูปถ่ายวีดีโอ, ดูหนัง/ฟังเพลง, Online shopping',Shopee,'3-5 hours',Essential,'Value for money',5,คุณภาพสินค้าไม่ตรงตามที่โฆษณา,'15,001-20,000 THB',Freelancer,Xiaomi
+LGBTQ+,18-25,Single,'Streaming, ถ่ายรูปถ่ายวีดีโอ, Edit video',CapCut,'5-6 hours','Highly essential',Camera,4,การรับประกันไม่ครอบคลุม,'<15,000 THB','Content creator',Vivo
+Male,46-55,Married,'Email, ข่าวสาร, Finance',Gmail,'0-1 hours','Not important',Durability,2,ไม่มีปัญหา,'50,001-100,000 THB','Civil servant',Oppo
+Female,26-35,Married,'Online shopping, Social media, Finance',Facebook,'1-3 hours','Somewhat important',Battery,4,การคืนสินค้ายุ่งยาก,'20,001-30,000 THB',Housewife,Realme
+Female,36-45,Married,'Track delivery, แชทลูกค้า, Email',Shopee,'1-3 hours',Essential,Stability,3,ระบบค้างบ่อย,'15,001-20,000 THB','Logistics staff',Oppo
+Male,18-25,Student,'Play games, Take photos, Watch movies',TikTok,'0-1 hours',Essential,Price,3,ไม่สามารถสัมผัสสินค้าก่อนซื้อได้,'<15,000 THB',Student,Xiaomi
+Female,26-35,Single,'Watch movies, Take photos, Listen to music',Facebook,'1-3 hours',Essential,'Product features',2,ความไม่แน่นอนในการรับประกัน,'15,001-20,000 THB','Office worker',Xiaomi
+Male,26-35,Single,'Play games, Streaming, ถ่ายรูปถ่ายวีดีโอ',YouTube,'3-5 hours','Highly essential',Features,4,'Cannot physically inspect product','20,001-30,000 THB','Office worker',Vivo
+Female,18-25,Student,'Social media, ถ่ายรูปถ่ายวีดีโอ, ดูหนัง/ฟังเพลง',Instagram,'>5 hours',Essential,Design,5,'Payment security concerns','<15,000 THB',Student,Vivo
+Female,36-45,Married,'ติดต่อสื่อสาร/ประชุมงาน, Email, Finance',LINE,'1-3 hours','Somewhat important',Price,3,การเปรียบเทียบราคายาก,'30,001-50,000 THB','Business owner',Oppo
+Male,18-25,Student,'Play games, Streaming, Social media',TikTok,'>5 hours','Highly essential',Performance,4,การจัดส่งล่าช้า,'<15,000 THB',Student,Realme
+Female,26-35,Single,'ถ่ายรูปถ่ายวีดีโอ, ดูหนัง/ฟังเพลง, Online shopping',Shopee,'3-5 hours',Essential,'Value for money',5,คุณภาพสินค้าไม่ตรงตามที่โฆษณา,'15,001-20,000 THB',Freelancer,Xiaomi
+LGBTQ+,18-25,Single,'Streaming, ถ่ายรูปถ่ายวีดีโอ, Edit video',CapCut,'5-6 hours','Highly essential',Camera,4,การรับประกันไม่ครอบคลุม,'<15,000 THB','Content creator',Vivo
+Male,46-55,Married,'Email, ข่าวสาร, Finance',Gmail,'0-1 hours','Not important',Durability,2,ไม่มีปัญหา,'50,001-100,000 THB','Civil servant',Oppo
+Female,26-35,Married,'Online shopping, Social media, Finance',Facebook,'1-3 hours','Somewhat important',Battery,4,การคืนสินค้ายุ่งยาก,'20,001-30,000 THB',Housewife,Realme
+Female,36-45,Married,'Track delivery, แชทลูกค้า, Email',Shopee,'1-3 hours',Essential,Stability,3,ระบบค้างบ่อย,'15,001-20,000 THB','Logistics staff',Oppo
+Male,18-25,Student,'Play games, Take photos, Watch movies',TikTok,'0-1 hours',Essential,Price,3,ไม่สามารถสัมผัสสินค้าก่อนซื้อได้,'<15,000 THB',Student,Xiaomi
+Female,26-35,Single,'Watch movies, Take photos, Listen to music',Facebook,'1-3 hours',Essential,'Product features',2,ความไม่แน่นอนในการรับประกัน,'15,001-20,000 THB','Office worker',Xiaomi
+Male,26-35,Single,'Play games, Streaming, ถ่ายรูปถ่ายวีดีโอ',YouTube,'3-5 hours','Highly essential',Features,4,'Cannot physically inspect product','20,001-30,000 THB','Office worker',Vivo
+Female,18-25,Student,'Social media, ถ่ายรูปถ่ายวีดีโอ, ดูหนัง/ฟังเพลง',Instagram,'>5 hours',Essential,Design,5,'Payment security concerns','<15,000 THB',Student,Vivo
+Female,36-45,Married,'ติดต่อสื่อสาร/ประชุมงาน, Email, Finance',LINE,'1-3 hours','Somewhat important',Price,3,การเปรียบเทียบราคายาก,'30,001-50,000 THB','Business owner',Oppo
+Male,18-25,Student,'Play games, Streaming, Social media',TikTok,'>5 hours','Highly essential',Performance,4,การจัดส่งล่าช้า,'<15,000 THB',Student,Realme
+Female,26-35,Single,'ถ่ายรูปถ่ายวีดีโอ, ดูหนัง/ฟังเพลง, Online shopping',Shopee,'3-5 hours',Essential,'Value for money',5,คุณภาพสินค้าไม่ตรงตามที่โฆษณา,'15,001-20,000 THB',Freelancer,Xiaomi
+LGBTQ+,18-25,Single,'Streaming, ถ่ายรูปถ่ายวีดีโอ, Edit video',CapCut,'5-6 hours','Highly essential',Camera,4,การรับประกันไม่ครอบคลุม,'<15,000 THB','Content creator',Vivo
+Male,46-55,Married,'Email, ข่าวสาร, Finance',Gmail,'0-1 hours','Not important',Durability,2,ไม่มีปัญหา,'50,001-100,000 THB','Civil servant',Oppo
+Female,26-35,Married,'Online shopping, Social media, Finance',Facebook,'1-3 hours','Somewhat important',Battery,4,การคืนสินค้ายุ่งยาก,'20,001-30,000 THB',Housewife,Realme
+Female,36-45,Married,'Track delivery, แชทลูกค้า, Email',Shopee,'1-3 hours',Essential,Stability,3,ระบบค้างบ่อย,'15,001-20,000 THB','Logistics staff',Oppo
+Male,18-25,Student,'Play games, Take photos, Watch movies',TikTok,'0-1 hours',Essential,Price,3,ไม่สามารถสัมผัสสินค้าก่อนซื้อได้,'<15,000 THB',Student,Xiaomi
+Female,26-35,Single,'Watch movies, Take photos, Listen to music',Facebook,'1-3 hours',Essential,'Product features',2,ความไม่แน่นอนในการรับประกัน,'15,001-20,000 THB','Office worker',Xiaomi
+Male,26-35,Single,'Play games, Streaming, ถ่ายรูปถ่ายวีดีโอ',YouTube,'3-5 hours','Highly essential',Features,4,'Cannot physically inspect product','20,001-30,000 THB','Office worker',Vivo
+Female,18-25,Student,'Social media, ถ่ายรูปถ่ายวีดีโอ, ดูหนัง/ฟังเพลง',Instagram,'>5 hours',Essential,Design,5,'Payment security concerns','<15,000 THB',Student,Vivo
+Female,36-45,Married,'ติดต่อสื่อสาร/ประชุมงาน, Email, Finance',LINE,'1-3 hours','Somewhat important',Price,3,การเปรียบเทียบราคายาก,'30,001-50,000 THB','Business owner',Oppo
+Male,18-25,Student,'Play games, Streaming, Social media',TikTok,'>5 hours','Highly essential',Performance,4,การจัดส่งล่าช้า,'<15,000 THB',Student,Realme
+Female,26-35,Single,'ถ่ายรูปถ่ายวีดีโอ, ดูหนัง/ฟังเพลง, Online shopping',Shopee,'3-5 hours',Essential,'Value for money',5,คุณภาพสินค้าไม่ตรงตามที่โฆษณา,'15,001-20,000 THB',Freelancer,Xiaomi
+LGBTQ+,18-25,Single,'Streaming, ถ่ายรูปถ่ายวีดีโอ, Edit video',CapCut,'5-6 hours','Highly essential',Camera,4,การรับประกันไม่ครอบคลุม,'<15,000 THB','Content creator',Vivo
+Male,46-55,Married,'Email, ข่าวสาร, Finance',Gmail,'0-1 hours','Not important',Durability,2,ไม่มีปัญหา,'50,001-100,000 THB','Civil servant',Oppo
+Female,26-35,Married,'Online shopping, Social media, Finance',Facebook,'1-3 hours','Somewhat important',Battery,4,การคืนสินค้ายุ่งยาก,'20,001-30,000 THB',Housewife,Realme
+Female,36-45,Married,'Track delivery, แชทลูกค้า, Email',Shopee,'1-3 hours',Essential,Stability,3,ระบบค้างบ่อย,'15,001-20,000 THB','Logistics staff',Oppo
+Female,26-35,Single,'Online meetings, Schedule management, Email','Microsoft Teams','3-5 hours','Highly essential',Ecosystem,5,'High price','50,001-100,000 THB',Manager,Apple
+Male,18-25,Student,'Play esports, Stream games, แชทชุมชน',Discord,'>5 hours','Highly essential',Performance,4,เครื่องร้อนบ่อย,'<15,000 THB',Student,Realme
+Female,36-45,Married,'Online shopping, Track delivery, แชทลูกค้า',LINE,'1-3 hours',Essential,Reliability,4,การคืนสินค้ายุ่งยาก,'30,001-50,000 THB',Housewife,Samsung
+LGBTQ+,18-25,Single,'Art photography, Video editing, Upload stories',VSCO,'5-6 hours','Highly essential','Sensor quality',5,ไม่มี,'20,001-30,000 THB',Artist,Vivo
+Male,46-55,Married,'Read news, Check stocks, Finance',SET,'0-1 hours','Not important',Simplicity,3,ระบบล้าสมัย,'100,001-150,000 THB',Investor,Oppo
+Female,56+,Married,'Chat with family, Read e-books, Listen to radio',Facebook,'0-1 hours','Not important',Price,2,ไม่มี,'<15,000 THB',Retired,Other
+Male,26-35,Single,'Product photography, Edit reviews, Online marketplace',Shopee,'3-5 hours',Essential,'Value for money',4,กล้องไม่คมชัด,'25,001-35,000 THB','Online seller',Xiaomi
+Female,18-25,Student,'ติ๊กต็อก, Livestream, Search information',TikTok,'>5 hours','Highly essential',Brand,5,พื้นที่เก็บข้อมูลไม่พอ,'<15,000 THB',Student,Apple
+Male,36-45,Married,'GPS navigation, Check car condition, ฟังพอดแคสต์','Google Maps','1-3 hours',Essential,Durability,4,หน้าจอมีจุดตาย,'50,001-100,000 THB','Delivery staff',Samsung
+Female,26-35,Single,'Online meetings, Schedule management, Email','Microsoft Teams','3-5 hours','Highly essential',Ecosystem,5,'High price','50,001-100,000 THB',Manager,Apple
+Male,18-25,Student,'Play esports, Stream games, แชทชุมชน',Discord,'>5 hours','Highly essential',Performance,4,เครื่องร้อนบ่อย,'<15,000 THB',Student,Realme
+Female,36-45,Married,'Online shopping, Track delivery, แชทลูกค้า',LINE,'1-3 hours',Essential,Reliability,4,การคืนสินค้ายุ่งยาก,'30,001-50,000 THB',Housewife,Samsung
+LGBTQ+,18-25,Single,'Art photography, Video editing, Upload stories',VSCO,'5-6 hours','Highly essential','Sensor quality',5,ไม่มี,'20,001-30,000 THB',Artist,Vivo
+Male,46-55,Married,'Read news, Check stocks, Finance',SET,'0-1 hours','Not important',Simplicity,3,ระบบล้าสมัย,'100,001-150,000 THB',Investor,Oppo
+Female,56+,Married,'Chat with family, Read e-books, Listen to radio',Facebook,'0-1 hours','Not important',Price,2,ไม่มี,'<15,000 THB',Retired,Other
+Male,26-35,Single,'Product photography, Edit reviews, Online marketplace',Shopee,'3-5 hours',Essential,'Value for money',4,กล้องไม่คมชัด,'25,001-35,000 THB','Online seller',Xiaomi
+Female,18-25,Student,'ติ๊กต็อก, Livestream, Search information',TikTok,'>5 hours','Highly essential',Brand,5,พื้นที่เก็บข้อมูลไม่พอ,'<15,000 THB',Student,Apple
+Male,36-45,Married,'GPS navigation, Check car condition, ฟังพอดแคสต์','Google Maps','1-3 hours',Essential,Durability,4,หน้าจอมีจุดตาย,'50,001-100,000 THB','Delivery staff',Samsung
+Female,26-35,Single,'Online meetings, Schedule management, Email','Microsoft Teams','3-5 hours','Highly essential',Ecosystem,5,'High price','50,001-100,000 THB',Manager,Apple
+Male,18-25,Student,'Play esports, Stream games, แชทชุมชน',Discord,'>5 hours','Highly essential',Performance,4,เครื่องร้อนบ่อย,'<15,000 THB',Student,Realme
+Female,36-45,Married,'Online shopping, Track delivery, แชทลูกค้า',LINE,'1-3 hours',Essential,Reliability,4,การคืนสินค้ายุ่งยาก,'30,001-50,000 THB',Housewife,Samsung
+LGBTQ+,18-25,Single,'Art photography, Video editing, Upload stories',VSCO,'5-6 hours','Highly essential','Sensor quality',5,ไม่มี,'20,001-30,000 THB',Artist,Vivo
+Male,46-55,Married,'Read news, Check stocks, Finance',SET,'0-1 hours','Not important',Simplicity,3,ระบบล้าสมัย,'100,001-150,000 THB',Investor,Oppo
+Female,56+,Married,'Chat with family, Read e-books, Listen to radio',Facebook,'0-1 hours','Not important',Price,2,ไม่มี,'<15,000 THB',Retired,Other
+Male,26-35,Single,'Product photography, Edit reviews, Online marketplace',Shopee,'3-5 hours',Essential,'Value for money',4,กล้องไม่คมชัด,'25,001-35,000 THB','Online seller',Xiaomi
+Female,18-25,Student,'ติ๊กต็อก, Livestream, Search information',TikTok,'>5 hours','Highly essential',Brand,5,พื้นที่เก็บข้อมูลไม่พอ,'<15,000 THB',Student,Apple
+Male,36-45,Married,'GPS navigation, Check car condition, ฟังพอดแคสต์','Google Maps','1-3 hours',Essential,Durability,4,หน้าจอมีจุดตาย,'50,001-100,000 THB','Delivery staff',Samsung
+Female,26-35,Single,'Online meetings, Schedule management, Email','Microsoft Teams','3-5 hours','Highly essential',Ecosystem,5,'High price','50,001-100,000 THB',Manager,Apple
+Male,18-25,Student,'Play esports, Stream games, แชทชุมชน',Discord,'>5 hours','Highly essential',Performance,4,เครื่องร้อนบ่อย,'<15,000 THB',Student,Realme
+Female,36-45,Married,'Online shopping, Track delivery, แชทลูกค้า',LINE,'1-3 hours',Essential,Reliability,4,การคืนสินค้ายุ่งยาก,'30,001-50,000 THB',Housewife,Samsung
+LGBTQ+,18-25,Single,'Art photography, Video editing, Upload stories',VSCO,'5-6 hours','Highly essential','Sensor quality',5,ไม่มี,'20,001-30,000 THB',Artist,Vivo
+Male,46-55,Married,'Read news, Check stocks, Finance',SET,'0-1 hours','Not important',Simplicity,3,ระบบล้าสมัย,'100,001-150,000 THB',Investor,Oppo
+Female,56+,Married,'Chat with family, Read e-books, Listen to radio',Facebook,'0-1 hours','Not important',Price,2,ไม่มี,'<15,000 THB',Retired,Other
+Male,26-35,Single,'Product photography, Edit reviews, Online marketplace',Shopee,'3-5 hours',Essential,'Value for money',4,กล้องไม่คมชัด,'25,001-35,000 THB','Online seller',Xiaomi
+Female,18-25,Student,'ติ๊กต็อก, Livestream, Search information',TikTok,'>5 hours','Highly essential',Brand,5,พื้นที่เก็บข้อมูลไม่พอ,'<15,000 THB',Student,Apple
+Male,36-45,Married,'GPS navigation, Check car condition, ฟังพอดแคสต์','Google Maps','1-3 hours',Essential,Durability,4,หน้าจอมีจุดตาย,'50,001-100,000 THB','Delivery staff',Samsung
+Female,26-35,Single,'Online meetings, Schedule management, Email','Microsoft Teams','3-5 hours','Highly essential',Ecosystem,5,'High price','50,001-100,000 THB',Manager,Apple
+Male,18-25,Student,'Play esports, Stream games, แชทชุมชน',Discord,'>5 hours','Highly essential',Performance,4,เครื่องร้อนบ่อย,'<15,000 THB',Student,Realme
+Female,36-45,Married,'Online shopping, Track delivery, แชทลูกค้า',LINE,'1-3 hours',Essential,Reliability,4,การคืนสินค้ายุ่งยาก,'30,001-50,000 THB',Housewife,Samsung
+LGBTQ+,18-25,Single,'Art photography, Video editing, Upload stories',VSCO,'5-6 hours','Highly essential','Sensor quality',5,ไม่มี,'20,001-30,000 THB',Artist,Vivo
+Male,46-55,Married,'Read news, Check stocks, Finance',SET,'0-1 hours','Not important',Simplicity,3,ระบบล้าสมัย,'100,001-150,000 THB',Investor,Oppo
+Female,56+,Married,'Chat with family, Read e-books, Listen to radio',Facebook,'0-1 hours','Not important',Price,2,ไม่มี,'<15,000 THB',Retired,Other
+Male,26-35,Single,'Product photography, Edit reviews, Online marketplace',Shopee,'3-5 hours',Essential,'Value for money',4,กล้องไม่คมชัด,'25,001-35,000 THB','Online seller',Xiaomi
+Female,18-25,Student,'ติ๊กต็อก, Livestream, Search information',TikTok,'>5 hours','Highly essential',Brand,5,พื้นที่เก็บข้อมูลไม่พอ,'<15,000 THB',Student,Apple
+Male,36-45,Married,'GPS navigation, Check car condition, ฟังพอดแคสต์','Google Maps','1-3 hours',Essential,Durability,4,หน้าจอมีจุดตาย,'50,001-100,000 THB','Delivery staff',Samsung
+Female,26-35,Single,'Online meetings, Schedule management, Email','Microsoft Teams','3-5 hours','Highly essential',Ecosystem,5,'High price','50,001-100,000 THB',Manager,Apple
+Male,18-25,Student,'Play esports, Stream games, แชทชุมชน',Discord,'>5 hours','Highly essential',Performance,4,เครื่องร้อนบ่อย,'<15,000 THB',Student,Realme
+Female,36-45,Married,'Online shopping, Track delivery, แชทลูกค้า',LINE,'1-3 hours',Essential,Reliability,4,การคืนสินค้ายุ่งยาก,'30,001-50,000 THB',Housewife,Samsung
+LGBTQ+,18-25,Single,'Art photography, Video editing, Upload stories',VSCO,'5-6 hours','Highly essential','Sensor quality',5,ไม่มี,'20,001-30,000 THB',Artist,Vivo
+Male,46-55,Married,'Read news, Check stocks, Finance',SET,'0-1 hours','Not important',Simplicity,3,ระบบล้าสมัย,'100,001-150,000 THB',Investor,Oppo
+Female,56+,Married,'Chat with family, Read e-books, Listen to radio',Facebook,'0-1 hours','Not important',Price,2,ไม่มี,'<15,000 THB',Retired,Other
+Male,26-35,Single,'Product photography, Edit reviews, Online marketplace',Shopee,'3-5 hours',Essential,'Value for money',4,กล้องไม่คมชัด,'25,001-35,000 THB','Online seller',Xiaomi
+Female,18-25,Student,'ติ๊กต็อก, Livestream, Search information',TikTok,'>5 hours','Highly essential',Brand,5,พื้นที่เก็บข้อมูลไม่พอ,'<15,000 THB',Student,Apple
+Male,36-45,Married,'GPS navigation, Check car condition, ฟังพอดแคสต์','Google Maps','1-3 hours',Essential,Durability,4,หน้าจอมีจุดตาย,'50,001-100,000 THB','Delivery staff',Samsung
+Female,26-35,Single,'Online meetings, Schedule management, Email','Microsoft Teams','3-5 hours','Highly essential',Ecosystem,5,'High price','50,001-100,000 THB',Manager,Apple
+Male,18-25,Student,'Play esports, Stream games, แชทชุมชน',Discord,'>5 hours','Highly essential',Performance,4,เครื่องร้อนบ่อย,'<15,000 THB',Student,Realme
+Female,36-45,Married,'Online shopping, Track delivery, แชทลูกค้า',LINE,'1-3 hours',Essential,Reliability,4,การคืนสินค้ายุ่งยาก,'30,001-50,000 THB',Housewife,Samsung
+LGBTQ+,18-25,Single,'Art photography, Video editing, Upload stories',VSCO,'5-6 hours','Highly essential','Sensor quality',5,ไม่มี,'20,001-30,000 THB',Artist,Vivo
+Male,46-55,Married,'Read news, Check stocks, Finance',SET,'0-1 hours','Not important',Simplicity,3,ระบบล้าสมัย,'100,001-150,000 THB',Investor,Oppo
+Female,56+,Married,'Chat with family, Read e-books, Listen to radio',Facebook,'0-1 hours','Not important',Price,2,ไม่มี,'<15,000 THB',Retired,Other
+Male,26-35,Single,'Product photography, Edit reviews, Online marketplace',Shopee,'3-5 hours',Essential,'Value for money',4,กล้องไม่คมชัด,'25,001-35,000 THB','Online seller',Xiaomi
+Female,18-25,Student,'ติ๊กต็อก, Livestream, Search information',TikTok,'>5 hours','Highly essential',Brand,5,พื้นที่เก็บข้อมูลไม่พอ,'<15,000 THB',Student,Apple
+Male,36-45,Married,'GPS navigation, Check car condition, ฟังพอดแคสต์','Google Maps','1-3 hours',Essential,Durability,4,หน้าจอมีจุดตาย,'50,001-100,000 THB','Delivery staff',Samsung
+Female,26-35,Single,'Online meetings, Schedule management, Email','Microsoft Teams','3-5 hours','Highly essential',Ecosystem,5,'High price','50,001-100,000 THB',Manager,Apple
+Male,18-25,Student,'Play esports, Stream games, แชทชุมชน',Discord,'>5 hours','Highly essential',Performance,4,เครื่องร้อนบ่อย,'<15,000 THB',Student,Realme
+Female,36-45,Married,'Online shopping, Track delivery, แชทลูกค้า',LINE,'1-3 hours',Essential,Reliability,4,การคืนสินค้ายุ่งยาก,'30,001-50,000 THB',Housewife,Samsung
+LGBTQ+,18-25,Single,'Art photography, Video editing, Upload stories',VSCO,'5-6 hours','Highly essential','Sensor quality',5,ไม่มี,'20,001-30,000 THB',Artist,Vivo
+Male,46-55,Married,'Read news, Check stocks, Finance',SET,'0-1 hours','Not important',Simplicity,3,ระบบล้าสมัย,'100,001-150,000 THB',Investor,Oppo
+Female,56+,Married,'Chat with family, Read e-books, Listen to radio',Facebook,'0-1 hours','Not important',Price,2,ไม่มี,'<15,000 THB',Retired,Other
+Male,26-35,Single,'Product photography, Edit reviews, Online marketplace',Shopee,'3-5 hours',Essential,'Value for money',4,กล้องไม่คมชัด,'25,001-35,000 THB','Online seller',Xiaomi
+Female,18-25,Student,'ติ๊กต็อก, Livestream, Search information',TikTok,'>5 hours','Highly essential',Brand,5,พื้นที่เก็บข้อมูลไม่พอ,'<15,000 THB',Student,Apple
+Male,36-45,Married,'GPS navigation, Check car condition, ฟังพอดแคสต์','Google Maps','1-3 hours',Essential,Durability,4,หน้าจอมีจุดตาย,'50,001-100,000 THB','Delivery staff',Samsung
+Female,26-35,Single,'Online meetings, Schedule management, Email','Microsoft Teams','3-5 hours','Highly essential',Ecosystem,5,'High price','50,001-100,000 THB',Manager,Apple
+Male,18-25,Student,'Play esports, Stream games, แชทชุมชน',Discord,'>5 hours','Highly essential',Performance,4,เครื่องร้อนบ่อย,'<15,000 THB',Student,Realme
+Female,36-45,Married,'Online shopping, Track delivery, แชทลูกค้า',LINE,'1-3 hours',Essential,Reliability,4,การคืนสินค้ายุ่งยาก,'30,001-50,000 THB',Housewife,Samsung
+LGBTQ+,18-25,Single,'Art photography, Video editing, Upload stories',VSCO,'5-6 hours','Highly essential','Sensor quality',5,ไม่มี,'20,001-30,000 THB',Artist,Vivo
+Male,46-55,Married,'Read news, Check stocks, Finance',SET,'0-1 hours','Not important',Simplicity,3,ระบบล้าสมัย,'100,001-150,000 THB',Investor,Oppo
+Female,56+,Married,'Chat with family, Read e-books, Listen to radio',Facebook,'0-1 hours','Not important',Price,2,ไม่มี,'<15,000 THB',Retired,Other
+Male,26-35,Single,'Product photography, Edit reviews, Online marketplace',Shopee,'3-5 hours',Essential,'Value for money',4,กล้องไม่คมชัด,'25,001-35,000 THB','Online seller',Xiaomi
+Female,18-25,Student,'ติ๊กต็อก, Livestream, Search information',TikTok,'>5 hours','Highly essential',Brand,5,พื้นที่เก็บข้อมูลไม่พอ,'<15,000 THB',Student,Apple
+Male,36-45,Married,'GPS navigation, Check car condition, ฟังพอดแคสต์','Google Maps','1-3 hours',Essential,Durability,4,หน้าจอมีจุดตาย,'50,001-100,000 THB','Delivery staff',Samsung
+Female,26-35,Single,'Online meetings, Schedule management, Email','Microsoft Teams','3-5 hours','Highly essential',Ecosystem,5,'High price','50,001-100,000 THB',Manager,Apple
+Male,18-25,Student,'Play esports, Stream games, แชทชุมชน',Discord,'>5 hours','Highly essential',Performance,4,เครื่องร้อนบ่อย,'<15,000 THB',Student,Realme
+Female,36-45,Married,'Online shopping, Track delivery, แชทลูกค้า',LINE,'1-3 hours',Essential,Reliability,4,การคืนสินค้ายุ่งยาก,'30,001-50,000 THB',Housewife,Samsung
+LGBTQ+,18-25,Single,'Art photography, Video editing, Upload stories',VSCO,'5-6 hours','Highly essential','Sensor quality',5,ไม่มี,'20,001-30,000 THB',Artist,Vivo
+Male,46-55,Married,'Read news, Check stocks, Finance',SET,'0-1 hours','Not important',Simplicity,3,ระบบล้าสมัย,'100,001-150,000 THB',Investor,Oppo
+Female,56+,Married,'Chat with family, Read e-books, Listen to radio',Facebook,'0-1 hours','Not important',Price,2,ไม่มี,'<15,000 THB',Retired,Other
+Male,26-35,Single,'Product photography, Edit reviews, Online marketplace',Shopee,'3-5 hours',Essential,'Value for money',4,กล้องไม่คมชัด,'25,001-35,000 THB','Online seller',Xiaomi
+Female,18-25,Student,'ติ๊กต็อก, Livestream, Search information',TikTok,'>5 hours','Highly essential',Brand,5,พื้นที่เก็บข้อมูลไม่พอ,'<15,000 THB',Student,Apple
+Male,36-45,Married,'GPS navigation, Check car condition, ฟังพอดแคสต์','Google Maps','1-3 hours',Essential,Durability,4,หน้าจอมีจุดตาย,'50,001-100,000 THB','Delivery staff',Samsung
+Male,18-25,Student,'Watch movies / listen to music, Play games, Take photos/videos',TikTok,'0-1 hours','Highly essential',Price,5,'Payment security concerns','<15,000 THB',Student,Apple
+Female,18-25,Student,'Watch movies / listen to music, Play games, Take photos/videos',Instagram,'>5 hours','Highly essential','Product features',4,'Payment security concerns','<15,000 THB',Student,Apple
+Female,18-25,Single,'Communication / meetings, Social media',Instagram,'1-3 hours',Essential,'Product features',4,'Uncertainty about warranty/service','15,001-20,000 THB',Student,Apple
+Female,18-25,Single,'Communication / meetings, Social media',Instagram,'1-3 hours',Essential,'Product features',4,'Cannot physically inspect product','15,001-20,000 THB',Student,Apple
+LGBTQ+,18-25,Single,'Watch movies / listen to music, Take photos/videos, Social media',Instagram,'3-5 hours','Highly essential','Product reviews',4,'Cannot physically inspect product','<15,000 THB',Student,Xiaomi
+Female,18-25,Single,'Watch movies / listen to music, Play games, Communication / meetings',TikTok,'>5 hours','Highly essential',Price,5,'Uncertainty about warranty/service','<15,000 THB',Student,Samsung
+Female,18-25,Single,'Watch movies / listen to music, Communication / meetings, Social media','Facebook Messenger','>5 hours','Highly essential','Product reviews',5,'Cannot physically inspect product','<15,000 THB',Student,Samsung
+Female,18-25,Single,'Watch movies / listen to music, Play games, Cloud apps',Instagram,'3-5 hours',Essential,'Product features',3,'Payment security concerns','<15,000 THB',Student,Samsung
+Male,18-25,Single,'Watch movies / listen to music',YouTube,'1-3 hours',Essential,Price,3,'Uncertainty about warranty/service','20,001-30,000 THB','Private company employee',Apple
+LGBTQ+,18-25,Single,'Watch movies / listen to music, Take photos/videos, Social media',Instagram,'3-5 hours','Highly essential','Product features',5,'Uncertainty about warranty/service','20,001-30,000 THB',Student,Apple
+Male,18-25,Single,'Watch movies / listen to music, Play games, Social media',Instagram,'>5 hours','Highly essential','Product features',4,'Cannot physically inspect product','<15,000 THB',Student,Apple
+Female,18-25,Single,'Watch movies / listen to music, Play games, Social media',Facebook,'3-5 hours','Highly essential','Product reviews',4,'Uncertainty about warranty/service','<15,000 THB',Student,Samsung
+Male,18-25,Single,'Watch movies / listen to music, Take photos/videos, Communication / meetings',Instagram,'3-5 hours','Highly essential','Product features',4,'Uncertainty about warranty/service','15,001-20,000 THB',Student,Apple
+Female,18-25,Single,'Watch movies / listen to music, Social media','Facebook Messenger','>5 hours','Highly essential','Product features',4,'Cannot physically inspect product','<15,000 THB',Student,Apple
+Female,18-25,Single,'Watch movies / listen to music, Play games, Social media',Instagram,'3-5 hours','Highly essential','Product features',5,'Cannot physically inspect product','15,001-20,000 THB',Student,Apple
+Male,18-25,Single,'Watch movies / listen to music, Play games, Take photos/videos',Facebook,'>5 hours','Highly essential','Product features',5,'Uncertainty about warranty/service','<15,000 THB',Student,Realme
+Female,18-25,Single,'Watch movies / listen to music, Play games, Communication / meetings',Instagram,'>5 hours',Essential,'Product features',3,'Cannot physically inspect product','<15,000 THB',Student,Apple
+Male,18-25,Single,'Watch movies / listen to music, Play games, Social media',YouTube,'3-5 hours',Essential,'Product features',1,'Cannot physically inspect product','<15,000 THB',Student,Samsung
+Female,18-25,Single,'Watch movies / listen to music, Take photos/videos, Communication / meetings',TikTok,'3-5 hours','Highly essential','Product features',4,'Uncertainty about warranty/service','<15,000 THB',Student,Vivo
+Male,18-25,Single,'Watch movies / listen to music, Play games, Social media',YouTube,'3-5 hours','Highly essential','Product reviews',5,'Uncertainty about warranty/service','<15,000 THB',Student,Apple
+Male,18-25,Single,'Watch movies / listen to music, Play games, Social media',Facebook,'>5 hours','Highly essential',Price,5,'Delivery delays/issues','<15,000 THB',Student,Redmi
+Male,18-25,Single,'Play games',Instagram,'>5 hours',Essential,'Product features',5,'Payment security concerns','มากกว่า 50,001 บาทขึ้นไป',Student,Apple
+Male,18-25,Single,'Watch movies / listen to music, Communication / meetings, Social media',YouTube,'3-5 hours','Highly essential','Product features',4,'Uncertainty about warranty/service','<15,000 THB',Student,Vivo
+Male,18-25,Single,'Watch movies / listen to music, Play games, Social media',YouTube,'>5 hours','Highly essential',Price,3,'Delivery delays/issues','<15,000 THB',Student,Oppo
+Male,18-25,Single,'Watch movies / listen to music, Take photos/videos, Communication / meetings',Facebook,'>5 hours','Highly essential','Product reviews',4,'Uncertainty about warranty/service','<15,000 THB',Student,Samsung
+Male,18-25,Single,'Play games, Take photos/videos, Cloud apps',Telegram,'>5 hours',Essential,Price,4,'Uncertainty about warranty/service','<15,000 THB',Student,Oppo
+Male,18-25,Single,'Watch movies / listen to music, Communication / meetings, Social media',YouTube,'3-5 hours',Essential,'Product features',4,'Cannot physically inspect product','15,001-20,000 THB',Student,Samsung
+Male,18-25,Single,'Watch movies / listen to music, Play games, Communication / meetings',Facebook,'3-5 hours',Essential,'Product features',3,'Cannot physically inspect product','<15,000 THB',Student,Oppo
+Male,18-25,Single,'Watch movies / listen to music, Play games, Communication / meetings',YouTube,'>5 hours',Essential,Price,4,'Uncertainty about warranty/service','<15,000 THB',Student,Vivo
+Male,18-25,Single,'Watch movies / listen to music, Play games, Cloud apps',YouTube,'>5 hours',Essential,'Product features',4,'Uncertainty about warranty/service','<15,000 THB',Student,Apple
+Female,18-25,Single,'Watch movies / listen to music, Communication / meetings, Social media','Facebook Messenger','3-5 hours',Essential,'Product reviews',4,'Delivery delays/issues','<15,000 THB',Student,Apple
+Female,18-25,Single,'Watch movies / listen to music, Social media',YouTube,'>5 hours',Essential,'Product features',4,'Uncertainty about warranty/service','<15,000 THB',Student,Apple
+Male,26-32,Married,'Play games',YouTube,'>5 hours','Highly essential',Price,5,'Cannot physically inspect product','30,001-40,000 THB','Business owner',Apple
+Female,18-25,Single,'Play games, Take photos/videos, Social media',Instagram,'>5 hours',Essential,'Product reviews',5,'Delivery delays/issues','<15,000 THB',Student,Samsung
+Male,18-25,Single,'Watch movies / listen to music, Play games',Instagram,'>5 hours','Highly essential',Price,5,'Delivery delays/issues','<15,000 THB',Student,Vivo
+Male,18-25,Single,'Watch movies / listen to music, Play games, Social media',Instagram,'3-5 hours','Highly essential','Product reviews',4,'Payment security concerns','<15,000 THB',Student,Xiaomi
+Male,18-25,Single,'Watch movies / listen to music',YouTube,'3-5 hours','Highly essential',Price,3,'Payment security concerns','<15,000 THB',Student,Xiaomi
+Female,18-25,Single,'Watch movies / listen to music, Play games, Take photos/videos',YouTube,'>5 hours','Highly essential','Product reviews',3,'Cannot physically inspect product','<15,000 THB',Student,Xiaomi
+Female,18-25,Single,'Watch movies / listen to music, Play games, Social media',YouTube,'>5 hours','Highly essential','Product features',4,'Uncertainty about warranty/service','<15,000 THB',Student,Apple
+Female,18-25,Single,'Watch movies / listen to music, Take photos/videos, Social media',TikTok,'3-5 hours','Highly essential','Product reviews',3,'Uncertainty about warranty/service','<15,000 THB',Student,Apple
+Male,18-25,Single,'Watch movies / listen to music, Play games, Social media',TikTok,'>5 hours','Highly essential','Product features',5,'Payment security concerns','<15,000 THB',Student,Samsung
+Male,18-25,Single,'Watch movies / listen to music, Play games, Social media',Facebook,'3-5 hours','Highly essential',Price,5,'Uncertainty about warranty/service','<15,000 THB',Student,Apple
+Female,18-25,Single,'Watch movies / listen to music, Communication / meetings, Social media','Instagram, YouTube, TikTok','>5 hours','Highly essential','Product features',5,'Cannot physically inspect product','<15,000 THB',Student,Apple
+Female,18-25,Single,'Cloud apps, Communication / meetings, Social media','Instagram, YouTube, Facebook Messenger, TikTok','>5 hours','Highly essential','Product reviews',5,'Cannot physically inspect product','<15,000 THB',Student,Apple
+Female,18-25,Single,'Watch movies / listen to music, Take photos/videos, Communication / meetings','Instagram, YouTube, Spotify, Telegram','3-5 hours','Highly essential','Product features',4,'Cannot physically inspect product','<15,000 THB',Student,Apple
+Female,18-25,Single,'Cloud apps, Communication / meetings, Social media','Instagram, Facebook, Facebook Messenger, TikTok','3-5 hours','Highly essential','Product features',4,'Payment security concerns','15,001-20,000 THB','Civil servant',Apple
+Male,18-25,Single,'Watch movies / listen to music, Play games, Social media','Instagram, Facebook, YouTube, Facebook Messenger, TikTok','>5 hours',Essential,'Product features',5,'Cannot physically inspect product','<15,000 THB',Student,Apple
+Male,18-25,Single,'Watch movies / listen to music, Play games','YouTube, TikTok','>5 hours','Highly essential',Price,3,'Delivery delays/issues','<15,000 THB',Student,Samsung
+Male,18-25,Single,'Watch movies / listen to music, Play games, Social media','Facebook, YouTube, Facebook Messenger, TikTok','3-5 hours','Highly essential',Price,4,'Uncertainty about warranty/service','<15,000 THB',Student,Oppo
+Female,26-32,Married,'Watch movies / listen to music, Communication / meetings, Social media','Instagram, Facebook, YouTube, Facebook Messenger','3-5 hours','Highly essential',Price,5,'Cannot physically inspect product','20,001-30,000 THB','Business owner',Apple
+Male,18-25,Single,'Watch movies / listen to music, Play games, Communication / meetings','Instagram, Facebook, YouTube, Facebook Messenger, TikTok','0-1 hours',Essential,'Product features',5,'Cannot physically inspect product','<15,000 THB',Student,Xiaomi
+Male,18-25,Single,'Watch movies / listen to music, Take photos/videos, Social media','Instagram, Facebook, YouTube, Facebook Messenger, Spotify, TikTok','1-3 hours',Essential,'Product reviews',5,'Cannot physically inspect product','<15,000 THB',Student,Apple
+Male,18-25,Single,'Watch movies / listen to music, Play games, Take photos/videos','Instagram, YouTube, Facebook Messenger, Spotify, TikTok','1-3 hours',Essential,'Product features',5,'Uncertainty about warranty/service','<15,000 THB',Student,Realme
+Male,18-25,Single,'Watch movies / listen to music, Play games','Instagram, Facebook, YouTube, Facebook Messenger, TikTok','>5 hours','Highly essential','Product features',5,'Cannot physically inspect product','<15,000 THB',Student,Apple
+Male,18-25,Single,'Watch movies / listen to music, Communication / meetings, Social media','Instagram, Facebook, YouTube, Facebook Messenger, TikTok','1-3 hours','Highly essential',Price,4,'Cannot physically inspect product','<15,000 THB',Student,Apple
+Male,18-25,Single,'Watch movies / listen to music, Play games, Social media','Instagram, Facebook, YouTube, Snapchat, Facebook Messenger, Spotify, TikTok','0-1 hours',Essential,Price,4,'Uncertainty about warranty/service','<15,000 THB',Student,Apple
+Male,18-25,Single,'Play games, Take photos/videos, Social media','Instagram, Facebook, YouTube, Facebook Messenger, TikTok','>5 hours','Highly essential','Product reviews',5,'Uncertainty about warranty/service','<15,000 THB',Student,Apple
+Male,18-25,Single,'Watch movies / listen to music, Play games','Instagram, Facebook, YouTube, Facebook Messenger, TikTok','>5 hours',Essential,'Product reviews',4,'Payment security concerns','<15,000 THB',Student,Realme
+Male,18-25,Single,'Watch movies / listen to music, Play games, Social media','Instagram, Facebook, YouTube, Facebook Messenger, Spotify, WhatsApp, TikTok, Telegram','>5 hours','Highly essential',Price,4,'Payment security concerns','<15,000 THB',Student,Apple
+Male,18-25,Single,'Watch movies / listen to music, Play games, Social media','Instagram, Facebook, YouTube, Facebook Messenger, TikTok','>5 hours','Highly essential','Product features',5,'Delivery delays/issues','<15,000 THB',Student,Realme
+Male,18-25,Single,'Play games, Take photos/videos, Cloud apps','Instagram, Facebook, YouTube, Facebook Messenger, Spotify, TikTok, Telegram','1-3 hours',Essential,'Product reviews',5,'Uncertainty about warranty/service','<15,000 THB',Student,Apple
+Male,18-25,Single,'Take photos/videos, Communication / meetings, Social media','Instagram, Facebook, Facebook Messenger, TikTok, Telegram','>5 hours','Highly essential',Price,4,'Cannot physically inspect product','<15,000 THB',Student,Apple
+Male,18-25,Single,'Watch movies / listen to music, Play games, Social media','Instagram, Facebook, YouTube, Facebook Messenger, TikTok','>5 hours',Essential,'Product reviews',5,'Uncertainty about warranty/service','<15,000 THB',Student,Apple
+Female,18-25,Married,'Watch movies / listen to music, Take photos/videos, Social media','Instagram, Facebook, Facebook Messenger, Spotify, TikTok','>5 hours','Highly essential',Price,5,'Cannot physically inspect product','<15,000 THB',Student,Huawei
+Male,18-25,Single,'Watch movies / listen to music, Play games, Social media','Facebook, YouTube, Facebook Messenger, Spotify','3-5 hours',Essential,Price,4,'Cannot physically inspect product','<15,000 THB',Student,Apple
+Female,18-25,Single,'Watch movies / listen to music, Communication / meetings, Social media','Instagram, Facebook, YouTube, Facebook Messenger','>5 hours','Highly essential','Product reviews',2,'Uncertainty about warranty/service','<15,000 THB',Student,Xiaomi
+Male,26-32,Married,'Play games, Take photos/videos, Social media','Instagram, Facebook, YouTube, Facebook Messenger, TikTok','>5 hours','Highly essential','Product features',5,'Uncertainty about warranty/service','30,001-40,000 THB','Civil servant',Apple
+Female,18-25,Single,'Watch movies / listen to music, Play games, Social media','Instagram, Facebook, YouTube, Facebook Messenger, Spotify, TikTok','>5 hours','Highly essential','Product reviews',4,'Payment security concerns','<15,000 THB',Student,Samsung
+Female,18-25,Single,'Watch movies / listen to music, Play games, Social media','Instagram, Facebook Messenger, TikTok','>5 hours','Highly essential','Product features',3,'Cannot physically inspect product','<15,000 THB',Student,Xiaomi
+Female,18-25,Single,'Watch movies / listen to music, Take photos/videos','Instagram, Facebook, YouTube, Facebook Messenger, Spotify, TikTok','>5 hours','Highly essential',Price,4,'Uncertainty about warranty/service','<15,000 THB',Student,Apple
+Female,18-25,Single,'Watch movies / listen to music, Play games, Social media',TikTok,'3-5 hours',Essential,'Product reviews',4,'Payment security concerns','<15,000 THB',Student,Apple
+Male,18-25,Single,'Watch movies / listen to music, Play games, Social media','Instagram, Spotify, TikTok','>5 hours',Essential,'Product reviews',4,'Payment security concerns','<15,000 THB',Student,Apple
+Female,18-25,Single,'Watch movies / listen to music, Play games, Social media','Instagram, Facebook, YouTube','3-5 hours','Highly essential','Product features',4,'Cannot physically inspect product','<15,000 THB',Student,Apple
+Male,18-25,Single,'Watch movies / listen to music, Play games, Take photos/videos','Instagram, Facebook, YouTube, Facebook Messenger, TikTok','>5 hours','Highly essential','Product features',4,'Uncertainty about warranty/service','<15,000 THB',Student,Apple
+Female,18-25,Single,'Watch movies / listen to music, Take photos/videos, Social media','Instagram, YouTube, TikTok','>5 hours','Highly essential','Product features',4,'Cannot physically inspect product','<15,000 THB',Student,Apple
+Male,18-25,Single,'Watch movies / listen to music, Play games, Social media','Instagram, Facebook, YouTube, Facebook Messenger, TikTok','3-5 hours',Essential,'Product features',4,'Cannot physically inspect product','<15,000 THB',Student,Apple
+Male,18-25,Single,'Watch movies / listen to music, Communication / meetings, Social media','Instagram, Facebook, YouTube, Facebook Messenger, TikTok','>5 hours','Highly essential','Product reviews',4,'Cannot physically inspect product','<15,000 THB',Student,Samsung
+Male,18-25,Single,'Watch movies / listen to music, Play games','Facebook, YouTube','>5 hours','Highly essential','Product features',3,'Cannot physically inspect product','<15,000 THB',Student,Huawei
+Male,18-25,Single,'Watch movies / listen to music, Play games, Social media','Instagram, Facebook, YouTube, Facebook Messenger, Spotify, TikTok','>5 hours',Essential,'Product features',4,'Payment security concerns','<15,000 THB',Student,Vivo
+Female,18-25,Single,'Watch movies / listen to music, Take photos/videos, Communication / meetings','Instagram, YouTube, Facebook Messenger, TikTok','3-5 hours','Highly essential',Price,5,'Payment security concerns','15,001-20,000 THB','Business owner',Apple
+Female,18-25,Single,'Watch movies / listen to music','Instagram, YouTube, TikTok','3-5 hours','Highly essential','Product features',4,'Payment security concerns','<15,000 THB',Student,Apple
+Female,18-25,Single,'Watch movies / listen to music',Instagram,'>5 hours','Highly essential','Product features',5,'Cannot physically inspect product','<15,000 THB',Student,Realme
+Male,18-25,Single,'Watch movies / listen to music, Communication / meetings, Social media','Instagram, Facebook, YouTube, Facebook Messenger, Spotify, TikTok, Telegram','1-3 hours','Highly essential','Product features',5,'Payment security concerns','15,001-20,000 THB',Student,Calculator
+Male,18-25,Single,'Watch movies / listen to music, Play games, Social media','Instagram, Facebook, YouTube, Facebook Messenger, Spotify','>5 hours',Essential,'Product reviews',4,'Cannot physically inspect product','<15,000 THB',Student,Samsung
+Male,18-25,Single,'Watch movies / listen to music, Play games, Social media','Instagram, Facebook, YouTube, Facebook Messenger, TikTok','>5 hours',Essential,'Product features',3,'Cannot physically inspect product','<15,000 THB',Student,Xiaomi
+Male,18-25,Single,'Watch movies / listen to music, Play games, Social media','Facebook, YouTube, Facebook Messenger','3-5 hours',Essential,Price,4,'Payment security concerns','<15,000 THB',Student,Samsung
+Female,33-40,Married,'Watch movies / listen to music, Take photos/videos, Communication / meetings','Facebook, YouTube, Facebook Messenger, TikTok','>5 hours','Highly essential','Product features',4,'Cannot physically inspect product','20,001-30,000 THB','Private company employee',Huawei
+Male,18-25,Single,'Watch movies / listen to music, Play games, Social media','Instagram, Facebook, Facebook Messenger, TikTok, Telegram','>5 hours',Essential,'Product features',3,'Uncertainty about warranty/service','<15,000 THB',Student,Oppo
+Male,18-25,Single,'Watch movies / listen to music, Play games, Communication / meetings','Instagram, Facebook, YouTube, Facebook Messenger, TikTok, Telegram','>5 hours','Highly essential','Product features',2,'Uncertainty about warranty/service','<15,000 THB',Student,Xiaomi
+Female,18-25,Single,'Watch movies / listen to music, Communication / meetings, Social media','Instagram, Facebook, YouTube, Facebook Messenger, Spotify, TikTok','>5 hours',Essential,'Product reviews',4,'Uncertainty about warranty/service','<15,000 THB',Student,Samsung
+Male,18-25,Single,'Watch movies / listen to music, Play games, Social media','Instagram, Facebook, YouTube, Facebook Messenger, TikTok','>5 hours','Highly essential','Product features',5,'Uncertainty about warranty/service','<15,000 THB',Student,Apple
+Female,18-25,Single,'Watch movies / listen to music, Take photos/videos, Social media','Instagram, YouTube, Spotify, TikTok','3-5 hours','Highly essential','Product features',5,'Payment security concerns','<15,000 THB',Student,Apple
+Female,18-25,Single,'Watch movies / listen to music, Take photos/videos, Social media','Instagram, TikTok','>5 hours','Highly essential','Product reviews',5,'Cannot physically inspect product','<15,000 THB',Student,Apple
+Female,18-25,Single,'Watch movies / listen to music, Take photos/videos, Social media','Instagram, Facebook, YouTube, Facebook Messenger, Spotify, TikTok','>5 hours',Essential,'Product features',4,'Payment security concerns','<15,000 THB',Student,Apple
+Female,26-35,Single,'Online meetings, Schedule management, Email','Microsoft Teams','3-5 hours','Highly essential',Ecosystem,5,'High price','50,001-100,000 THB',Manager,Apple
+Male,18-25,Student,'Play esports, Stream games, แชทชุมชน',Discord,'>5 hours','Highly essential',Performance,4,เครื่องร้อนบ่อย,'<15,000 THB',Student,Realme
+Female,36-45,Married,'Online shopping, Track delivery, แชทลูกค้า',LINE,'1-3 hours',Essential,Reliability,4,การคืนสินค้ายุ่งยาก,'30,001-50,000 THB',Housewife,Samsung
+LGBTQ+,18-25,Single,'Art photography, Video editing, Upload stories',VSCO,'5-6 hours','Highly essential','Sensor quality',5,ไม่มี,'20,001-30,000 THB',Artist,Vivo
+Male,46-55,Married,'Read news, Check stocks, Finance',SET,'0-1 hours','Not important',Simplicity,3,ระบบล้าสมัย,'100,001-150,000 THB',Investor,Oppo
+Female,56+,Married,'Chat with family, Read e-books, Listen to radio',Facebook,'0-1 hours','Not important',Price,2,ไม่มี,'<15,000 THB',Retired,Other
+Male,26-35,Single,'Product photography, Edit reviews, Online marketplace',Shopee,'3-5 hours',Essential,'Value for money',4,กล้องไม่คมชัด,'25,001-35,000 THB','Online seller',Xiaomi
+Female,18-25,Student,'ติ๊กต็อก, Livestream, Search information',TikTok,'>5 hours','Highly essential',Brand,5,พื้นที่เก็บข้อมูลไม่พอ,'<15,000 THB',Student,Apple
+Male,36-45,Married,'GPS navigation, Check car condition, ฟังพอดแคสต์','Google Maps','1-3 hours',Essential,Durability,4,หน้าจอมีจุดตาย,'50,001-100,000 THB','Delivery staff',Samsung
+Female,18-25,Single,'Watch movies / listen to music, Take photos/videos, Social media','Instagram, TikTok','>5 hours','Highly essential','Product reviews',4,'Payment security concerns','<15,000 THB',Student,Apple
+Female,18-25,Single,'Watch movies / listen to music, Play games, Social media','Instagram, Facebook, YouTube, Facebook Messenger, TikTok, Line','>5 hours',Essential,'Product reviews',5,'Cannot physically inspect product','<15,000 THB',Student,Oppo
+Female,18-25,Single,'Cloud apps, Communication / meetings, Social media','Instagram, Facebook, Facebook Messenger, TikTok, LINE','>5 hours','Highly essential',Price,5,'Cannot physically inspect product','20,001-30,000 THB',Student,Apple
+Female,18-25,Single,'Watch movies / listen to music, Play games, Social media','Instagram, Facebook, YouTube, Facebook Messenger, Spotify, TikTok','>5 hours','Highly essential','Product features',5,'Uncertainty about warranty/service','<15,000 THB',Student,Samsung
+Female,26-32,Single,'Watch movies / listen to music, Play games, Take photos/videos','Instagram, Facebook, YouTube, Facebook Messenger, TikTok','1-3 hours',Essential,'Product reviews',4,'Payment security concerns','<15,000 THB','Business owner',Apple
+Female,26-32,Single,'Take photos/videos, Communication / meetings, Social media','Instagram, Facebook, YouTube, Facebook Messenger, Spotify, TikTok','>5 hours',Essential,'Product reviews',4,'Cannot physically inspect product','20,001-30,000 THB','Business owner',Apple
+Male,18-25,Single,'Watch movies / listen to music, Play games, Social media','Instagram, Facebook, YouTube, Facebook Messenger, Telegram','3-5 hours',Essential,Price,4,'Uncertainty about warranty/service','<15,000 THB',Student,Xiaomi
+Female,18-25,Single,'Watch movies / listen to music, Take photos/videos','Instagram, Facebook, YouTube, TikTok','>5 hours','Highly essential',Price,4,'Payment security concerns','<15,000 THB',Student,Apple
+Female,18-25,Single,'Watch movies / listen to music, Play games, Social media','Instagram, Facebook, YouTube, Facebook Messenger, Spotify, TikTok','3-5 hours','Highly essential','Product reviews',5,'Cannot physically inspect product','<15,000 THB',Student,Apple
+Male,18-25,Single,'Watch movies / listen to music, Play games, Social media','Instagram, Facebook Messenger, TikTok','1-3 hours',Essential,'Product reviews',4,'Cannot physically inspect product','15,001-20,000 THB','Business owner',Vivo
+Male,18-25,Single,'Watch movies / listen to music, Play games, Social media','Instagram, Facebook, YouTube, Facebook Messenger, Spotify, TikTok, Telegram','>5 hours','Highly essential',Price,4,'Uncertainty about warranty/service','<15,000 THB',Student,Xiaomi
+Male,18-25,Single,'Watch movies / listen to music, Take photos/videos','Instagram, Facebook, YouTube, Facebook Messenger, TikTok','>5 hours',Essential,Price,4,'Uncertainty about warranty/service','<15,000 THB',Student,Apple
+Female,18-25,Single,'Watch movies / listen to music, Communication / meetings, Social media','Instagram, Facebook, YouTube, Facebook Messenger, TikTok','>5 hours','Highly essential','Product features',4,'Payment security concerns','<15,000 THB',Student,Apple
+Female,18-25,Single,'Watch movies / listen to music, Play games, Take photos/videos','Instagram, Facebook, YouTube, Facebook Messenger, Spotify, TikTok','>5 hours','Highly essential',Price,5,'Uncertainty about warranty/service','<15,000 THB',Student,Samsung
+Male,18-25,Single,'Watch movies / listen to music, Play games, Social media','Instagram, Facebook, YouTube, Facebook Messenger, TikTok, Telegram','>5 hours','Highly essential','Product features',5,'Cannot physically inspect product','<15,000 THB',Student,Apple
+Male,26-32,Single,'Watch movies / listen to music, Communication / meetings, Social media','Instagram, Facebook, YouTube, Facebook Messenger, TikTok','>5 hours',Essential,'Product features',4,'Uncertainty about warranty/service','30,001-40,000 THB','Business owner',Samsung
+Male,18-25,Single,'Watch movies / listen to music, Play games, Social media','Instagram, Facebook, YouTube, Facebook Messenger, TikTok','>5 hours','Highly essential','Product reviews',3,'Uncertainty about warranty/service','<15,000 THB',Student,Samsung
+Male,26-32,Single,'Watch movies / listen to music, Play games',YouTube,'>5 hours',Essential,'Product features',4,'Payment security concerns','15,001-20,000 THB','Business owner',Apple
+Male,18-25,Single,'Watch movies / listen to music, Play games','Instagram, Facebook, YouTube, Facebook Messenger, TikTok','>5 hours','Highly essential','Product features',5,'Cannot physically inspect product','<15,000 THB',Student,Apple
+Male,18-25,Single,'Watch movies / listen to music, Play games, Take photos/videos','Instagram, Facebook, TikTok','>5 hours','Highly essential','Product features',4,'Cannot physically inspect product','<15,000 THB',Student,Apple
+Male,18-25,Single,'Watch movies / listen to music, Play games, Take photos/videos','Instagram, Facebook, YouTube, Facebook Messenger, Spotify, TikTok','3-5 hours',Essential,Price,5,'Payment security concerns','<15,000 THB',Student,Apple
+Male,18-25,Single,'Take photos/videos, Communication / meetings, Social media','Instagram, Facebook, YouTube, Facebook Messenger, Spotify, TikTok, Telegram','>5 hours',Essential,'Product features',5,'Cannot physically inspect product','<15,000 THB',Student,Apple
+Male,18-25,Single,'Watch movies / listen to music, Play games, Social media','Instagram, Facebook Messenger, TikTok','>5 hours',Essential,'Product features',4,'Payment security concerns','<15,000 THB',Student,Apple
+Female,18-25,Single,'Watch movies / listen to music, Play games, Social media','Instagram, Facebook, YouTube, Facebook Messenger, TikTok, Line, X','>5 hours','Highly essential','Product features',5,'Payment security concerns','<15,000 THB',Student,Vivo
+Male,18-25,Single,'Watch movies / listen to music, Take photos/videos, Communication / meetings','Instagram, Facebook, YouTube, Facebook Messenger, Telegram','1-3 hours',Essential,'Product features',3,'Payment security concerns','<15,000 THB',Student,'Realme 7 5G'
+Male,18-25,Single,'Watch movies / listen to music, Play games, Take photos/videos','Instagram, Facebook, YouTube, Facebook Messenger, Spotify, TikTok','1-3 hours',Essential,'Product reviews',4,'Uncertainty about warranty/service','<15,000 THB',Student,Xiaomi
+Male,18-25,Single,'Watch movies / listen to music','Instagram, Facebook, YouTube, Snapchat, Facebook Messenger, Spotify, WhatsApp, TikTok','3-5 hours','Highly essential',Price,3,'Payment security concerns','<15,000 THB',Student,Apple
+Male,18-25,Single,'Watch movies / listen to music, Play games, Social media','Instagram, Facebook, YouTube, Facebook Messenger','>5 hours','Highly essential',Price,3,'Payment security concerns','<15,000 THB',Student,Samsung
+Male,18-25,Single,'Watch movies / listen to music','YouTube, Facebook Messenger, Discord, Wise','>5 hours',Essential,'Product features',4,'Cannot physically inspect product','มากกว่า 50,001 บาทขึ้นไป','Business owner',Apple
+Female,18-25,Single,'Watch movies / listen to music, Play games, Communication / meetings','Instagram, Facebook, YouTube, Spotify, TikTok','>5 hours','Highly essential',Price,4,'Cannot physically inspect product','<15,000 THB',Student,Apple
+Male,18-25,Single,'Watch movies / listen to music, Take photos/videos, Communication / meetings','Instagram, Facebook, YouTube, Facebook Messenger, Spotify','>5 hours','Highly essential',Price,4,'Uncertainty about warranty/service','<15,000 THB',Student,Oppo
+Female,18-25,Single,'Watch movies / listen to music, Communication / meetings, Social media','Instagram, Facebook, YouTube, Facebook Messenger, TikTok','>5 hours','Highly essential','Product features',5,'Payment security concerns','<15,000 THB',Student,Realme
+Male,18-25,Single,'Watch movies / listen to music, Play games, Social media','Facebook, YouTube, Facebook Messenger','1-3 hours',Essential,Price,4,'Cannot physically inspect product','<15,000 THB',Student,Oppo
+Male,18-25,Married,'Watch movies / listen to music, Social media','Instagram, Facebook, YouTube, Facebook Messenger, TikTok','1-3 hours','Highly essential','Product reviews',4,'Payment security concerns','<15,000 THB','Factory worker',Samsung
+Female,26-32,Single,'Watch movies / listen to music, Play games, Communication / meetings','Facebook, Facebook Messenger, Spotify','>5 hours','Highly essential','Product features',3,'Cannot physically inspect product','<15,000 THB','Private company employee',Apple
+Male,18-25,Single,'Watch movies / listen to music, Take photos/videos, Social media','Instagram, Facebook, YouTube, Facebook Messenger','3-5 hours',Essential,'Product features',4,'Uncertainty about warranty/service','<15,000 THB',Student,Samsung
+Female,18-25,Single,'Watch movies / listen to music','Instagram, Facebook, Facebook Messenger, TikTok','1-3 hours','Highly essential','Product reviews',3,'Uncertainty about warranty/service','<15,000 THB',Student,Oppo
+Male,18-25,Single,'Watch movies / listen to music, Play games, Social media','Instagram, Facebook, YouTube, Facebook Messenger, Spotify, TikTok','>5 hours','Highly essential','Product features',4,'Uncertainty about warranty/service','<15,000 THB',Student,Infinix
+Male,60+,แยกกันอยู่,'Play games, Take photos/videos','Instagram, Facebook, YouTube, Snapchat, Facebook Messenger, Spotify, WhatsApp, TikTok, Telegram','>5 hours','Not necessary','Product features',4,'Delivery delays/issues','มากกว่า 50,001 บาทขึ้นไป',Student,Apple
+Male,18-25,Single,'Play games',WhatsApp,'0-1 hours','Not necessary','Product features',2,'Delivery delays/issues','มากกว่า 50,001 บาทขึ้นไป','Factory worker',Samsung
+Female,18-25,Single,'Watch movies / listen to music','Instagram, Facebook, TikTok','>5 hours','Highly essential','Product features',4,'Payment security concerns','<15,000 THB',Student,Apple
+Male,18-25,Student,'Play games, Take photos, Watch movies',TikTok,'0-1 hours',Essential,Price,3,ไม่สามารถสัมผัสสินค้าก่อนซื้อได้,'<15,000 THB',Student,Xiaomi
+Female,26-35,Single,'Watch movies, Take photos, Listen to music',Facebook,'1-3 hours',Essential,'Product features',2,ความไม่แน่นอนในการรับประกัน,'15,001-20,000 THB','Office worker',Xiaomi
+Male,26-35,Single,'Play games, Streaming, ถ่ายรูปถ่ายวีดีโอ',YouTube,'3-5 hours','Highly essential',Features,4,'Cannot physically inspect product','20,001-30,000 THB','Office worker',Vivo
+Female,18-25,Student,'Social media, ถ่ายรูปถ่ายวีดีโอ, ดูหนัง/ฟังเพลง',Instagram,'>5 hours',Essential,Design,5,'Payment security concerns','<15,000 THB',Student,Vivo
+Female,36-45,Married,'ติดต่อสื่อสาร/ประชุมงาน, Email, Finance',LINE,'1-3 hours','Somewhat important',Price,3,การเปรียบเทียบราคายาก,'30,001-50,000 THB','Business owner',Oppo
+Male,18-25,Student,'Play games, Streaming, Social media',TikTok,'>5 hours','Highly essential',Performance,4,การจัดส่งล่าช้า,'<15,000 THB',Student,Realme
+Female,26-35,Single,'ถ่ายรูปถ่ายวีดีโอ, ดูหนัง/ฟังเพลง, Online shopping',Shopee,'3-5 hours',Essential,'Value for money',5,คุณภาพสินค้าไม่ตรงตามที่โฆษณา,'15,001-20,000 THB',Freelancer,Xiaomi
+LGBTQ+,18-25,Single,'Streaming, ถ่ายรูปถ่ายวีดีโอ, Edit video',CapCut,'5-6 hours','Highly essential',Camera,4,การรับประกันไม่ครอบคลุม,'<15,000 THB','Content creator',Vivo
+Male,46-55,Married,'Email, ข่าวสาร, Finance',Gmail,'0-1 hours','Not important',Durability,2,ไม่มีปัญหา,'50,001-100,000 THB','Civil servant',Oppo
+Female,26-35,Married,'Online shopping, Social media, Finance',Facebook,'1-3 hours','Somewhat important',Battery,4,การคืนสินค้ายุ่งยาก,'20,001-30,000 THB',Housewife,Realme
+Female,36-45,Married,'Track delivery, แชทลูกค้า, Email',Shopee,'1-3 hours',Essential,Stability,3,ระบบค้างบ่อย,'15,001-20,000 THB','Logistics staff',Oppo
+Female,18-25,Single,'Take photos/videos, Communication / meetings, Social media','Facebook, Facebook Messenger, Line','3-5 hours','Highly essential','Product features',5,'Uncertainty about warranty/service','30,001-40,000 THB','Business owner',Apple
+Male,18-25,Student,'Play games, Take photos, Watch movies',TikTok,'0-1 hours',Essential,Price,3,ไม่สามารถสัมผัสสินค้าก่อนซื้อได้,'<15,000 THB',Student,Xiaomi
+Female,26-35,Single,'Watch movies, Take photos, Listen to music',Facebook,'1-3 hours',Essential,'Product features',2,ความไม่แน่นอนในการรับประกัน,'15,001-20,000 THB','Office worker',Xiaomi
+Male,26-35,Single,'Play games, Streaming, ถ่ายรูปถ่ายวีดีโอ',YouTube,'3-5 hours','Highly essential',Features,4,'Cannot physically inspect product','20,001-30,000 THB','Office worker',Vivo
+Female,18-25,Student,'Social media, ถ่ายรูปถ่ายวีดีโอ, ดูหนัง/ฟังเพลง',Instagram,'>5 hours',Essential,Design,5,'Payment security concerns','<15,000 THB',Student,Vivo
+Female,36-45,Married,'ติดต่อสื่อสาร/ประชุมงาน, Email, Finance',LINE,'1-3 hours','Somewhat important',Price,3,การเปรียบเทียบราคายาก,'30,001-50,000 THB','Business owner',Oppo
+Male,18-25,Student,'Play games, Streaming, Social media',TikTok,'>5 hours','Highly essential',Performance,4,การจัดส่งล่าช้า,'<15,000 THB',Student,Realme
+Female,26-35,Single,'ถ่ายรูปถ่ายวีดีโอ, ดูหนัง/ฟังเพลง, Online shopping',Shopee,'3-5 hours',Essential,'Value for money',5,คุณภาพสินค้าไม่ตรงตามที่โฆษณา,'15,001-20,000 THB',Freelancer,Xiaomi
+LGBTQ+,18-25,Single,'Streaming, ถ่ายรูปถ่ายวีดีโอ, Edit video',CapCut,'5-6 hours','Highly essential',Camera,4,การรับประกันไม่ครอบคลุม,'<15,000 THB','Content creator',Vivo
+Male,46-55,Married,'Email, ข่าวสาร, Finance',Gmail,'0-1 hours','Not important',Durability,2,ไม่มีปัญหา,'50,001-100,000 THB','Civil servant',Oppo
+Female,26-35,Married,'Online shopping, Social media, Finance',Facebook,'1-3 hours','Somewhat important',Battery,4,การคืนสินค้ายุ่งยาก,'20,001-30,000 THB',Housewife,Realme
+Female,36-45,Married,'Track delivery, แชทลูกค้า, Email',Shopee,'1-3 hours',Essential,Stability,3,ระบบค้างบ่อย,'15,001-20,000 THB','Logistics staff',Oppo
+Male,26-32,Single,'Take photos/videos, Communication / meetings, Social media','Facebook, Facebook Messenger, Line','3-5 hours','Highly essential','Product features',5,'Uncertainty about warranty/service','30,001-40,000 THB','Business owner',Apple
+Male,26-32,Single,'Take photos/videos, Communication / meetings, Social media','Facebook, Facebook Messenger, Line','3-5 hours','Highly essential','Product features',5,'Uncertainty about warranty/service','30,001-40,000 THB','Business owner',Apple
+Male,18-25,Student,'Play games, Take photos, Watch movies',TikTok,'0-1 hours',Essential,Price,3,ไม่สามารถสัมผัสสินค้าก่อนซื้อได้,'<15,000 THB',Student,Xiaomi
+Female,26-35,Single,'Watch movies, Take photos, Listen to music',Facebook,'1-3 hours',Essential,'Product features',2,ความไม่แน่นอนในการรับประกัน,'15,001-20,000 THB','Office worker',Xiaomi
+Male,26-35,Single,'Play games, Streaming, ถ่ายรูปถ่ายวีดีโอ',YouTube,'3-5 hours','Highly essential',Features,4,'Cannot physically inspect product','20,001-30,000 THB','Office worker',Vivo
+Female,18-25,Student,'Social media, ถ่ายรูปถ่ายวีดีโอ, ดูหนัง/ฟังเพลง',Instagram,'>5 hours',Essential,Design,5,'Payment security concerns','<15,000 THB',Student,Vivo
+Female,36-45,Married,'ติดต่อสื่อสาร/ประชุมงาน, Email, Finance',LINE,'1-3 hours','Somewhat important',Price,3,การเปรียบเทียบราคายาก,'30,001-50,000 THB','Business owner',Oppo
+Male,18-25,Student,'Play games, Streaming, Social media',TikTok,'>5 hours','Highly essential',Performance,4,การจัดส่งล่าช้า,'<15,000 THB',Student,Realme
+Female,26-35,Single,'ถ่ายรูปถ่ายวีดีโอ, ดูหนัง/ฟังเพลง, Online shopping',Shopee,'3-5 hours',Essential,'Value for money',5,คุณภาพสินค้าไม่ตรงตามที่โฆษณา,'15,001-20,000 THB',Freelancer,Xiaomi
+LGBTQ+,18-25,Single,'Streaming, ถ่ายรูปถ่ายวีดีโอ, Edit video',CapCut,'5-6 hours','Highly essential',Camera,4,การรับประกันไม่ครอบคลุม,'<15,000 THB','Content creator',Vivo
+Male,46-55,Married,'Email, ข่าวสาร, Finance',Gmail,'0-1 hours','Not important',Durability,2,ไม่มีปัญหา,'50,001-100,000 THB','Civil servant',Oppo
+Female,26-35,Married,'Online shopping, Social media, Finance',Facebook,'1-3 hours','Somewhat important',Battery,4,การคืนสินค้ายุ่งยาก,'20,001-30,000 THB',Housewife,Realme
+Female,36-45,Married,'Track delivery, แชทลูกค้า, Email',Shopee,'1-3 hours',Essential,Stability,3,ระบบค้างบ่อย,'15,001-20,000 THB','Logistics staff',Oppo
+Female,26-32,Single,'Take photos/videos, Communication / meetings, Social media','Facebook, Facebook Messenger, Line','3-5 hours','Highly essential','Product features',5,'Uncertainty about warranty/service','30,001-40,000 THB','Business owner',Apple
+Female,26-32,Single,'Take photos/videos, Communication / meetings, Social media','Facebook, Facebook Messenger, Line','3-5 hours','Highly essential','Product features',5,'Uncertainty about warranty/service','30,001-40,000 THB','Business owner',Apple
+Male,18-25,Student,'Play games, Take photos, Watch movies',TikTok,'0-1 hours',Essential,Price,3,ไม่สามารถสัมผัสสินค้าก่อนซื้อได้,'<15,000 THB',Student,Xiaomi
+Female,26-35,Single,'Watch movies, Take photos, Listen to music',Facebook,'1-3 hours',Essential,'Product features',2,ความไม่แน่นอนในการรับประกัน,'15,001-20,000 THB','Office worker',Xiaomi
+Male,26-35,Single,'Play games, Streaming, ถ่ายรูปถ่ายวีดีโอ',YouTube,'3-5 hours','Highly essential',Features,4,'Cannot physically inspect product','20,001-30,000 THB','Office worker',Vivo
+Female,18-25,Student,'Social media, ถ่ายรูปถ่ายวีดีโอ, ดูหนัง/ฟังเพลง',Instagram,'>5 hours',Essential,Design,5,'Payment security concerns','<15,000 THB',Student,Vivo
+Female,36-45,Married,'ติดต่อสื่อสาร/ประชุมงาน, Email, Finance',LINE,'1-3 hours','Somewhat important',Price,3,การเปรียบเทียบราคายาก,'30,001-50,000 THB','Business owner',Oppo
+Male,18-25,Student,'Play games, Streaming, Social media',TikTok,'>5 hours','Highly essential',Performance,4,การจัดส่งล่าช้า,'<15,000 THB',Student,Realme
+Female,26-35,Single,'ถ่ายรูปถ่ายวีดีโอ, ดูหนัง/ฟังเพลง, Online shopping',Shopee,'3-5 hours',Essential,'Value for money',5,คุณภาพสินค้าไม่ตรงตามที่โฆษณา,'15,001-20,000 THB',Freelancer,Xiaomi
+LGBTQ+,18-25,Single,'Streaming, ถ่ายรูปถ่ายวีดีโอ, Edit video',CapCut,'5-6 hours','Highly essential',Camera,4,การรับประกันไม่ครอบคลุม,'<15,000 THB','Content creator',Vivo
+Male,46-55,Married,'Email, ข่าวสาร, Finance',Gmail,'0-1 hours','Not important',Durability,2,ไม่มีปัญหา,'50,001-100,000 THB','Civil servant',Oppo
+Female,26-35,Married,'Online shopping, Social media, Finance',Facebook,'1-3 hours','Somewhat important',Battery,4,การคืนสินค้ายุ่งยาก,'20,001-30,000 THB',Housewife,Realme
+Female,36-45,Married,'Track delivery, แชทลูกค้า, Email',Shopee,'1-3 hours',Essential,Stability,3,ระบบค้างบ่อย,'15,001-20,000 THB','Logistics staff',Oppo
+Female,26-32,Single,'Take photos/videos, Communication / meetings, Social media','Facebook, Facebook Messenger, Line','3-5 hours','Highly essential','Product features',5,'Uncertainty about warranty/service','30,001-40,000 THB','Business owner',Apple
+Female,26-32,Single,'Take photos/videos, Communication / meetings, Social media','Facebook, Facebook Messenger, Line','3-5 hours','Highly essential','Product features',5,'Uncertainty about warranty/service','30,001-40,000 THB','Business owner',Apple
+Male,18-25,Single,'Play games, Take photos/videos, Social media','Facebook, Facebook Messenger, Spotify, TikTok','3-5 hours','Highly essential','Product features',5,'Cannot physically inspect product','20,001-30,000 THB',Student,Apple
+Male,18-25,Student,'Play games, Take photos, Watch movies',TikTok,'0-1 hours',Essential,Price,3,ไม่สามารถสัมผัสสินค้าก่อนซื้อได้,'<15,000 THB',Student,Xiaomi
+Female,26-35,Single,'Watch movies, Take photos, Listen to music',Facebook,'1-3 hours',Essential,'Product features',2,ความไม่แน่นอนในการรับประกัน,'15,001-20,000 THB','Office worker',Xiaomi
+Male,26-35,Single,'Play games, Streaming, ถ่ายรูปถ่ายวีดีโอ',YouTube,'3-5 hours','Highly essential',Features,4,'Cannot physically inspect product','20,001-30,000 THB','Office worker',Vivo
+Female,18-25,Student,'Social media, ถ่ายรูปถ่ายวีดีโอ, ดูหนัง/ฟังเพลง',Instagram,'>5 hours',Essential,Design,5,'Payment security concerns','<15,000 THB',Student,Vivo
+Female,36-45,Married,'ติดต่อสื่อสาร/ประชุมงาน, Email, Finance',LINE,'1-3 hours','Somewhat important',Price,3,การเปรียบเทียบราคายาก,'30,001-50,000 THB','Business owner',Oppo
+Male,18-25,Student,'Play games, Streaming, Social media',TikTok,'>5 hours','Highly essential',Performance,4,การจัดส่งล่าช้า,'<15,000 THB',Student,Realme
+Female,26-35,Single,'ถ่ายรูปถ่ายวีดีโอ, ดูหนัง/ฟังเพลง, Online shopping',Shopee,'3-5 hours',Essential,'Value for money',5,คุณภาพสินค้าไม่ตรงตามที่โฆษณา,'15,001-20,000 THB',Freelancer,Xiaomi
+LGBTQ+,18-25,Single,'Streaming, ถ่ายรูปถ่ายวีดีโอ, Edit video',CapCut,'5-6 hours','Highly essential',Camera,4,การรับประกันไม่ครอบคลุม,'<15,000 THB','Content creator',Vivo
+Male,46-55,Married,'Email, ข่าวสาร, Finance',Gmail,'0-1 hours','Not important',Durability,2,ไม่มีปัญหา,'50,001-100,000 THB','Civil servant',Oppo
+Female,26-35,Married,'Online shopping, Social media, Finance',Facebook,'1-3 hours','Somewhat important',Battery,4,การคืนสินค้ายุ่งยาก,'20,001-30,000 THB',Housewife,Realme
+Female,36-45,Married,'Track delivery, แชทลูกค้า, Email',Shopee,'1-3 hours',Essential,Stability,3,ระบบค้างบ่อย,'15,001-20,000 THB','Logistics staff',Oppo
+Male,18-25,Single,'Play games, Take photos/videos, Social media','Facebook, Facebook Messenger, Spotify, TikTok','3-5 hours','Highly essential','Product features',5,'Cannot physically inspect product','20,001-30,000 THB',Student,Apple
+Male,18-25,Single,'Play games, Take photos/videos, Social media','Facebook, Facebook Messenger, Spotify, TikTok','3-5 hours','Highly essential','Product features',5,'Cannot physically inspect product','20,001-30,000 THB',Student,Apple
+Male,18-25,Single,'Play games, Take photos/videos, Social media','Facebook, Facebook Messenger, Spotify, TikTok','3-5 hours','Highly essential','Product features',5,'Cannot physically inspect product','20,001-30,000 THB',Student,Apple
+LGBTQ+,18-25,Single,'Watch movies / listen to music, Take photos/videos, Social media','Instagram, Facebook, Facebook Messenger, Spotify, TikTok','>5 hours','Highly essential','Product features',5,'Cannot physically inspect product','15,001-20,000 THB',Student,Apple
+Male,18-25,Student,'Play games, Take photos, Watch movies',TikTok,'0-1 hours',Essential,Price,3,ไม่สามารถสัมผัสสินค้าก่อนซื้อได้,'<15,000 THB',Student,Xiaomi
+Female,26-35,Single,'Watch movies, Take photos, Listen to music',Facebook,'1-3 hours',Essential,'Product features',2,ความไม่แน่นอนในการรับประกัน,'15,001-20,000 THB','Office worker',Xiaomi
+Male,26-35,Single,'Play games, Streaming, ถ่ายรูปถ่ายวีดีโอ',YouTube,'3-5 hours','Highly essential',Features,4,'Cannot physically inspect product','20,001-30,000 THB','Office worker',Vivo
+Female,18-25,Student,'Social media, ถ่ายรูปถ่ายวีดีโอ, ดูหนัง/ฟังเพลง',Instagram,'>5 hours',Essential,Design,5,'Payment security concerns','<15,000 THB',Student,Vivo
+Female,36-45,Married,'ติดต่อสื่อสาร/ประชุมงาน, Email, Finance',LINE,'1-3 hours','Somewhat important',Price,3,การเปรียบเทียบราคายาก,'30,001-50,000 THB','Business owner',Oppo
+Male,18-25,Student,'Play games, Streaming, Social media',TikTok,'>5 hours','Highly essential',Performance,4,การจัดส่งล่าช้า,'<15,000 THB',Student,Realme
+Female,26-35,Single,'ถ่ายรูปถ่ายวีดีโอ, ดูหนัง/ฟังเพลง, Online shopping',Shopee,'3-5 hours',Essential,'Value for money',5,คุณภาพสินค้าไม่ตรงตามที่โฆษณา,'15,001-20,000 THB',Freelancer,Xiaomi
+LGBTQ+,18-25,Single,'Streaming, ถ่ายรูปถ่ายวีดีโอ, Edit video',CapCut,'5-6 hours','Highly essential',Camera,4,การรับประกันไม่ครอบคลุม,'<15,000 THB','Content creator',Vivo
+Male,46-55,Married,'Email, ข่าวสาร, Finance',Gmail,'0-1 hours','Not important',Durability,2,ไม่มีปัญหา,'50,001-100,000 THB','Civil servant',Oppo
+Female,26-35,Married,'Online shopping, Social media, Finance',Facebook,'1-3 hours','Somewhat important',Battery,4,การคืนสินค้ายุ่งยาก,'20,001-30,000 THB',Housewife,Realme
+Female,36-45,Married,'Track delivery, แชทลูกค้า, Email',Shopee,'1-3 hours',Essential,Stability,3,ระบบค้างบ่อย,'15,001-20,000 THB','Logistics staff',Oppo
+LGBTQ+,18-25,Single,'Watch movies / listen to music, Take photos/videos, Social media','Instagram, Facebook, Facebook Messenger, Spotify, TikTok','>5 hours','Highly essential','Product features',5,'Cannot physically inspect product','15,001-20,000 THB',Student,Apple
+LGBTQ+,18-25,Single,'Watch movies / listen to music, Take photos/videos, Social media','Instagram, Facebook, Facebook Messenger, Spotify, TikTok','>5 hours','Highly essential','Product features',5,'Cannot physically inspect product','15,001-20,000 THB',Student,Apple
+Female,33-40,Married,'Take photos/videos, Communication / meetings, Social media','Facebook, TikTok, Line','3-5 hours',Essential,'Product reviews',5,'Payment security concerns','30,001-40,000 THB','Civil servant',Samsung
+Male,18-25,Student,'Play games, Take photos, Watch movies',TikTok,'0-1 hours',Essential,Price,3,ไม่สามารถสัมผัสสินค้าก่อนซื้อได้,'<15,000 THB',Student,Xiaomi
+Female,26-35,Single,'Watch movies, Take photos, Listen to music',Facebook,'1-3 hours',Essential,'Product features',2,ความไม่แน่นอนในการรับประกัน,'15,001-20,000 THB','Office worker',Xiaomi
+Male,26-35,Single,'Play games, Streaming, ถ่ายรูปถ่ายวีดีโอ',YouTube,'3-5 hours','Highly essential',Features,4,'Cannot physically inspect product','20,001-30,000 THB','Office worker',Vivo
+Female,18-25,Student,'Social media, ถ่ายรูปถ่ายวีดีโอ, ดูหนัง/ฟังเพลง',Instagram,'>5 hours',Essential,Design,5,'Payment security concerns','<15,000 THB',Student,Vivo
+Female,36-45,Married,'ติดต่อสื่อสาร/ประชุมงาน, Email, Finance',LINE,'1-3 hours','Somewhat important',Price,3,การเปรียบเทียบราคายาก,'30,001-50,000 THB','Business owner',Oppo
+Male,18-25,Student,'Play games, Streaming, Social media',TikTok,'>5 hours','Highly essential',Performance,4,การจัดส่งล่าช้า,'<15,000 THB',Student,Realme
+Female,26-35,Single,'ถ่ายรูปถ่ายวีดีโอ, ดูหนัง/ฟังเพลง, Online shopping',Shopee,'3-5 hours',Essential,'Value for money',5,คุณภาพสินค้าไม่ตรงตามที่โฆษณา,'15,001-20,000 THB',Freelancer,Xiaomi
+LGBTQ+,18-25,Single,'Streaming, ถ่ายรูปถ่ายวีดีโอ, Edit video',CapCut,'5-6 hours','Highly essential',Camera,4,การรับประกันไม่ครอบคลุม,'<15,000 THB','Content creator',Vivo
+Male,46-55,Married,'Email, ข่าวสาร, Finance',Gmail,'0-1 hours','Not important',Durability,2,ไม่มีปัญหา,'50,001-100,000 THB','Civil servant',Oppo
+Female,26-35,Married,'Online shopping, Social media, Finance',Facebook,'1-3 hours','Somewhat important',Battery,4,การคืนสินค้ายุ่งยาก,'20,001-30,000 THB',Housewife,Realme
+Female,36-45,Married,'Track delivery, แชทลูกค้า, Email',Shopee,'1-3 hours',Essential,Stability,3,ระบบค้างบ่อย,'15,001-20,000 THB','Logistics staff',Oppo
+Female,33-40,Married,'Take photos/videos, Communication / meetings, Social media','Facebook, TikTok, Line','3-5 hours',Essential,'Product reviews',5,'Payment security concerns','30,001-40,000 THB','Civil servant',Samsung
+Female,18-25,Single,'Watch movies / listen to music, Communication / meetings, Social media','Instagram, Facebook, YouTube, Facebook Messenger, TikTok','1-3 hours',Essential,'Product features',3,'Payment security concerns','<15,000 THB','Private company employee',Apple
+Male,18-25,Student,'Play games, Take photos, Watch movies',Instagram,'1-3 hours',Essential,'Product features',4,ไม่สามารถสัมผัสสินค้าก่อนซื้อได้,'<15,000 THB',Student,Oppo
+Female,18-25,Single,'Watch movies / listen to music, Play games, Take photos',TikTok,'0-1 hours','Highly essential',Price,3,'Payment security concerns','<15,000 THB',Student,Oppo
+Male,26-35,Working,'Watch movies, Play games, Take photos',Facebook,'1-3 hours',Essential,'Product features',2,ความซับซ้อนในการชำระเงิน,'15,001-20,000 THB',Employee,Other
+Female,26-35,Working,'Communication, Take photos, Social media',Instagram,'1-3 hours',Essential,Price,3,ปัญหาการบริการหลังการขาย,'15,001-20,000 THB',Employee,Other
+Female,18-25,Single,'Take photos, Listen to music, Social media',Instagram,'1-3 hours',Essential,'Product features',4,ไม่แน่นอนเกี่ยวกับการรับประกัน,'15,001-20,000 THB',Student,Realme
+Male,18-25,Student,'Play games, Take photos, Watch movies',TikTok,'0-1 hours',Essential,Price,3,ความไม่แน่นอนในการรับประกัน,'<15,000 THB',Student,Realme
+Male,26-35,Working,'Play games, Watch movies, Take photos',TikTok,'>5 hours',Essential,Price,3,ไม่สามารถสัมผัสสินค้าได้จริง,'15,001-20,000 THB',Employee,Vivo
+Female,26-35,Working,'Watch movies, Take photos, Listen to music',Facebook,'1-3 hours',Essential,'Product features',4,ความกังวลเรื่องบริการหลังการขาย,'15,001-20,000 THB',Employee,Vivo
+Female,18-25,Student,'Watch movies / listen to music, Play games, Take photos',Instagram,'0-1 hours','Highly essential','Product features',2,ความไม่แน่นอนเกี่ยวกับบริการหลังการขาย,'<15,000 THB',Student,Xiaomi
+Male,18-25,Student,'Play games, Take photos, Watch movies',TikTok,'1-3 hours',Essential,Price,3,ไม่สามารถสัมผัสสินค้าก่อนซื้อได้,'<15,000 THB',Student,Xiaomi
+Male,18-25,Student,'Play games, Take photos, Watch movies',TikTok,'1-3 hours',Essential,'Product features',4,ไม่สามารถสัมผัสสินค้าก่อนซื้อได้,'<15,000 THB',Student,Oppo
+Female,18-25,Single,'Watch movies, Listen to music, Take photos',Instagram,'0-1 hours','Highly essential',Price,3,ความกังวลเรื่องความปลอดภัย,'<15,000 THB',Student,Oppo
+Male,26-35,Working,'Play games, Take photos, Watch movies',Facebook,'1-3 hours',Essential,'Product features',4,ปัญหาด้านการทดลองสินค้า,'15,001-20,000 THB',Employee,Oppo
+Female,18-25,Student,'Watch movies, Take photos, Listen to music',TikTok,'0-1 hours',Essential,Price,3,ความไม่แน่นอนของการรับประกัน,'<15,000 THB',Student,Oppo
+Male,18-25,Single,'Play games, Watch movies, Take photos',Instagram,'1-3 hours',Essential,'Product features',4,ความซับซ้อนในการชำระเงิน,'<15,000 THB',Student,Oppo
+Female,26-35,Working,'Watch movies, Take photos, Listen to music',Facebook,'1-3 hours',Essential,Price,3,ไม่สามารถทดลองสินค้าได้,'15,001-20,000 THB',Employee,Oppo
+Male,26-35,Working,'Play games, Take photos, Watch movies',TikTok,'>5 hours',Essential,'Product features',4,ความกังวลเรื่องบริการหลังการขาย,'15,001-20,000 THB',Employee,Oppo
+Female,18-25,Student,'Watch movies, Listen to music, Take photos',Instagram,'0-1 hours','Highly essential',Price,3,ไม่สามารถสัมผัสสินค้าก่อนซื้อได้,'<15,000 THB',Student,Oppo
+Male,26-35,Working,'Play games, Take photos, Watch movies',Facebook,'1-3 hours',Essential,'Product features',4,ปัญหาด้านความปลอดภัยของการชำระเงิน,'15,001-20,000 THB',Employee,Oppo
+Female,26-35,Working,'Watch movies, Take photos, Listen to music',TikTok,'1-3 hours',Essential,Price,3,ความไม่แน่นอนของการรับประกัน,'15,001-20,000 THB',Employee,Oppo
+Female,18-25,Single,'Watch movies, Listen to music, Take photos',Instagram,'1-3 hours',Essential,'Product features',4,ไม่แน่นอนเกี่ยวกับการรับประกัน,'15,001-20,000 THB',Student,Realme
+Male,18-25,Student,'Play games, Take photos, Watch movies',TikTok,'0-1 hours',Essential,Price,3,ปัญหาการทดลองสินค้า,'<15,000 THB',Student,Realme
+Female,26-35,Working,'Watch movies, Take photos, Listen to music',Facebook,'1-3 hours',Essential,'Product features',4,ความไม่แน่นอนในการรับประกัน,'15,001-20,000 THB',Employee,Realme
+Male,18-25,Student,'Play games, Watch movies, Take photos',Instagram,'0-1 hours',Essential,Price,3,ไม่สามารถสัมผัสสินค้าก่อนซื้อได้,'<15,000 THB',Student,Realme
+Female,18-25,Single,'Watch movies, Listen to music, Take photos',TikTok,'1-3 hours',Essential,'Product features',4,ความกังวลด้านการรับประกัน,'15,001-20,000 THB',Student,Realme
+Male,26-35,Working,'Play games, Take photos, Watch movies',Facebook,'>5 hours',Essential,Price,3,ปัญหาด้านการชำระเงิน,'15,001-20,000 THB',Employee,Realme
+Female,18-25,Student,'Watch movies, Take photos, Listen to music',Instagram,'0-1 hours',Essential,'Product features',4,ไม่สามารถทดลองสินค้าได้,'<15,000 THB',Student,Realme
+Male,26-35,Working,'Play games, Watch movies, Take photos',TikTok,'1-3 hours',Essential,Price,3,ความไม่แน่นอนในการรับประกัน,'15,001-20,000 THB',Employee,Realme
+Female,26-35,Working,'Watch movies, Take photos, Listen to music',Facebook,'1-3 hours',Essential,'Product features',4,ความกังวลเรื่องบริการหลังการขาย,'15,001-20,000 THB',Employee,Realme
+Male,18-25,Student,'Play games, Take photos, Watch movies',Instagram,'0-1 hours',Essential,Price,3,ไม่สามารถสัมผัสสินค้าก่อนซื้อได้,'<15,000 THB',Student,Realme
+Male,26-35,Working,'Play games, Watch movies, Take photos',TikTok,'>5 hours',Essential,Price,3,ไม่สามารถสัมผัสสินค้าก่อนซื้อได้,'15,001-20,000 THB',Employee,Vivo
+Female,26-35,Working,'Watch movies, Take photos, Listen to music',Facebook,'1-3 hours',Essential,'Product features',4,ปัญหาบริการหลังการขาย,'15,001-20,000 THB',Employee,Vivo
+Male,18-25,Student,'Play games, Take photos, Watch movies',Instagram,'0-1 hours',Essential,Price,3,ความกังวลเกี่ยวกับความปลอดภัย,'<15,000 THB',Student,Vivo
+Female,18-25,Single,'Watch movies, Listen to music, Take photos',TikTok,'1-3 hours',Essential,'Product features',4,ไม่สามารถทดลองสินค้าได้,'<15,000 THB',Student,Vivo
+Male,26-35,Working,'Play games, Take photos, Watch movies',Facebook,'>5 hours',Essential,Price,3,ปัญหาด้านการชำระเงิน,'15,001-20,000 THB',Employee,Vivo
+Female,26-35,Working,'Watch movies, Take photos, Listen to music',Instagram,'1-3 hours',Essential,'Product features',4,ความไม่แน่นอนในการรับประกัน,'15,001-20,000 THB',Employee,Vivo
+Male,18-25,Student,'Play games, Take photos, Watch movies',TikTok,'0-1 hours',Essential,Price,3,ไม่สามารถสัมผัสสินค้าก่อนซื้อได้,'<15,000 THB',Student,Vivo
+Female,26-35,Working,'Watch movies, Take photos, Listen to music',Facebook,'1-3 hours',Essential,'Product features',4,ปัญหาด้านบริการหลังการขาย,'15,001-20,000 THB',Employee,Vivo
+Male,26-35,Working,'Play games, Take photos, Watch movies',Instagram,'>5 hours',Essential,Price,3,ความไม่แน่นอนของการรับประกัน,'15,001-20,000 THB',Employee,Vivo
+Female,18-25,Student,'Watch movies, Listen to music, Take photos',TikTok,'1-3 hours',Essential,'Product features',4,ไม่สามารถทดลองสินค้าได้,'<15,000 THB',Student,Vivo
+Male,26-35,Working,'Play games, Take photos, Watch movies',Facebook,'1-3 hours',Essential,Price,3,ปัญหาด้านการชำระเงิน,'15,001-20,000 THB',Employee,Vivo
+Female,18-25,Student,'Watch movies, Listen to music, Take photos',Instagram,'0-1 hours',Essential,'Product features',2,ปัญหาบริการหลังการขาย,'<15,000 THB',Student,Xiaomi
+Male,18-25,Student,'Play games, Take photos, Watch movies',TikTok,'1-3 hours',Essential,Price,3,ไม่สามารถสัมผัสสินค้าก่อนซื้อได้,'<15,000 THB',Student,Xiaomi
+Female,26-35,Working,'Watch movies, Take photos, Listen to music',Facebook,'1-3 hours',Essential,'Product features',2,ความไม่แน่นอนในการรับประกัน,'15,001-20,000 THB',Employee,Xiaomi
+Male,26-35,Working,'Play games, Take photos, Watch movies',Instagram,'>5 hours',Essential,Price,3,ปัญหาด้านการชำระเงิน,'15,001-20,000 THB',Employee,Xiaomi
+Female,18-25,Student,'Watch movies, Listen to music, Take photos',TikTok,'0-1 hours',Essential,'Product features',2,ไม่สามารถทดลองสินค้าได้,'<15,000 THB',Student,Xiaomi
+Male,26-35,Working,'Play games, Take photos, Watch movies',Facebook,'1-3 hours',Essential,Price,3,ความไม่แน่นอนของการรับประกัน,'15,001-20,000 THB',Employee,Xiaomi
+Female,26-35,Working,'Watch movies, Take photos, Listen to music',Instagram,'1-3 hours',Essential,'Product features',2,ปัญหาบริการหลังการขาย,'15,001-20,000 THB',Employee,Xiaomi
+Male,18-25,Student,'Play games, Take photos, Watch movies',TikTok,'0-1 hours',Essential,Price,3,ไม่สามารถสัมผัสสินค้าก่อนซื้อได้,'<15,000 THB',Student,Xiaomi
+Female,26-35,Single,'Watch movies, Take photos, Listen to music',Facebook,'1-3 hours',Essential,'Product features',2,ความไม่แน่นอนในการรับประกัน,'15,001-20,000 THB','Office worker',Xiaomi
+Male,26-35,Single,'Play games, Streaming, ถ่ายรูปถ่ายวีดีโอ',YouTube,'3-5 hours','Highly essential',Features,4,'Cannot physically inspect product','20,001-30,000 THB','Office worker',Vivo
+Female,18-25,Student,'Social media, ถ่ายรูปถ่ายวีดีโอ, ดูหนัง/ฟังเพลง',Instagram,'>5 hours',Essential,Design,5,'Payment security concerns','<15,000 THB',Student,Vivo
+Female,36-45,Married,'ติดต่อสื่อสาร/ประชุมงาน, Email, Finance',LINE,'1-3 hours','Somewhat important',Price,3,การเปรียบเทียบราคายาก,'30,001-50,000 THB','Business owner',Oppo
+Male,18-25,Student,'Play games, Streaming, Social media',TikTok,'>5 hours','Highly essential',Performance,4,การจัดส่งล่าช้า,'<15,000 THB',Student,Realme
+Female,26-35,Single,'ถ่ายรูปถ่ายวีดีโอ, ดูหนัง/ฟังเพลง, Online shopping',Shopee,'3-5 hours',Essential,'Value for money',5,คุณภาพสินค้าไม่ตรงตามที่โฆษณา,'15,001-20,000 THB',Freelancer,Xiaomi
+LGBTQ+,18-25,Single,'Streaming, ถ่ายรูปถ่ายวีดีโอ, Edit video',CapCut,'5-6 hours','Highly essential',Camera,4,การรับประกันไม่ครอบคลุม,'<15,000 THB','Content creator',Vivo
+Male,46-55,Married,'Email, ข่าวสาร, Finance',Gmail,'0-1 hours','Not important',Durability,2,ไม่มีปัญหา,'50,001-100,000 THB','Civil servant',Oppo
+Female,26-35,Married,'Online shopping, Social media, Finance',Facebook,'1-3 hours','Somewhat important',Battery,4,การคืนสินค้ายุ่งยาก,'20,001-30,000 THB',Housewife,Realme
+Female,36-45,Married,'Track delivery, แชทลูกค้า, Email',Shopee,'1-3 hours',Essential,Stability,3,ระบบค้างบ่อย,'15,001-20,000 THB','Logistics staff',Oppo
+Male,18-25,Student,'Play games, Take photos, Watch movies',TikTok,'0-1 hours',Essential,Price,3,ไม่สามารถสัมผัสสินค้าก่อนซื้อได้,'<15,000 THB',Student,Xiaomi
+Female,26-35,Single,'Watch movies, Take photos, Listen to music',Facebook,'1-3 hours',Essential,'Product features',2,ความไม่แน่นอนในการรับประกัน,'15,001-20,000 THB','Office worker',Xiaomi
+Male,26-35,Single,'Play games, Streaming, ถ่ายรูปถ่ายวีดีโอ',YouTube,'3-5 hours','Highly essential',Features,4,'Cannot physically inspect product','20,001-30,000 THB','Office worker',Vivo
+Female,18-25,Student,'Social media, ถ่ายรูปถ่ายวีดีโอ, ดูหนัง/ฟังเพลง',Instagram,'>5 hours',Essential,Design,5,'Payment security concerns','<15,000 THB',Student,Vivo
+Female,36-45,Married,'ติดต่อสื่อสาร/ประชุมงาน, Email, Finance',LINE,'1-3 hours','Somewhat important',Price,3,การเปรียบเทียบราคายาก,'30,001-50,000 THB','Business owner',Oppo
+Male,18-25,Student,'Play games, Streaming, Social media',TikTok,'>5 hours','Highly essential',Performance,4,การจัดส่งล่าช้า,'<15,000 THB',Student,Realme
+Female,26-35,Single,'ถ่ายรูปถ่ายวีดีโอ, ดูหนัง/ฟังเพลง, Online shopping',Shopee,'3-5 hours',Essential,'Value for money',5,คุณภาพสินค้าไม่ตรงตามที่โฆษณา,'15,001-20,000 THB',Freelancer,Xiaomi
+LGBTQ+,18-25,Single,'Streaming, ถ่ายรูปถ่ายวีดีโอ, Edit video',CapCut,'5-6 hours','Highly essential',Camera,4,การรับประกันไม่ครอบคลุม,'<15,000 THB','Content creator',Vivo
+Male,46-55,Married,'Email, ข่าวสาร, Finance',Gmail,'0-1 hours','Not important',Durability,2,ไม่มีปัญหา,'50,001-100,000 THB','Civil servant',Oppo
+Female,26-35,Married,'Online shopping, Social media, Finance',Facebook,'1-3 hours','Somewhat important',Battery,4,การคืนสินค้ายุ่งยาก,'20,001-30,000 THB',Housewife,Realme
+Female,36-45,Married,'Track delivery, แชทลูกค้า, Email',Shopee,'1-3 hours',Essential,Stability,3,ระบบค้างบ่อย,'15,001-20,000 THB','Logistics staff',Oppo
+Male,18-25,Student,'Play games, Take photos, Watch movies',TikTok,'0-1 hours',Essential,Price,3,ไม่สามารถสัมผัสสินค้าก่อนซื้อได้,'<15,000 THB',Student,Xiaomi
+Female,26-35,Single,'Watch movies, Take photos, Listen to music',Facebook,'1-3 hours',Essential,'Product features',2,ความไม่แน่นอนในการรับประกัน,'15,001-20,000 THB','Office worker',Xiaomi
+Male,26-35,Single,'Play games, Streaming, ถ่ายรูปถ่ายวีดีโอ',YouTube,'3-5 hours','Highly essential',Features,4,'Cannot physically inspect product','20,001-30,000 THB','Office worker',Vivo
+Female,18-25,Student,'Social media, ถ่ายรูปถ่ายวีดีโอ, ดูหนัง/ฟังเพลง',Instagram,'>5 hours',Essential,Design,5,'Payment security concerns','<15,000 THB',Student,Vivo
+Female,36-45,Married,'ติดต่อสื่อสาร/ประชุมงาน, Email, Finance',LINE,'1-3 hours','Somewhat important',Price,3,การเปรียบเทียบราคายาก,'30,001-50,000 THB','Business owner',Oppo
+Male,18-25,Student,'Play games, Streaming, Social media',TikTok,'>5 hours','Highly essential',Performance,4,การจัดส่งล่าช้า,'<15,000 THB',Student,Realme
+Female,26-35,Single,'ถ่ายรูปถ่ายวีดีโอ, ดูหนัง/ฟังเพลง, Online shopping',Shopee,'3-5 hours',Essential,'Value for money',5,คุณภาพสินค้าไม่ตรงตามที่โฆษณา,'15,001-20,000 THB',Freelancer,Xiaomi
+LGBTQ+,18-25,Single,'Streaming, ถ่ายรูปถ่ายวีดีโอ, Edit video',CapCut,'5-6 hours','Highly essential',Camera,4,การรับประกันไม่ครอบคลุม,'<15,000 THB','Content creator',Vivo
+Male,46-55,Married,'Email, ข่าวสาร, Finance',Gmail,'0-1 hours','Not important',Durability,2,ไม่มีปัญหา,'50,001-100,000 THB','Civil servant',Oppo
+Female,26-35,Married,'Online shopping, Social media, Finance',Facebook,'1-3 hours','Somewhat important',Battery,4,การคืนสินค้ายุ่งยาก,'20,001-30,000 THB',Housewife,Realme
+Female,36-45,Married,'Track delivery, แชทลูกค้า, Email',Shopee,'1-3 hours',Essential,Stability,3,ระบบค้างบ่อย,'15,001-20,000 THB','Logistics staff',Oppo
+Male,18-25,Student,'Play games, Take photos, Watch movies',TikTok,'0-1 hours',Essential,Price,3,ไม่สามารถสัมผัสสินค้าก่อนซื้อได้,'<15,000 THB',Student,Xiaomi
+Female,26-35,Single,'Watch movies, Take photos, Listen to music',Facebook,'1-3 hours',Essential,'Product features',2,ความไม่แน่นอนในการรับประกัน,'15,001-20,000 THB','Office worker',Xiaomi
+Male,26-35,Single,'Play games, Streaming, ถ่ายรูปถ่ายวีดีโอ',YouTube,'3-5 hours','Highly essential',Features,4,'Cannot physically inspect product','20,001-30,000 THB','Office worker',Vivo
+Female,18-25,Student,'Social media, ถ่ายรูปถ่ายวีดีโอ, ดูหนัง/ฟังเพลง',Instagram,'>5 hours',Essential,Design,5,'Payment security concerns','<15,000 THB',Student,Vivo
+Female,36-45,Married,'ติดต่อสื่อสาร/ประชุมงาน, Email, Finance',LINE,'1-3 hours','Somewhat important',Price,3,การเปรียบเทียบราคายาก,'30,001-50,000 THB','Business owner',Oppo
+Male,18-25,Student,'Play games, Streaming, Social media',TikTok,'>5 hours','Highly essential',Performance,4,การจัดส่งล่าช้า,'<15,000 THB',Student,Realme
+Female,26-35,Single,'ถ่ายรูปถ่ายวีดีโอ, ดูหนัง/ฟังเพลง, Online shopping',Shopee,'3-5 hours',Essential,'Value for money',5,คุณภาพสินค้าไม่ตรงตามที่โฆษณา,'15,001-20,000 THB',Freelancer,Xiaomi
+LGBTQ+,18-25,Single,'Streaming, ถ่ายรูปถ่ายวีดีโอ, Edit video',CapCut,'5-6 hours','Highly essential',Camera,4,การรับประกันไม่ครอบคลุม,'<15,000 THB','Content creator',Vivo
+Male,46-55,Married,'Email, ข่าวสาร, Finance',Gmail,'0-1 hours','Not important',Durability,2,ไม่มีปัญหา,'50,001-100,000 THB','Civil servant',Oppo
+Female,26-35,Married,'Online shopping, Social media, Finance',Facebook,'1-3 hours','Somewhat important',Battery,4,การคืนสินค้ายุ่งยาก,'20,001-30,000 THB',Housewife,Realme
+Female,36-45,Married,'Track delivery, แชทลูกค้า, Email',Shopee,'1-3 hours',Essential,Stability,3,ระบบค้างบ่อย,'15,001-20,000 THB','Logistics staff',Oppo
+Male,18-25,Student,'Play games, Take photos, Watch movies',TikTok,'0-1 hours',Essential,Price,3,ไม่สามารถสัมผัสสินค้าก่อนซื้อได้,'<15,000 THB',Student,Xiaomi
+Female,26-35,Single,'Watch movies, Take photos, Listen to music',Facebook,'1-3 hours',Essential,'Product features',2,ความไม่แน่นอนในการรับประกัน,'15,001-20,000 THB','Office worker',Xiaomi
+Male,26-35,Single,'Play games, Streaming, ถ่ายรูปถ่ายวีดีโอ',YouTube,'3-5 hours','Highly essential',Features,4,'Cannot physically inspect product','20,001-30,000 THB','Office worker',Vivo
+Female,18-25,Student,'Social media, ถ่ายรูปถ่ายวีดีโอ, ดูหนัง/ฟังเพลง',Instagram,'>5 hours',Essential,Design,5,'Payment security concerns','<15,000 THB',Student,Vivo
+Female,36-45,Married,'ติดต่อสื่อสาร/ประชุมงาน, Email, Finance',LINE,'1-3 hours','Somewhat important',Price,3,การเปรียบเทียบราคายาก,'30,001-50,000 THB','Business owner',Oppo
+Male,18-25,Student,'Play games, Streaming, Social media',TikTok,'>5 hours','Highly essential',Performance,4,การจัดส่งล่าช้า,'<15,000 THB',Student,Realme
+Female,26-35,Single,'ถ่ายรูปถ่ายวีดีโอ, ดูหนัง/ฟังเพลง, Online shopping',Shopee,'3-5 hours',Essential,'Value for money',5,คุณภาพสินค้าไม่ตรงตามที่โฆษณา,'15,001-20,000 THB',Freelancer,Xiaomi
+LGBTQ+,18-25,Single,'Streaming, ถ่ายรูปถ่ายวีดีโอ, Edit video',CapCut,'5-6 hours','Highly essential',Camera,4,การรับประกันไม่ครอบคลุม,'<15,000 THB','Content creator',Vivo
+Male,46-55,Married,'Email, ข่าวสาร, Finance',Gmail,'0-1 hours','Not important',Durability,2,ไม่มีปัญหา,'50,001-100,000 THB','Civil servant',Oppo
+Female,26-35,Married,'Online shopping, Social media, Finance',Facebook,'1-3 hours','Somewhat important',Battery,4,การคืนสินค้ายุ่งยาก,'20,001-30,000 THB',Housewife,Realme
+Female,36-45,Married,'Track delivery, แชทลูกค้า, Email',Shopee,'1-3 hours',Essential,Stability,3,ระบบค้างบ่อย,'15,001-20,000 THB','Logistics staff',Oppo
+Female,26-35,Single,'Online meetings, Schedule management, Email','Microsoft Teams','3-5 hours','Highly essential',Ecosystem,5,'High price','50,001-100,000 THB',Manager,Apple
+Male,18-25,Student,'Play esports, Stream games, แชทชุมชน',Discord,'>5 hours','Highly essential',Performance,4,เครื่องร้อนบ่อย,'<15,000 THB',Student,Realme
+Female,36-45,Married,'Online shopping, Track delivery, แชทลูกค้า',LINE,'1-3 hours',Essential,Reliability,4,การคืนสินค้ายุ่งยาก,'30,001-50,000 THB',Housewife,Samsung
+LGBTQ+,18-25,Single,'Art photography, Video editing, Upload stories',VSCO,'5-6 hours','Highly essential','Sensor quality',5,ไม่มี,'20,001-30,000 THB',Artist,Vivo
+Male,46-55,Married,'Read news, Check stocks, Finance',SET,'0-1 hours','Not important',Simplicity,3,ระบบล้าสมัย,'100,001-150,000 THB',Investor,Oppo
+Female,56+,Married,'Chat with family, Read e-books, Listen to radio',Facebook,'0-1 hours','Not important',Price,2,ไม่มี,'<15,000 THB',Retired,Other
+Male,26-35,Single,'Product photography, Edit reviews, Online marketplace',Shopee,'3-5 hours',Essential,'Value for money',4,กล้องไม่คมชัด,'25,001-35,000 THB','Online seller',Xiaomi
+Female,18-25,Student,'ติ๊กต็อก, Livestream, Search information',TikTok,'>5 hours','Highly essential',Brand,5,พื้นที่เก็บข้อมูลไม่พอ,'<15,000 THB',Student,Apple
+Male,36-45,Married,'GPS navigation, Check car condition, ฟังพอดแคสต์','Google Maps','1-3 hours',Essential,Durability,4,หน้าจอมีจุดตาย,'50,001-100,000 THB','Delivery staff',Samsung
+Female,26-35,Single,'Online meetings, Schedule management, Email','Microsoft Teams','3-5 hours','Highly essential',Ecosystem,5,'High price','50,001-100,000 THB',Manager,Apple
+Male,18-25,Student,'Play esports, Stream games, แชทชุมชน',Discord,'>5 hours','Highly essential',Performance,4,เครื่องร้อนบ่อย,'<15,000 THB',Student,Realme
+Female,36-45,Married,'Online shopping, Track delivery, แชทลูกค้า',LINE,'1-3 hours',Essential,Reliability,4,การคืนสินค้ายุ่งยาก,'30,001-50,000 THB',Housewife,Samsung
+LGBTQ+,18-25,Single,'Art photography, Video editing, Upload stories',VSCO,'5-6 hours','Highly essential','Sensor quality',5,ไม่มี,'20,001-30,000 THB',Artist,Vivo
+Male,46-55,Married,'Read news, Check stocks, Finance',SET,'0-1 hours','Not important',Simplicity,3,ระบบล้าสมัย,'100,001-150,000 THB',Investor,Oppo
+Female,56+,Married,'Chat with family, Read e-books, Listen to radio',Facebook,'0-1 hours','Not important',Price,2,ไม่มี,'<15,000 THB',Retired,Other
+Male,26-35,Single,'Product photography, Edit reviews, Online marketplace',Shopee,'3-5 hours',Essential,'Value for money',4,กล้องไม่คมชัด,'25,001-35,000 THB','Online seller',Xiaomi
+Female,18-25,Student,'ติ๊กต็อก, Livestream, Search information',TikTok,'>5 hours','Highly essential',Brand,5,พื้นที่เก็บข้อมูลไม่พอ,'<15,000 THB',Student,Apple
+Male,36-45,Married,'GPS navigation, Check car condition, ฟังพอดแคสต์','Google Maps','1-3 hours',Essential,Durability,4,หน้าจอมีจุดตาย,'50,001-100,000 THB','Delivery staff',Samsung
+Female,26-35,Single,'Online meetings, Schedule management, Email','Microsoft Teams','3-5 hours','Highly essential',Ecosystem,5,'High price','50,001-100,000 THB',Manager,Apple
+Male,18-25,Student,'Play esports, Stream games, แชทชุมชน',Discord,'>5 hours','Highly essential',Performance,4,เครื่องร้อนบ่อย,'<15,000 THB',Student,Realme
+Female,36-45,Married,'Online shopping, Track delivery, แชทลูกค้า',LINE,'1-3 hours',Essential,Reliability,4,การคืนสินค้ายุ่งยาก,'30,001-50,000 THB',Housewife,Samsung
+LGBTQ+,18-25,Single,'Art photography, Video editing, Upload stories',VSCO,'5-6 hours','Highly essential','Sensor quality',5,ไม่มี,'20,001-30,000 THB',Artist,Vivo
+Male,46-55,Married,'Read news, Check stocks, Finance',SET,'0-1 hours','Not important',Simplicity,3,ระบบล้าสมัย,'100,001-150,000 THB',Investor,Oppo
+Female,56+,Married,'Chat with family, Read e-books, Listen to radio',Facebook,'0-1 hours','Not important',Price,2,ไม่มี,'<15,000 THB',Retired,Other
+Male,26-35,Single,'Product photography, Edit reviews, Online marketplace',Shopee,'3-5 hours',Essential,'Value for money',4,กล้องไม่คมชัด,'25,001-35,000 THB','Online seller',Xiaomi
+Female,18-25,Student,'ติ๊กต็อก, Livestream, Search information',TikTok,'>5 hours','Highly essential',Brand,5,พื้นที่เก็บข้อมูลไม่พอ,'<15,000 THB',Student,Apple
+Male,36-45,Married,'GPS navigation, Check car condition, ฟังพอดแคสต์','Google Maps','1-3 hours',Essential,Durability,4,หน้าจอมีจุดตาย,'50,001-100,000 THB','Delivery staff',Samsung
+Female,26-35,Single,'Online meetings, Schedule management, Email','Microsoft Teams','3-5 hours','Highly essential',Ecosystem,5,'High price','50,001-100,000 THB',Manager,Apple
+Male,18-25,Student,'Play esports, Stream games, แชทชุมชน',Discord,'>5 hours','Highly essential',Performance,4,เครื่องร้อนบ่อย,'<15,000 THB',Student,Realme
+Female,36-45,Married,'Online shopping, Track delivery, แชทลูกค้า',LINE,'1-3 hours',Essential,Reliability,4,การคืนสินค้ายุ่งยาก,'30,001-50,000 THB',Housewife,Samsung
+LGBTQ+,18-25,Single,'Art photography, Video editing, Upload stories',VSCO,'5-6 hours','Highly essential','Sensor quality',5,ไม่มี,'20,001-30,000 THB',Artist,Vivo
+Male,46-55,Married,'Read news, Check stocks, Finance',SET,'0-1 hours','Not important',Simplicity,3,ระบบล้าสมัย,'100,001-150,000 THB',Investor,Oppo
+Female,56+,Married,'Chat with family, Read e-books, Listen to radio',Facebook,'0-1 hours','Not important',Price,2,ไม่มี,'<15,000 THB',Retired,Other
+Male,26-35,Single,'Product photography, Edit reviews, Online marketplace',Shopee,'3-5 hours',Essential,'Value for money',4,กล้องไม่คมชัด,'25,001-35,000 THB','Online seller',Xiaomi
+Female,18-25,Student,'ติ๊กต็อก, Livestream, Search information',TikTok,'>5 hours','Highly essential',Brand,5,พื้นที่เก็บข้อมูลไม่พอ,'<15,000 THB',Student,Apple
+Male,36-45,Married,'GPS navigation, Check car condition, ฟังพอดแคสต์','Google Maps','1-3 hours',Essential,Durability,4,หน้าจอมีจุดตาย,'50,001-100,000 THB','Delivery staff',Samsung
+Female,26-35,Single,'Online meetings, Schedule management, Email','Microsoft Teams','3-5 hours','Highly essential',Ecosystem,5,'High price','50,001-100,000 THB',Manager,Apple
+Male,18-25,Student,'Play esports, Stream games, แชทชุมชน',Discord,'>5 hours','Highly essential',Performance,4,เครื่องร้อนบ่อย,'<15,000 THB',Student,Realme
+Female,36-45,Married,'Online shopping, Track delivery, แชทลูกค้า',LINE,'1-3 hours',Essential,Reliability,4,การคืนสินค้ายุ่งยาก,'30,001-50,000 THB',Housewife,Samsung
+LGBTQ+,18-25,Single,'Art photography, Video editing, Upload stories',VSCO,'5-6 hours','Highly essential','Sensor quality',5,ไม่มี,'20,001-30,000 THB',Artist,Vivo
+Male,46-55,Married,'Read news, Check stocks, Finance',SET,'0-1 hours','Not important',Simplicity,3,ระบบล้าสมัย,'100,001-150,000 THB',Investor,Oppo
+Female,56+,Married,'Chat with family, Read e-books, Listen to radio',Facebook,'0-1 hours','Not important',Price,2,ไม่มี,'<15,000 THB',Retired,Other
+Male,26-35,Single,'Product photography, Edit reviews, Online marketplace',Shopee,'3-5 hours',Essential,'Value for money',4,กล้องไม่คมชัด,'25,001-35,000 THB','Online seller',Xiaomi
+Female,18-25,Student,'ติ๊กต็อก, Livestream, Search information',TikTok,'>5 hours','Highly essential',Brand,5,พื้นที่เก็บข้อมูลไม่พอ,'<15,000 THB',Student,Apple
+Male,36-45,Married,'GPS navigation, Check car condition, ฟังพอดแคสต์','Google Maps','1-3 hours',Essential,Durability,4,หน้าจอมีจุดตาย,'50,001-100,000 THB','Delivery staff',Samsung
+Female,26-35,Single,'Online meetings, Schedule management, Email','Microsoft Teams','3-5 hours','Highly essential',Ecosystem,5,'High price','50,001-100,000 THB',Manager,Apple
+Male,18-25,Student,'Play esports, Stream games, แชทชุมชน',Discord,'>5 hours','Highly essential',Performance,4,เครื่องร้อนบ่อย,'<15,000 THB',Student,Realme
+Female,36-45,Married,'Online shopping, Track delivery, แชทลูกค้า',LINE,'1-3 hours',Essential,Reliability,4,การคืนสินค้ายุ่งยาก,'30,001-50,000 THB',Housewife,Samsung
+LGBTQ+,18-25,Single,'Art photography, Video editing, Upload stories',VSCO,'5-6 hours','Highly essential','Sensor quality',5,ไม่มี,'20,001-30,000 THB',Artist,Vivo
+Male,46-55,Married,'Read news, Check stocks, Finance',SET,'0-1 hours','Not important',Simplicity,3,ระบบล้าสมัย,'100,001-150,000 THB',Investor,Oppo
+Female,56+,Married,'Chat with family, Read e-books, Listen to radio',Facebook,'0-1 hours','Not important',Price,2,ไม่มี,'<15,000 THB',Retired,Other
+Male,26-35,Single,'Product photography, Edit reviews, Online marketplace',Shopee,'3-5 hours',Essential,'Value for money',4,กล้องไม่คมชัด,'25,001-35,000 THB','Online seller',Xiaomi
+Female,18-25,Student,'ติ๊กต็อก, Livestream, Search information',TikTok,'>5 hours','Highly essential',Brand,5,พื้นที่เก็บข้อมูลไม่พอ,'<15,000 THB',Student,Apple
+Male,36-45,Married,'GPS navigation, Check car condition, ฟังพอดแคสต์','Google Maps','1-3 hours',Essential,Durability,4,หน้าจอมีจุดตาย,'50,001-100,000 THB','Delivery staff',Samsung
+Female,26-35,Single,'Online meetings, Schedule management, Email','Microsoft Teams','3-5 hours','Highly essential',Ecosystem,5,'High price','50,001-100,000 THB',Manager,Apple
+Male,18-25,Student,'Play esports, Stream games, แชทชุมชน',Discord,'>5 hours','Highly essential',Performance,4,เครื่องร้อนบ่อย,'<15,000 THB',Student,Realme
+Female,36-45,Married,'Online shopping, Track delivery, แชทลูกค้า',LINE,'1-3 hours',Essential,Reliability,4,การคืนสินค้ายุ่งยาก,'30,001-50,000 THB',Housewife,Samsung
+LGBTQ+,18-25,Single,'Art photography, Video editing, Upload stories',VSCO,'5-6 hours','Highly essential','Sensor quality',5,ไม่มี,'20,001-30,000 THB',Artist,Vivo
+Male,46-55,Married,'Read news, Check stocks, Finance',SET,'0-1 hours','Not important',Simplicity,3,ระบบล้าสมัย,'100,001-150,000 THB',Investor,Oppo
+Female,56+,Married,'Chat with family, Read e-books, Listen to radio',Facebook,'0-1 hours','Not important',Price,2,ไม่มี,'<15,000 THB',Retired,Other
+Male,26-35,Single,'Product photography, Edit reviews, Online marketplace',Shopee,'3-5 hours',Essential,'Value for money',4,กล้องไม่คมชัด,'25,001-35,000 THB','Online seller',Xiaomi
+Female,18-25,Student,'ติ๊กต็อก, Livestream, Search information',TikTok,'>5 hours','Highly essential',Brand,5,พื้นที่เก็บข้อมูลไม่พอ,'<15,000 THB',Student,Apple
+Male,36-45,Married,'GPS navigation, Check car condition, ฟังพอดแคสต์','Google Maps','1-3 hours',Essential,Durability,4,หน้าจอมีจุดตาย,'50,001-100,000 THB','Delivery staff',Samsung
+Female,26-35,Single,'Online meetings, Schedule management, Email','Microsoft Teams','3-5 hours','Highly essential',Ecosystem,5,'High price','50,001-100,000 THB',Manager,Apple
+Male,18-25,Student,'Play esports, Stream games, แชทชุมชน',Discord,'>5 hours','Highly essential',Performance,4,เครื่องร้อนบ่อย,'<15,000 THB',Student,Realme
+Female,36-45,Married,'Online shopping, Track delivery, แชทลูกค้า',LINE,'1-3 hours',Essential,Reliability,4,การคืนสินค้ายุ่งยาก,'30,001-50,000 THB',Housewife,Samsung
+LGBTQ+,18-25,Single,'Art photography, Video editing, Upload stories',VSCO,'5-6 hours','Highly essential','Sensor quality',5,ไม่มี,'20,001-30,000 THB',Artist,Vivo
+Male,46-55,Married,'Read news, Check stocks, Finance',SET,'0-1 hours','Not important',Simplicity,3,ระบบล้าสมัย,'100,001-150,000 THB',Investor,Oppo
+Female,56+,Married,'Chat with family, Read e-books, Listen to radio',Facebook,'0-1 hours','Not important',Price,2,ไม่มี,'<15,000 THB',Retired,Other
+Male,26-35,Single,'Product photography, Edit reviews, Online marketplace',Shopee,'3-5 hours',Essential,'Value for money',4,กล้องไม่คมชัด,'25,001-35,000 THB','Online seller',Xiaomi
+Female,18-25,Student,'ติ๊กต็อก, Livestream, Search information',TikTok,'>5 hours','Highly essential',Brand,5,พื้นที่เก็บข้อมูลไม่พอ,'<15,000 THB',Student,Apple
+Male,36-45,Married,'GPS navigation, Check car condition, ฟังพอดแคสต์','Google Maps','1-3 hours',Essential,Durability,4,หน้าจอมีจุดตาย,'50,001-100,000 THB','Delivery staff',Samsung
+Female,26-35,Single,'Online meetings, Schedule management, Email','Microsoft Teams','3-5 hours','Highly essential',Ecosystem,5,'High price','50,001-100,000 THB',Manager,Apple
+Male,18-25,Student,'Play esports, Stream games, แชทชุมชน',Discord,'>5 hours','Highly essential',Performance,4,เครื่องร้อนบ่อย,'<15,000 THB',Student,Realme
+Female,36-45,Married,'Online shopping, Track delivery, แชทลูกค้า',LINE,'1-3 hours',Essential,Reliability,4,การคืนสินค้ายุ่งยาก,'30,001-50,000 THB',Housewife,Samsung
+LGBTQ+,18-25,Single,'Art photography, Video editing, Upload stories',VSCO,'5-6 hours','Highly essential','Sensor quality',5,ไม่มี,'20,001-30,000 THB',Artist,Vivo
+Male,46-55,Married,'Read news, Check stocks, Finance',SET,'0-1 hours','Not important',Simplicity,3,ระบบล้าสมัย,'100,001-150,000 THB',Investor,Oppo
+Female,56+,Married,'Chat with family, Read e-books, Listen to radio',Facebook,'0-1 hours','Not important',Price,2,ไม่มี,'<15,000 THB',Retired,Other
+Male,26-35,Single,'Product photography, Edit reviews, Online marketplace',Shopee,'3-5 hours',Essential,'Value for money',4,กล้องไม่คมชัด,'25,001-35,000 THB','Online seller',Xiaomi
+Female,18-25,Student,'ติ๊กต็อก, Livestream, Search information',TikTok,'>5 hours','Highly essential',Brand,5,พื้นที่เก็บข้อมูลไม่พอ,'<15,000 THB',Student,Apple
+Male,36-45,Married,'GPS navigation, Check car condition, ฟังพอดแคสต์','Google Maps','1-3 hours',Essential,Durability,4,หน้าจอมีจุดตาย,'50,001-100,000 THB','Delivery staff',Samsung
+Female,26-35,Single,'Online meetings, Schedule management, Email','Microsoft Teams','3-5 hours','Highly essential',Ecosystem,5,'High price','50,001-100,000 THB',Manager,Apple
+Male,18-25,Student,'Play esports, Stream games, แชทชุมชน',Discord,'>5 hours','Highly essential',Performance,4,เครื่องร้อนบ่อย,'<15,000 THB',Student,Realme
+Female,36-45,Married,'Online shopping, Track delivery, แชทลูกค้า',LINE,'1-3 hours',Essential,Reliability,4,การคืนสินค้ายุ่งยาก,'30,001-50,000 THB',Housewife,Samsung
+LGBTQ+,18-25,Single,'Art photography, Video editing, Upload stories',VSCO,'5-6 hours','Highly essential','Sensor quality',5,ไม่มี,'20,001-30,000 THB',Artist,Vivo
+Male,46-55,Married,'Read news, Check stocks, Finance',SET,'0-1 hours','Not important',Simplicity,3,ระบบล้าสมัย,'100,001-150,000 THB',Investor,Oppo
+Female,56+,Married,'Chat with family, Read e-books, Listen to radio',Facebook,'0-1 hours','Not important',Price,2,ไม่มี,'<15,000 THB',Retired,Other
+Male,26-35,Single,'Product photography, Edit reviews, Online marketplace',Shopee,'3-5 hours',Essential,'Value for money',4,กล้องไม่คมชัด,'25,001-35,000 THB','Online seller',Xiaomi
+Female,18-25,Student,'ติ๊กต็อก, Livestream, Search information',TikTok,'>5 hours','Highly essential',Brand,5,พื้นที่เก็บข้อมูลไม่พอ,'<15,000 THB',Student,Apple
+Male,36-45,Married,'GPS navigation, Check car condition, ฟังพอดแคสต์','Google Maps','1-3 hours',Essential,Durability,4,หน้าจอมีจุดตาย,'50,001-100,000 THB','Delivery staff',Samsung
