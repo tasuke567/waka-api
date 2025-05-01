@@ -2,7 +2,7 @@ services:
   - type: web
     name: waka-api
     env: node
-    buildCommand: mkdir -p java && curl -L -o java/jre17.tar.gz https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.10+7/OpenJDK17U-jre_x64_linux_hotspot_17.0.10_7.tar.gz && tar -xzf java/jre17.tar.gz -C java --strip-components=1 && export PATH=$PWD/java/bin:$PATH && yarn install && yarn build && mkdir -p dist/uploads && mkdir -p dist/model && cp -r model/ dist/model/ && chmod -R 755 dist/model/ && chmod 755 dist/uploads
+    buildCommand: mkdir -p java && curl -L -o java/jre8.tar.gz https://github.com/adoptium/temurin8-binaries/releases/download/jdk8u402-b06/OpenJDK8U-jre_x64_linux_hotspot_8u402b06.tar.gz -C java --strip-components=1 && export PATH=$PWD/java/bin:$PATH && yarn install && yarn build && mkdir -p dist/uploads && mkdir -p dist/model && cp -r model/ dist/model/ && chmod -R 755 dist/model/ && chmod 755 dist/uploads
     startCommand: yarn start
     envVars:
       - key: NODE_ENV
