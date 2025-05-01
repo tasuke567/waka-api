@@ -1,485 +1,150 @@
-/* ----------------------------------------------------------
-   Express + Weka API  ─  /predict  (POST multipart/form-data)
-   ---------------------------------------------------------- */
+// Express + Weka API (Cleaned + Ready for Deploy)
+
 import crypto from "node:crypto";
 import express from "express";
 import multer from "multer";
-import { execFile } from "node:child_process";
-import fs, { promises as f } from "node:fs";
-import { existsSync, mkdirSync } from "node:fs";
+import { execFile, execSync } from "node:child_process";
+import fs, { promises as fsp } from "node:fs";
+import { existsSync, mkdirSync, statSync, readdirSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "url";
 import csvParser from "csv-parser";
-import { execSync } from "node:child_process";
 import { v4 as uuidv4 } from "uuid";
-import { readdirSync, statSync } from "fs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PORT = process.env.PORT ?? 3000;
-const WEKA_JAR =
-  process.env.WEKA_JAR || path.join(__dirname, "../model/weka.jar");
-const MTJ_JAR =
-  process.env.MTJ_JAR ?? path.join(__dirname, "../model/mtj-1.0.4.jar");
 const MODEL = path.join(__dirname, "../model/myJ48.model");
 const HEADER_PATH = path.join(__dirname, "../model/header.arff");
 const HEADER = existsSync(HEADER_PATH)
   ? fs.readFileSync(HEADER_PATH, "utf8")
   : fs.readFileSync(path.join(__dirname, "../model/header.arff.tpl"), "utf8");
-const CLASS_ATTR = "Current_brand"; // ชื่อคอลัมน์ที่เป็น class label
+const WEKA_JAR = path.join(__dirname, "../model/weka.jar");
+const MTJ_JAR = path.join(__dirname, "../model/mtj-1.0.4.jar");
 const WEKA_CP = [WEKA_JAR, MTJ_JAR].join(path.delimiter);
+const CLASS_ATTR = "Current_brand";
+const uploadDir = path.join(__dirname, "uploads");
+const trainDir = path.join(uploadDir, "train");
 
-interface Prediction {
-  label: string; // เช่น "Apple"
-  distribution: number[]; // เช่น [0.10, 0.05, 0.40, 0.15, 0.30]
-}
+// Ensure directories
+[uploadDir, trainDir].forEach((dir) => {
+  if (!existsSync(dir)) mkdirSync(dir, { recursive: true });
+});
 
-// Replace checkJava() with this version
 function checkJava() {
   const javaPath = path.join(process.cwd(), "java/bin/java");
-  const minVersion = 17;
-
-  try {
-    const versionOutput = execSync(`"${javaPath}" -version 2>&1`).toString();
-    const versionMatch = versionOutput.match(/version "(\d+)\./);
-
-    if (!versionMatch || parseInt(versionMatch[1]) < minVersion) {
-      throw new Error(`Java ${minVersion}+ required`);
-    }
-  } catch (e) {
-    throw new Error(
-      `Java check failed: ${e instanceof Error ? e.message : String(e)}`
-    );
-  }
-}
-/* ---------- multer ---------- */
-// Ensure uploads directory exists
-const uploadDir = path.join(__dirname, "uploads");
-
-// ตรวจสอบการสร้างโฟลเดอร์
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir, { recursive: true, mode: 0o755 });
+  const versionOutput = execSync(`"${javaPath}" -version 2>&1`).toString();
+  const match = versionOutput.match(/version \"(\d+)/);
+  if (!match || parseInt(match[1]) < 17) throw new Error("Java 17+ required");
 }
 
 const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    // Double-check directory exists on each upload
-    if (!existsSync(uploadDir)) {
-      mkdirSync(uploadDir, { recursive: true });
-    }
-    cb(null, uploadDir);
-  },
-  filename: (req, file, cb) => {
-    const ext = path.extname(file.originalname).toLowerCase();
-    const name = crypto.randomUUID() + ext;
-    cb(null, name);
-  },
+  destination: (_, __, cb) => cb(null, uploadDir),
+  filename: (_, file, cb) => cb(null, `${crypto.randomUUID()}${path.extname(file.originalname)}`),
 });
 
 const upload = multer({
   storage,
   limits: { fileSize: 5_000_000 },
   fileFilter: (_, file, cb) => {
-    const allowedMimes = [
-      "text/csv",
-      "text/plain",
-      "application/octet-stream",
-      "application/x-arff",
-    ];
-
-    if (allowedMimes.includes(file.mimetype)) {
-      cb(null, true);
-    } else {
-      cb(new Error(`Unsupported file type: ${file.mimetype}`));
-    }
+    const allowed = ["text/csv", "text/plain", "application/octet-stream", "application/x-arff"];
+    cb(null, allowed.includes(file.mimetype));
   },
 });
 
-/* ---------- helpers ---------- */
-async function buildArff(
-  csvPath: string,
-  isTrain: boolean,
-  modelDir: string
-): Promise<string> {
-  // 0) Verify input file exists
-  if (!existsSync(csvPath)) {
-    throw new Error(`Input file not found: ${csvPath}`);
-  }
-
-  // 1) Load CSV rows
+async function buildArff(csvPath: string, isTrain: boolean): Promise<string> {
   const rows: Record<string, string>[] = [];
   await new Promise<void>((res, rej) => {
-    fs.createReadStream(csvPath, { encoding: "utf8" })
-      .pipe(
-        csvParser({
-          mapHeaders: ({ header }) => header.replace(/^\uFEFF/, "").trim(),
-          mapValues: ({ value }) =>
-            typeof value === "string" ? value.trim().normalize("NFKC") : value, // เพิ่มการ normalize ค่า
-        })
-      )
-      .on("headers", (hdrs: string[]) => {
-        console.log("🔍 CSV headers:", hdrs);
-      })
+    fs.createReadStream(csvPath)
+      .pipe(csvParser({
+        mapHeaders: ({ header }) => header.replace(/^\uFEFF/, "").trim(),
+        mapValues: ({ value }) => value.trim().normalize("NFKC"),
+      }))
       .on("data", (row) => rows.push(row))
-      .on("end", () => res())
+      .on("end", res)
       .on("error", rej);
   });
 
-  console.log(`✨ Parsed ${rows.length} row(s) from CSV`);
-  if (!rows.length) throw new Error("No data in CSV");
+  const headerText = fs.readFileSync(HEADER_PATH, "utf8");
+  const cols = headerText.split("\n")
+    .filter((l) => l.startsWith("@ATTRIBUTE"))
+    .map((l) => l.split(/\s+/)[1]);
 
-  // 2) Load header template
-  const headerPath = path.join(modelDir, "header.arff");
-  const HEADER = fs.readFileSync(headerPath, "utf8");
-
-  // 3) Extract attributes
-  const cols = HEADER.split("\n")
-    .filter((l) => l.trim().startsWith("@ATTRIBUTE"))
-    .map((l) => l.trim().split(/\s+/)[1]);
-  // ในฟังก์ชัน buildArff
-  if (isTrain && !cols.includes(CLASS_ATTR)) {
-    throw new Error(`Missing class attribute "${CLASS_ATTR}" in CSV`);
-  }
-  // 4) Prepare ARFF path
-  const arffPath = path.join(uploadDir, `${crypto.randomUUID()}.arff`);
-  // ตรวจสอบสิทธิ์การเขียนไฟล์
-  fs.accessSync(uploadDir, fs.constants.R_OK | fs.constants.W_OK);
-  // Ensure upload directory exists
-  if (!existsSync(uploadDir)) {
-    mkdirSync(uploadDir, { recursive: true });
-  }
-
-  // 5) Write file with proper error handling
-  const ws = fs.createWriteStream(arffPath, { encoding: "utf8" });
-
-  return new Promise<string>((resolve, reject) => {
-    ws.on("error", reject).on("finish", () => {
-      console.log("✅ ARFF generated at", arffPath);
-      resolve(path.resolve(arffPath));
-    });
-
-    // Write header and data
-    ws.write(HEADER.trim() + "\n@DATA\n");
-
-    // Process rows
-    for (const r of rows) {
-      const line = cols
-        .map((col) => {
-          if (col === CLASS_ATTR) {
-            if (isTrain) {
-              const v = r[col];
-              if (!v) throw new Error(`Missing class ${col}`);
-              return /[\s,{}]/.test(v) ? `'${v}'` : v;
-            }
-            return "?";
-          }
-          const v = r[col]!;
-          return /[\s,{}]/.test(v) ? `'${v}'` : v;
-        })
-        .join(",");
-
+  const arffPath = path.join(uploadDir, `${uuidv4()}.arff`);
+  await new Promise<void>((resolve, reject) => {
+    const ws = fs.createWriteStream(arffPath);
+    ws.on("error", reject).on("finish", resolve);
+    ws.write(headerText.trim() + "\n@DATA\n");
+    for (const row of rows) {
+      const line = cols.map((col) => {
+        const val = col === CLASS_ATTR && !isTrain ? "?" : row[col];
+        return /[\s,{}]/.test(val) ? `'${val}'` : val;
+      }).join(",");
       ws.write(line + "\n");
     }
-
     ws.end();
   });
+  return arffPath;
 }
 
-function wekaPredict(arff: string, modelPath: string): Promise<Prediction> {
+function wekaPredict(arff: string, model: string): Promise<any> {
+  const javaPath = path.join(process.cwd(), "java/bin/java");
+  const args = ["-Xmx1G", "-cp", WEKA_CP, "weka.classifiers.trees.J48", "-l", model, "-T", arff, "-p", "0", "-distribution"];
   return new Promise((resolve, reject) => {
-    const javaPath = path.resolve(process.cwd(), "java/bin/java");
-    const args = [
-      "-Xmx1G",
-      "-cp",
-      WEKA_CP,
-      "weka.classifiers.trees.J48",
-      "-l",
-      modelPath, // โหลดโมเดล
-      "-T",
-      arff, // test arff
-      "-p",
-      "0", // print คอลัมน์ last (class)
-      "-distribution", // (เลือก) ให้โชว์เปอร์เซ็นต์
-    ];
-    console.log("Executing Weka with:", [javaPath, ...args].join(" "));
     execFile(javaPath, args, { encoding: "utf8" }, (err, stdout, stderr) => {
-      console.log("=== WEKA STDOUT ===\n", stdout);
-      console.log("=== WEKA STDERR ===\n", stderr);
-
-      if (err || stderr.includes("Exception")) {
-        console.error("Weka Execution Error:", {
-          args: [javaPath, ...args],
-          error: err?.message,
-          stderr,
-        });
-        return reject(new Error("Weka execution failed"));
-      }
-
-      // Improved parsing logic
-      try {
-        const predictionLine = stdout
-          .split("\n")
-          .find((line) => line.includes(":") && line.includes("distribution"));
-
-        if (!predictionLine) {
-          throw new Error("No prediction line found");
-        }
-
-        const parts = predictionLine
-          .trim()
-          .split(/\s+/)
-          .filter((p) => p !== "");
-
-        const label = parts[parts.length - 2].split(":").pop()!;
-        const distribution = parts[parts.length - 1]
-          .replace(/[\[\]]/g, "")
-          .split(",")
-          .map(parseFloat);
-
-        resolve({ label, distribution });
-      } catch (parseError) {
-        reject(
-          new Error(
-            `Failed to parse Weka output: ${parseError}\nOutput:\n${stdout}`
-          )
-        );
-      }
+      if (err || stderr.includes("Exception")) return reject("Weka error");
+      const line = stdout.split("\n").find((l) => l.includes("distribution"));
+      if (!line) return reject("No prediction line found");
+      const parts = line.trim().split(/\s+/);
+      resolve({
+        label: parts.at(-2)?.split(":").pop(),
+        distribution: parts.at(-1)?.replace(/[\[\]]/g, "").split(",").map(Number),
+      });
     });
   });
 }
 
-function wekaTrain(
-  algorithm: string,
-  arffPath: string,
-  modelName: string,
-  options: string[] = []
-) {
-  return new Promise<string>((ok, bad) => {
-    const javaPath = path.resolve(process.cwd(), "java/bin/java");
-    // สร้างโฟลเดอร์เก็บโมเดลถ้ายังไม่มี
-    const modelDir = path.dirname(MODEL);
-    const headerPath = path.join(modelDir, "header.arff");
-    if (!existsSync(modelDir)) fs.mkdirSync(modelDir, { recursive: true });
-
-    const outModel = path.join(modelDir, modelName);
-    const args = [
-      "-Xmx1G",
-      "-cp",
-      WEKA_CP,
-      algorithm, // e.g. "weka.classifiers.bayes.NaiveBayes"
-      "-t",
-      arffPath,
-      "-d",
-      outModel, // บันทึกไฟล์ .model
-      ...options, // tuning options ถ้ามี
-    ];
-
-    console.log("Training CMD:", [javaPath, ...args].join(" "));
-    execFile(javaPath, args, { encoding: "utf8" }, (e, out, err) => {
-      if (err) console.error("TRAIN-ERR\n", err);
-      if (e) return bad(err || e.message);
-      console.log("TRAIN-OUT\n", out);
-      ok(outModel); // ส่ง path ของโมเดลกลับ
-    });
-  });
-}
-
-function listFilesWithTime(dir: string) {
-  if (!existsSync(dir)) return [];
-  return readdirSync(dir)
-    .map((file) => {
-      const full = path.join(dir, file);
-      const stats = statSync(full);
-      return {
-        file,
-        size: stats.size,
-        created: stats.birthtime,
-        path: full,
-      };
-    })
-    .sort((a, b) => b.created.getTime() - a.created.getTime()); // ล่าสุดอยู่บน
-}
-
-/* ---------- check model ---------- */
-if (!existsSync(MODEL)) throw new Error("Model not found: " + MODEL);
-
-/* ---------- route ------------ */
 const app = express();
 
 app.post("/predict", upload.single("file"), async (req, res) => {
-  if (!req.file) {
-    res.status(400).json({ error: "file missing" });
-    return;
-  }
-
   try {
-    // สร้างชื่อไฟล์แบบ debug-friendly
-
-    // 🔧 สร้าง .arff ปกติ
-    const tmp = await buildArff(req.file.path, false, path.dirname(MODEL));
-
-    // ✅ คัดลอกสำเนาเพื่อให้ Weka ใช้ไฟล์นี้โดยตรง
-    const sessionId = uuidv4();
-    const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
-    const safeArffName = `predict-${timestamp}-${sessionId}.arff`;
-    const safeArffPath = path.join(uploadDir, safeArffName);
-    // ✅ คัดลอกเก็บถาวร
-    fs.copyFileSync(tmp, safeArffPath);
-
-    // 🔍 log เพื่อ confirm
-    console.log("📄 Saved ARFF copy to:", safeArffPath);
-
-    // ✅ ทำ prediction ปกติ
-    const brand = await wekaPredict(safeArffPath, MODEL);
-    res.json({ brand });
-
-    // ❌ ไม่ลบไฟล์
-    // คุณสามารถใช้ระบบ cron หรือ admin endpoint มาลบทีหลัง
+    const arffPath = await buildArff(req.file!.path, false);
+    const fileName = `predict-${new Date().toISOString().replace(/[:.]/g, "-")}-${uuidv4()}.arff`;
+    const finalPath = path.join(uploadDir, fileName);
+    fs.copyFileSync(arffPath, finalPath);
+    const prediction = await wekaPredict(finalPath, MODEL);
+    res.json({ prediction });
   } catch (e) {
-    const errorMessage = `Prediction failed: ${String(e)}`;
-    console.error(errorMessage);
-    res.status(500).json({
-      error: errorMessage,
-      details: e instanceof Error ? e.stack : undefined,
-    });
+    res.status(500).json({ error: String(e) });
   }
 });
-
-const trainUploadDir = path.join(uploadDir, "train");
-if (!existsSync(trainUploadDir)) mkdirSync(trainUploadDir, { recursive: true });
 
 app.post("/train", upload.single("file"), async (req, res) => {
-  if (!req.file) {
-    res.status(400).json({ error: "file missing" });
-    return;
-  }
-
-  const { algorithm = "weka.classifiers.trees.J48", modelName } = req.body;
-  const options = req.body.options
-    ? (req.body.options as string).trim().split(/\s+/)
-    : [];
-
-  let arffPath: string | null = null;
-
   try {
-    const ext = path.extname(req.file.originalname).toLowerCase();
-    arffPath =
-      ext === ".arff"
-        ? path.resolve(req.file.path).replace(/\\/g, "/")
-        : await buildArff(req.file.path, true, path.dirname(MODEL)); // isTrain = true
-
-    // 🔁 เก็บสำเนา ARFF แยกชื่อด้วย timestamp + uuid
-    const sessionId = uuidv4();
-    const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
-    const debugTrainName = `train-${timestamp}-${sessionId}.arff`;
-    const debugTrainPath = path.join(trainUploadDir, debugTrainName);
-    fs.copyFileSync(arffPath, debugTrainPath);
-    console.log("📄 Saved training ARFF at:", debugTrainPath);
-
-    // 💾 บันทึก header (สำหรับ predict ใช้)
-    const actualHeader = fs
-      .readFileSync(arffPath, "utf8")
-      .split("@DATA")[0]
-      .trim();
-    fs.writeFileSync(
-      path.join(path.dirname(MODEL), "header.arff"),
-      actualHeader
-    );
-
-    const finalModelFile = modelName ?? `${sessionId}.model`;
-    const modelPath = await wekaTrain(
-      algorithm,
-      arffPath,
-      finalModelFile,
-      options
-    );
-
-    res.json({ model: modelPath });
-  } catch (e: any) {
-    res.status(500).json({ error: e.message });
+    const arffPath = await buildArff(req.file!.path, true);
+    const fileName = `train-${new Date().toISOString().replace(/[:.]/g, "-")}-${uuidv4()}.arff`;
+    const finalPath = path.join(trainDir, fileName);
+    fs.copyFileSync(arffPath, finalPath);
+    const header = fs.readFileSync(arffPath, "utf8").split("@DATA")[0];
+    fs.writeFileSync(HEADER_PATH, header);
+    res.json({ saved: finalPath });
+  } catch (e) {
+    res.status(500).json({ error: String(e) });
   }
 });
 
-app.get("/model-info", (req, res) => {
-  const tempArff = path.join("uploads", "empty.arff");
-  // เขียน ARFF เปล่าจาก HEADER template
-  const header = HEADER.includes("@data") ? HEADER : HEADER + "\n@DATA\n";
-  fs.writeFileSync(tempArff, header, "utf8");
-  const args = [
-    "-cp",
-    WEKA_CP,
-    "weka.classifiers.trees.J48",
-    "-l",
-    MODEL,
-    "-T",
-    path.resolve(tempArff).replace(/\\/g, "/"),
-  ];
-  execFile(
-    "java",
-    ["-Xmx1G", ...args],
-    { encoding: "utf8" },
-    (err, stdout, stderr) => {
-      const outText = [stdout?.trim(), stderr?.trim(), err ? err.message : null]
-        .filter(Boolean)
-        .join("\n\n---\n\n");
-      if (!outText) {
-        return res.status(204).send("No output from Weka");
-      }
-      res.type("text/plain").send(outText);
-    }
-  );
-});
-
-// เพิ่ม endpoint ตรวจสอบระบบ
-app.get("/system-check", (req, res) => {
-  const modelDir = path.dirname(MODEL); // Define modelDir here
-  const checks = {
-    java: existsSync("java/bin/java"),
-    model: existsSync(MODEL),
-    uploadDir: {
-      exists: existsSync(uploadDir),
-      writable: (() => {
-        try {
-          fs.accessSync(uploadDir, fs.constants.W_OK);
-          return true;
-        } catch {
-          return false;
-        }
-      })(),
-    },
-    arffTemplate: existsSync(path.join(modelDir, "header.arff")),
-  };
-
-  res.json(checks);
-});
-
-// 🔁 รายการไฟล์ prediction
 app.get("/predict-history", (req, res) => {
-  const files = listFilesWithTime(uploadDir).filter(
-    (f) => f.file.startsWith("predict-") && f.file.endsWith(".arff")
-  );
+  const files = readdirSync(uploadDir)
+    .filter(f => f.startsWith("predict-") && f.endsWith(".arff"))
+    .map(f => ({ file: f, time: statSync(path.join(uploadDir, f)).birthtime }));
   res.json(files);
 });
 
-// 🔁 รายการไฟล์ training
 app.get("/train-history", (req, res) => {
-  const trainDir = path.join(uploadDir, "train");
-  const files = listFilesWithTime(trainDir).filter(
-    (f) => f.file.startsWith("train-") && f.file.endsWith(".arff")
-  );
+  const files = readdirSync(trainDir)
+    .filter(f => f.startsWith("train-") && f.endsWith(".arff"))
+    .map(f => ({ file: f, time: statSync(path.join(trainDir, f)).birthtime }));
   res.json(files);
 });
 
 checkJava();
-// เพิ่มก่อน app.listen()
-const requiredFiles = [
-  path.join(__dirname, "../model/header.arff"),
-  path.join(__dirname, "../model/header.arff.tpl"),
-  MODEL,
-];
-
-requiredFiles.forEach((file) => {
-  if (!existsSync(file)) {
-    throw new Error(`Missing required file: ${file}`);
-  }
-});
 app.listen(PORT, () => console.log(`🚀  http://localhost:${PORT}`));
