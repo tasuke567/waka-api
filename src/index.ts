@@ -75,66 +75,83 @@ async function buildArff(
   csvPath: string,
   isTrain: boolean  
 ): Promise<string> {
-  // ─── 1) โหลด rows จาก CSV ──────────────────────────────────
+  // Use absolute paths consistently
+  const __dirname = path.dirname(fileURLToPath(import.meta.url));
+  const uploadDir = path.join(__dirname, 'uploads');
+
+  // 0) Verify input file exists
+  if (!existsSync(csvPath)) {
+    throw new Error(`Input file not found: ${csvPath}`);
+  }
+
+  // 1) Load CSV rows
   const rows: Record<string, string>[] = [];
   await new Promise<void>((res, rej) => {
-    fs.createReadStream(csvPath, { encoding: "utf8" }) // ใส่เป็น object ให้ถูก
-      .pipe(
-        csvParser({
-          mapHeaders: ({ header }) => header.replace(/^\uFEFF/, "").trim(), // ตัด BOM + trim
-        })
-      )
+    fs.createReadStream(csvPath, { encoding: "utf8" })
+      .pipe(csvParser({
+        mapHeaders: ({ header }) => header.replace(/^\uFEFF/, "").trim(),
+      }))
       .on("headers", (hdrs: string[]) => {
         console.log("🔍 CSV headers:", hdrs);
       })
       .on("data", (row) => rows.push(row))
       .on("end", () => res())
-      .on("error", (e) => rej(e));
+      .on("error", rej);
   });
 
   console.log(`✨ Parsed ${rows.length} row(s) from CSV`);
   if (!rows.length) throw new Error("No data in CSV");
 
-  // ─── 2) โหลด header template (ห้ามมี @DATA ใน tpl) ────────
-  const HEADER = fs.readFileSync("model/header.arff.tpl", "utf8");
+  // 2) Load header template
+  const headerPath = path.join(__dirname, '../model/header.arff.tpl');
+  const HEADER = fs.readFileSync(headerPath, "utf8");
 
-  // ─── 3) ดึงชื่อ attribute แต่ละตัว ────────────────────────
+  // 3) Extract attributes
   const cols = HEADER.split("\n")
-    .filter((l) => l.trim().startsWith("@ATTRIBUTE"))
-    .map((l) => l.trim().split(/\s+/)[1]);
+    .filter(l => l.trim().startsWith("@ATTRIBUTE"))
+    .map(l => l.trim().split(/\s+/)[1]);
 
-  // ─── 4) เตรียมไฟล์ .arff ใหม่ ─────────────────────────────
-  const arffPath = path.join("uploads", crypto.randomUUID() + ".arff");
-  const ws = fs.createWriteStream(arffPath, { encoding: "utf8" });
-
-  // ─── 5) เขียน HEADER แล้วตามด้วย @DATA แค่ครั้งเดียว ───────
-  ws.write(HEADER.trim() + "\n@DATA\n");
-
-  // ─── 6) วนเขียน data rows ────────────────────────────────
-  for (const r of rows) {
-    const line = cols.map((col) => {
-      if (col === CLASS_ATTR) {
-        if (isTrain) {
-          // ต้องดึง class จริงจาก CSV!
-          const v = r[col];
-          if (v == null) throw new Error(`Missing class ${col}`);
-          return /[\s,{}]/.test(v) ? `'${v}'` : v;
-        } else {
-          // ทิ้งให้ WEKA ทำนาย
-          return "?";
-        }
-      }
-      // … ส่วนอื่นเดิม …
-      const v = r[col]!;
-      return /[\s,{}]/.test(v) ? `'${v}'` : v;
-    }).join(",");
-    ws.write(line + "\n");
+  // 4) Prepare ARFF path
+  const arffPath = path.join(uploadDir, `${crypto.randomUUID()}.arff`);
+  
+  // Ensure upload directory exists
+  if (!existsSync(uploadDir)) {
+    mkdirSync(uploadDir, { recursive: true });
   }
 
-  // ─── 7) รอปิด stream แล้วคืน path ─────────────────────────
-  await new Promise((res) => ws.end(res));
-  console.log("✅ ARFF generated at", arffPath);
-  return path.resolve(arffPath).replace(/\\/g, "/");
+  // 5) Write file with proper error handling
+  const ws = fs.createWriteStream(arffPath, { encoding: "utf8" });
+  
+  return new Promise<string>((resolve, reject) => {
+    ws.on('error', reject)
+      .on('finish', () => {
+        console.log("✅ ARFF generated at", arffPath);
+        resolve(path.resolve(arffPath));
+      });
+
+    // Write header and data
+    ws.write(HEADER.trim() + "\n@DATA\n");
+    
+    // Process rows
+    for (const r of rows) {
+      const line = cols.map(col => {
+        if (col === CLASS_ATTR) {
+          if (isTrain) {
+            const v = r[col];
+            if (!v) throw new Error(`Missing class ${col}`);
+            return /[\s,{}]/.test(v) ? `'${v}'` : v;
+          }
+          return "?";
+        }
+        const v = r[col]!;
+        return /[\s,{}]/.test(v) ? `'${v}'` : v;
+      }).join(",");
+      
+      ws.write(line + "\n");
+    }
+    
+    ws.end();
+  });
 }
 
 function wekaPredict(arff: string, modelPath: string): Promise<Prediction> {
@@ -239,8 +256,12 @@ app.post("/predict", upload.single("file"), async (req, res) => {
       details: e instanceof Error ? e.stack : undefined,
     });
   } finally {
-    // f.rm(tmp, { force: true });
-    // f.rm(req.file.path, { force: true });
+    if (req.file?.path) {
+      await f.unlink(req.file.path).catch(console.error);
+    }
+    if (tmp) {
+      await f.unlink(tmp).catch(console.error);
+    }
   }
 });
 
