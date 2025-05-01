@@ -6,7 +6,7 @@ import express from "express";
 import multer from "multer";
 import { execFile } from "node:child_process";
 import fs, { promises as f } from "node:fs";
-import { existsSync } from "node:fs";
+import { existsSync, mkdirSync  } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from 'url';
 import { log } from "node:console";
@@ -30,11 +30,23 @@ interface Prediction {
   distribution: number[]; // เช่น [0.10, 0.05, 0.40, 0.15, 0.30]
 }
 /* ---------- multer ---------- */
+// Ensure uploads directory exists
+const uploadDir = path.join(__dirname, "uploads");
+if (!existsSync(uploadDir)) {
+  mkdirSync(uploadDir, { recursive: true });
+}
+
 const storage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, "uploads/"),
+  destination: (req, file, cb) => {
+    // Double-check directory exists on each upload
+    if (!existsSync(uploadDir)) {
+      mkdirSync(uploadDir, { recursive: true });
+    }
+    cb(null, uploadDir);
+  },
   filename: (req, file, cb) => {
-    const ext = path.extname(file.originalname).toLowerCase(); // ".arff" หรือ ".csv"
-    const name = crypto.randomUUID() + ext; // "uuid.arff"
+    const ext = path.extname(file.originalname).toLowerCase();
+    const name = crypto.randomUUID() + ext;
     cb(null, name);
   },
 });
@@ -42,8 +54,20 @@ const storage = multer.diskStorage({
 const upload = multer({
   storage,
   limits: { fileSize: 5_000_000 },
-  fileFilter: (_, file, cb) =>
-    cb(null, /text|csv|arff|octet-stream/.test(file.mimetype)),
+  fileFilter: (_, file, cb) => {
+    const allowedMimes = [
+      "text/csv",
+      "text/plain",
+      "application/octet-stream",
+      "application/x-arff",
+    ];
+    
+    if (allowedMimes.includes(file.mimetype)) {
+      cb(null, true);
+    } else {
+      cb(new Error(`Unsupported file type: ${file.mimetype}`));
+    }
+  },
 });
 
 /* ---------- helpers ---------- */
