@@ -2,14 +2,29 @@ services:
   - type: web
     name: waka-api
     env: node
-    buildCommand: mkdir -p java && curl -L -o java/jre17.tar.gz https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.10+7/OpenJDK17U-jre_x64_linux_hotspot_17.0.10_7.tar.gz && tar -xzf java/jre17.tar.gz -C java --strip-components=1 && export PATH=$PWD/java/bin:$PATH && yarn install && yarn build && mkdir -p dist/uploads && mkdir -p dist/model && cp -r model/*.arff dist/model/ && cp -r model/*.jar dist/model/ && cp -r model/*.model dist/model/
+    buildCommand: |
+      mkdir -p java && \
+      curl -L -o java/jre17.tar.gz https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.10+7/OpenJDK17U-jre_x64_linux_hotspot_17.0.10_7.tar.gz && \
+      tar -xzf java/jre17.tar.gz -C java --strip-components=1 && \
+      export PATH=$PWD/java/bin:$PATH && \
+      yarn install && \
+      yarn build && \
+      mkdir -p dist/uploads && \
+      mkdir -p dist/model && \
+      cp -r model/ dist/model/ && \
+      chmod -R 755 dist/model/ && \
+      chmod 755 dist/uploads
     startCommand: yarn start
     envVars:
       - key: NODE_ENV
         value: production
       - key: PORT
         value: 10000
+      - key: JAVA_HOME
+        value: /opt/render/project/src/java
+      - key: PATH
+        value: $JAVA_HOME/bin:$PATH
     disk:
       name: uploads
-      mountPath: /opt/render/project/uploads
+      mountPath: /opt/render/project/src/dist/uploads # ตรงกับ path ในโค้ด
       sizeGB: 1

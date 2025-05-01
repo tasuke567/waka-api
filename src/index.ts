@@ -39,19 +39,23 @@ function checkJava() {
   try {
     const versionOutput = execSync(`"${javaPath}" -version 2>&1`).toString();
     const versionMatch = versionOutput.match(/version "(\d+)\./);
-    
+
     if (!versionMatch || parseInt(versionMatch[1]) < minVersion) {
       throw new Error(`Java ${minVersion}+ required`);
     }
   } catch (e) {
-    throw new Error(`Java check failed: ${e instanceof Error ? e.message : String(e)}`);
+    throw new Error(
+      `Java check failed: ${e instanceof Error ? e.message : String(e)}`
+    );
   }
 }
 /* ---------- multer ---------- */
 // Ensure uploads directory exists
 const uploadDir = path.join(__dirname, "uploads");
-if (!existsSync(uploadDir)) {
-  mkdirSync(uploadDir, { recursive: true });
+
+// ตรวจสอบการสร้างโฟลเดอร์
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir, { recursive: true, mode: 0o755 });
 }
 
 const storage = multer.diskStorage({
@@ -94,9 +98,6 @@ async function buildArff(
   isTrain: boolean,
   modelDir: string
 ): Promise<string> {
-  
-  
-
   // 0) Verify input file exists
   if (!existsSync(csvPath)) {
     throw new Error(`Input file not found: ${csvPath}`);
@@ -138,7 +139,8 @@ async function buildArff(
   }
   // 4) Prepare ARFF path
   const arffPath = path.join(uploadDir, `${crypto.randomUUID()}.arff`);
-
+  // ตรวจสอบสิทธิ์การเขียนไฟล์
+  fs.accessSync(uploadDir, fs.constants.R_OK | fs.constants.W_OK);
   // Ensure upload directory exists
   if (!existsSync(uploadDir)) {
     mkdirSync(uploadDir, { recursive: true });
@@ -205,7 +207,7 @@ function wekaPredict(arff: string, modelPath: string): Promise<Prediction> {
         console.error("Weka Execution Error:", {
           args: [javaPath, ...args],
           error: err?.message,
-          stderr
+          stderr,
         });
         return reject(new Error("Weka execution failed"));
       }
@@ -314,9 +316,9 @@ app.post("/predict", upload.single("file"), async (req, res) => {
     const filesToDelete = [
       req.file?.path,
       tmp,
-      path.join(uploadDir, "empty.arff")
+      path.join(uploadDir, "empty.arff"),
     ].filter(Boolean);
-    
+
     await Promise.all(
       filesToDelete.map(async (file) => {
         if (await f.access(file).catch(() => false)) {
@@ -397,15 +399,38 @@ app.get("/model-info", (req, res) => {
     }
   );
 });
+
+// เพิ่ม endpoint ตรวจสอบระบบ
+app.get("/system-check", (req, res) => {
+  const modelDir = path.dirname(MODEL); // Define modelDir here
+  const checks = {
+    java: existsSync("java/bin/java"),
+    model: existsSync(MODEL),
+    uploadDir: {
+      exists: existsSync(uploadDir),
+      writable: (() => {
+        try {
+          fs.accessSync(uploadDir, fs.constants.W_OK);
+          return true;
+        } catch {
+          return false;
+        }
+      })(),
+    },
+    arffTemplate: existsSync(path.join(modelDir, "header.arff")),
+  };
+
+  res.json(checks);
+});
 checkJava();
 // เพิ่มก่อน app.listen()
 const requiredFiles = [
   path.join(__dirname, "../model/header.arff"),
   path.join(__dirname, "../model/header.arff.tpl"),
-  MODEL
+  MODEL,
 ];
 
-requiredFiles.forEach(file => {
+requiredFiles.forEach((file) => {
   if (!existsSync(file)) {
     throw new Error(`Missing required file: ${file}`);
   }
