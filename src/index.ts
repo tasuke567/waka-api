@@ -11,6 +11,8 @@ import path from "node:path";
 import { fileURLToPath } from "url";
 import csvParser from "csv-parser";
 import { execSync } from "node:child_process";
+import { v4 as uuidv4 } from "uuid";
+import { readdirSync, statSync } from "fs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PORT = process.env.PORT ?? 3000;
@@ -281,6 +283,23 @@ function wekaTrain(
   });
 }
 
+
+function listFilesWithTime(dir: string) {
+  if (!existsSync(dir)) return [];
+  return readdirSync(dir)
+    .map((file) => {
+      const full = path.join(dir, file);
+      const stats = statSync(full);
+      return {
+        file,
+        size: stats.size,
+        created: stats.birthtime,
+        path: full,
+      };
+    })
+    .sort((a, b) => b.created.getTime() - a.created.getTime()); // ล่าสุดอยู่บน
+}
+
 /* ---------- check model ---------- */
 if (!existsSync(MODEL)) throw new Error("Model not found: " + MODEL);
 
@@ -293,13 +312,29 @@ app.post("/predict", upload.single("file"), async (req, res) => {
     return;
   }
 
-  let tmp: string | null = null;
-
   try {
-    tmp = await buildArff(req.file.path, false, path.dirname(MODEL)); // isTrain = false
+    // สร้างชื่อไฟล์แบบ debug-friendly
+    const sessionId = uuidv4(); // หรือใช้ req.ip, user id, etc.
+    const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
+    const debugFileName = `predict-${timestamp}-${sessionId}.arff`;
+    const debugPath = path.join(uploadDir, debugFileName);
 
+    // 🔧 สร้าง .arff ปกติ
+    const tmp = await buildArff(req.file.path, false, path.dirname(MODEL));
+
+    // ✅ คัดลอกเก็บถาวร
+    fs.copyFileSync(tmp, debugPath);
+
+    // 🔍 log เพื่อ confirm
+    console.log("📄 Saved ARFF copy to:", debugPath);
+
+    // ✅ ทำ prediction ปกติ
     const brand = await wekaPredict(tmp, MODEL);
     res.json({ brand });
+
+    // ❌ ไม่ลบไฟล์
+    // คุณสามารถใช้ระบบ cron หรือ admin endpoint มาลบทีหลัง
+
   } catch (e) {
     const errorMessage = `Prediction failed: ${String(e)}`;
     console.error(errorMessage);
@@ -307,20 +342,12 @@ app.post("/predict", upload.single("file"), async (req, res) => {
       error: errorMessage,
       details: e instanceof Error ? e.stack : undefined,
     });
-  } finally {
-    const filesToDelete = [req.file?.path, tmp]
-      .filter(Boolean) // ลบ null/undefined
-      .map((file) => path.resolve(file!)); // normalize path
-
-    for (const file of filesToDelete) {
-      try {
-        await f.unlink(file);
-      } catch (e) {
-        console.warn("❌ Failed to delete:", file, e instanceof Error ? e.message : String(e));
-      }
-    }
   }
 });
+
+const trainUploadDir = path.join(uploadDir, "train");
+if (!existsSync(trainUploadDir)) mkdirSync(trainUploadDir, { recursive: true });
+
 
 app.post("/train", upload.single("file"), async (req, res) => {
   if (!req.file) {
@@ -342,32 +369,27 @@ app.post("/train", upload.single("file"), async (req, res) => {
         ? path.resolve(req.file.path).replace(/\\/g, "/")
         : await buildArff(req.file.path, true, path.dirname(MODEL)); // isTrain = true
 
+    // 🔁 เก็บสำเนา ARFF แยกชื่อด้วย timestamp + uuid
+    const sessionId = uuidv4();
+    const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
+    const debugTrainName = `train-${timestamp}-${sessionId}.arff`;
+    const debugTrainPath = path.join(trainUploadDir, debugTrainName);
+    fs.copyFileSync(arffPath, debugTrainPath);
+    console.log("📄 Saved training ARFF at:", debugTrainPath);
+
+    // 💾 บันทึก header (สำหรับ predict ใช้)
     const actualHeader = fs
       .readFileSync(arffPath, "utf8")
       .split("@DATA")[0]
       .trim();
+    fs.writeFileSync(path.join(path.dirname(MODEL), "header.arff"), actualHeader);
 
-    const modelDir = path.dirname(MODEL);
-    fs.writeFileSync(path.join(modelDir, "header.arff"), actualHeader);
-
-    const modelFile = modelName ?? crypto.randomUUID() + ".model";
-    const modelPath = await wekaTrain(algorithm, arffPath, modelFile, options);
+    const finalModelFile = modelName ?? `${sessionId}.model`;
+    const modelPath = await wekaTrain(algorithm, arffPath, finalModelFile, options);
 
     res.json({ model: modelPath });
   } catch (e: any) {
     res.status(500).json({ error: e.message });
-  } finally {
-    const filesToDelete = [req.file?.path, arffPath]
-      .filter(Boolean)
-      .map((file) => path.resolve(file!));
-
-    for (const file of filesToDelete) {
-      try {
-        await f.unlink(file);
-      } catch (e) {
-        console.warn("❌ Failed to delete:", file, e instanceof Error ? e.message : String(e));
-      }
-    }
   }
 });
 
@@ -423,6 +445,27 @@ app.get("/system-check", (req, res) => {
 
   res.json(checks);
 });
+
+
+
+
+// 🔁 รายการไฟล์ prediction
+app.get("/predict-history", (req, res) => {
+  const files = listFilesWithTime(uploadDir).filter((f) =>
+    f.file.startsWith("predict-") && f.file.endsWith(".arff")
+  );
+  res.json(files);
+});
+
+// 🔁 รายการไฟล์ training
+app.get("/train-history", (req, res) => {
+  const trainDir = path.join(uploadDir, "train");
+  const files = listFilesWithTime(trainDir).filter((f) =>
+    f.file.startsWith("train-") && f.file.endsWith(".arff")
+  );
+  res.json(files);
+});
+
 checkJava();
 // เพิ่มก่อน app.listen()
 const requiredFiles = [
@@ -437,3 +480,5 @@ requiredFiles.forEach((file) => {
   }
 });
 app.listen(PORT, () => console.log(`🚀  http://localhost:${PORT}`));
+
+
