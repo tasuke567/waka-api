@@ -2,7 +2,7 @@ services:
   - type: web
     name: waka-api
     env: node
-    buildCommand: yarn build && mkdir -p dist/uploads && mkdir -p dist/model
+    buildCommand: sudo apt-get update && sudo apt-get install -y openjdk-17-jre && yarn install && yarn build && mkdir -p dist/uploads && mkdir -p dist/model
     startCommand: yarn start
     envVars:
       - key: NODE_ENV

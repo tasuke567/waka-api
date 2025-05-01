@@ -6,20 +6,20 @@ import express from "express";
 import multer from "multer";
 import { execFile } from "node:child_process";
 import fs, { promises as f } from "node:fs";
-import { existsSync, mkdirSync  } from "node:fs";
+import { existsSync, mkdirSync } from "node:fs";
 import path from "node:path";
-import { fileURLToPath } from 'url';
-import { log } from "node:console";
+import { fileURLToPath } from "url";
 import csvParser from "csv-parser";
-
+import { execSync } from "node:child_process";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PORT = process.env.PORT ?? 3000;
-const WEKA_JAR = process.env.WEKA_JAR || path.join(__dirname, '../model/weka.jar');
+const WEKA_JAR =
+  process.env.WEKA_JAR || path.join(__dirname, "../model/weka.jar");
 const MTJ_JAR = process.env.MTJ_JAR ?? "model/mtj-1.0.4.jar";
-const MODEL = path.join(__dirname, '../model/myJ48.model');
+const MODEL = path.join(__dirname, "../model/myJ48.model");
 const HEADER = fs.readFileSync(
-  path.join(__dirname, '../model/header.arff.tpl'), 
+  path.join(__dirname, "../model/header.arff.tpl"),
   "utf8"
 );
 const CLASS_ATTR = "Current_brand"; // ชื่อคอลัมน์ที่เป็น class label
@@ -28,6 +28,17 @@ const WEKA_CP = [WEKA_JAR, MTJ_JAR].join(path.delimiter);
 interface Prediction {
   label: string; // เช่น "Apple"
   distribution: number[]; // เช่น [0.10, 0.05, 0.40, 0.15, 0.30]
+}
+
+function checkJava() {
+  try {
+    execSync("java -version", { stdio: "inherit" });
+  } catch (e) {
+    throw new Error(
+      "Java Runtime Environment (JRE) is required but not found.\n" +
+        "Install with: sudo apt-get install openjdk-17-jre"
+    );
+  }
 }
 /* ---------- multer ---------- */
 // Ensure uploads directory exists
@@ -61,7 +72,7 @@ const upload = multer({
       "application/octet-stream",
       "application/x-arff",
     ];
-    
+
     if (allowedMimes.includes(file.mimetype)) {
       cb(null, true);
     } else {
@@ -71,13 +82,10 @@ const upload = multer({
 });
 
 /* ---------- helpers ---------- */
-async function buildArff(
-  csvPath: string,
-  isTrain: boolean  
-): Promise<string> {
+async function buildArff(csvPath: string, isTrain: boolean): Promise<string> {
   // Use absolute paths consistently
   const __dirname = path.dirname(fileURLToPath(import.meta.url));
-  const uploadDir = path.join(__dirname, 'uploads');
+  const uploadDir = path.join(__dirname, "uploads");
 
   // 0) Verify input file exists
   if (!existsSync(csvPath)) {
@@ -88,9 +96,11 @@ async function buildArff(
   const rows: Record<string, string>[] = [];
   await new Promise<void>((res, rej) => {
     fs.createReadStream(csvPath, { encoding: "utf8" })
-      .pipe(csvParser({
-        mapHeaders: ({ header }) => header.replace(/^\uFEFF/, "").trim(),
-      }))
+      .pipe(
+        csvParser({
+          mapHeaders: ({ header }) => header.replace(/^\uFEFF/, "").trim(),
+        })
+      )
       .on("headers", (hdrs: string[]) => {
         console.log("🔍 CSV headers:", hdrs);
       })
@@ -103,17 +113,17 @@ async function buildArff(
   if (!rows.length) throw new Error("No data in CSV");
 
   // 2) Load header template
-  const headerPath = path.join(__dirname, '../model/header.arff.tpl');
+  const headerPath = path.join(__dirname, "../model/header.arff.tpl");
   const HEADER = fs.readFileSync(headerPath, "utf8");
 
   // 3) Extract attributes
   const cols = HEADER.split("\n")
-    .filter(l => l.trim().startsWith("@ATTRIBUTE"))
-    .map(l => l.trim().split(/\s+/)[1]);
+    .filter((l) => l.trim().startsWith("@ATTRIBUTE"))
+    .map((l) => l.trim().split(/\s+/)[1]);
 
   // 4) Prepare ARFF path
   const arffPath = path.join(uploadDir, `${crypto.randomUUID()}.arff`);
-  
+
   // Ensure upload directory exists
   if (!existsSync(uploadDir)) {
     mkdirSync(uploadDir, { recursive: true });
@@ -121,41 +131,43 @@ async function buildArff(
 
   // 5) Write file with proper error handling
   const ws = fs.createWriteStream(arffPath, { encoding: "utf8" });
-  
+
   return new Promise<string>((resolve, reject) => {
-    ws.on('error', reject)
-      .on('finish', () => {
-        console.log("✅ ARFF generated at", arffPath);
-        resolve(path.resolve(arffPath));
-      });
+    ws.on("error", reject).on("finish", () => {
+      console.log("✅ ARFF generated at", arffPath);
+      resolve(path.resolve(arffPath));
+    });
 
     // Write header and data
     ws.write(HEADER.trim() + "\n@DATA\n");
-    
+
     // Process rows
     for (const r of rows) {
-      const line = cols.map(col => {
-        if (col === CLASS_ATTR) {
-          if (isTrain) {
-            const v = r[col];
-            if (!v) throw new Error(`Missing class ${col}`);
-            return /[\s,{}]/.test(v) ? `'${v}'` : v;
+      const line = cols
+        .map((col) => {
+          if (col === CLASS_ATTR) {
+            if (isTrain) {
+              const v = r[col];
+              if (!v) throw new Error(`Missing class ${col}`);
+              return /[\s,{}]/.test(v) ? `'${v}'` : v;
+            }
+            return "?";
           }
-          return "?";
-        }
-        const v = r[col]!;
-        return /[\s,{}]/.test(v) ? `'${v}'` : v;
-      }).join(",");
-      
+          const v = r[col]!;
+          return /[\s,{}]/.test(v) ? `'${v}'` : v;
+        })
+        .join(",");
+
       ws.write(line + "\n");
     }
-    
+
     ws.end();
   });
 }
 
 function wekaPredict(arff: string, modelPath: string): Promise<Prediction> {
   return new Promise((resolve, reject) => {
+    const javaPath = "/usr/bin/java";
     const args = [
       "-Xmx1G",
       "-cp",
@@ -170,7 +182,7 @@ function wekaPredict(arff: string, modelPath: string): Promise<Prediction> {
       "-distribution", // (เลือก) ให้โชว์เปอร์เซ็นต์
     ];
 
-    execFile("java", args, { encoding: "utf8" }, (err, stdout, stderr) => {
+    execFile(javaPath, args, { encoding: "utf8" }, (err, stdout, stderr) => {
       if (err) {
         return reject(new Error(stderr || err.message));
       }
@@ -282,7 +294,7 @@ app.post("/train", upload.single("file"), async (req, res) => {
     const arffPath =
       ext === ".arff"
         ? path.resolve(req.file.path).replace(/\\/g, "/")
-        : await buildArff(req.file.path , true); // isTrain = true
+        : await buildArff(req.file.path, true); // isTrain = true
 
     // train
     const modelFile = modelName ?? crypto.randomUUID() + ".model";
@@ -329,5 +341,5 @@ app.get("/model-info", (req, res) => {
     }
   );
 });
-
+checkJava();
 app.listen(PORT, () => console.log(`🚀  http://localhost:${PORT}`));

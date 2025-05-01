@@ -6,6 +6,7 @@
   "scripts": {
     "build": "tsc && cp -r model/ dist/model/",
     "start": "node dist/index.js",
+    "test:java": "java -version",
     "dev": "nodemon --exec ts-node src/index.ts"
   },
   "keywords": [],
