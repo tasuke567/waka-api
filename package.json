@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "tsc && xcopy /E /I /Y model dist\\model",
+    "build": "tsc && shx cp -r model dist/model",
     "start": "node dist/index.js",
     "test:java": "java -version",
     "dev": "nodemon --exec ts-node src/index.ts",
@@ -30,6 +30,7 @@
     "@types/multer": "^1.4.12",
     "@types/node": "^22.14.1",
     "@types/uuid": "^10.0.0",
+    "shx": "^0.4.0",
     "ts-node": "^10.9.2",
     "tsx": "^4.19.3",
     "typescript": "^5.8.3"
