@@ -229,7 +229,7 @@ app.post("/train", upload.single("file"), async (req, res) => {
         : await buildArff(req.file.path , true); // isTrain = true
 
     // train
-    const modelFile = modelName || `${crypto.randomUUID()}.model`;
+    const modelFile = modelName ?? crypto.randomUUID() + ".model";
     const modelPath = await wekaTrain(algorithm, arffPath, modelFile, options);
 
     res.json({ model: modelPath });
