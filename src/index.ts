@@ -316,7 +316,7 @@ app.post("/predict", upload.single("file"), async (req, res) => {
       try {
         await f.unlink(file);
       } catch (e) {
-        console.warn("❌ Failed to delete:", file, e.message);
+        console.warn("❌ Failed to delete:", file, e instanceof Error ? e.message : String(e));
       }
     }
   }
@@ -365,7 +365,7 @@ app.post("/train", upload.single("file"), async (req, res) => {
       try {
         await f.unlink(file);
       } catch (e) {
-        console.warn("❌ Failed to delete:", file, e.message);
+        console.warn("❌ Failed to delete:", file, e instanceof Error ? e.message : String(e));
       }
     }
   }
