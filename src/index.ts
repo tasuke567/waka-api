@@ -16,12 +16,13 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PORT = process.env.PORT ?? 3000;
 const WEKA_JAR =
   process.env.WEKA_JAR || path.join(__dirname, "../model/weka.jar");
-const MTJ_JAR = process.env.MTJ_JAR ?? "model/mtj-1.0.4.jar";
+const MTJ_JAR =
+  process.env.MTJ_JAR ?? path.join(__dirname, "../model/mtj-1.0.4.jar");
 const MODEL = path.join(__dirname, "../model/myJ48.model");
-const HEADER = fs.readFileSync(
-  path.join(__dirname, "../model/header.arff.tpl"),
-  "utf8"
-);
+const HEADER_PATH = path.join(__dirname, "../model/header.arff");
+const HEADER = existsSync(HEADER_PATH)
+  ? fs.readFileSync(HEADER_PATH, "utf8")
+  : fs.readFileSync(path.join(__dirname, "../model/header.arff.tpl"), "utf8");
 const CLASS_ATTR = "Current_brand"; // ชื่อคอลัมน์ที่เป็น class label
 const WEKA_CP = [WEKA_JAR, MTJ_JAR].join(path.delimiter);
 
@@ -33,18 +34,17 @@ interface Prediction {
 // Replace checkJava() with this version
 function checkJava() {
   const javaPath = path.join(process.cwd(), "java/bin/java");
-
-  if (!existsSync(javaPath)) {
-    throw new Error(`Java not found at ${javaPath}`);
-  }
+  const minVersion = 17;
 
   try {
-    execSync(`"${javaPath}" -version 2>&1`);
-    console.log("✅ Java found at:", javaPath);
+    const versionOutput = execSync(`"${javaPath}" -version 2>&1`).toString();
+    const versionMatch = versionOutput.match(/version "(\d+)\./);
+    
+    if (!versionMatch || parseInt(versionMatch[1]) < minVersion) {
+      throw new Error(`Java ${minVersion}+ required`);
+    }
   } catch (e) {
-    throw new Error(
-      `Java verification failed: ${e instanceof Error ? e.message : String(e)}`
-    );
+    throw new Error(`Java check failed: ${e instanceof Error ? e.message : String(e)}`);
   }
 }
 /* ---------- multer ---------- */
@@ -89,7 +89,11 @@ const upload = multer({
 });
 
 /* ---------- helpers ---------- */
-async function buildArff(csvPath: string, isTrain: boolean): Promise<string> {
+async function buildArff(
+  csvPath: string,
+  isTrain: boolean,
+  modelDir: string
+): Promise<string> {
   // Use absolute paths consistently
   const __dirname = path.dirname(fileURLToPath(import.meta.url));
   const uploadDir = path.join(__dirname, "uploads");
@@ -106,6 +110,8 @@ async function buildArff(csvPath: string, isTrain: boolean): Promise<string> {
       .pipe(
         csvParser({
           mapHeaders: ({ header }) => header.replace(/^\uFEFF/, "").trim(),
+          mapValues: ({ value }) =>
+            typeof value === "string" ? value.trim().normalize("NFKC") : value, // เพิ่มการ normalize ค่า
         })
       )
       .on("headers", (hdrs: string[]) => {
@@ -120,14 +126,17 @@ async function buildArff(csvPath: string, isTrain: boolean): Promise<string> {
   if (!rows.length) throw new Error("No data in CSV");
 
   // 2) Load header template
-  const headerPath = path.join(__dirname, "../model/header.arff.tpl");
+  const headerPath = path.join(modelDir, "header.arff");
   const HEADER = fs.readFileSync(headerPath, "utf8");
 
   // 3) Extract attributes
   const cols = HEADER.split("\n")
     .filter((l) => l.trim().startsWith("@ATTRIBUTE"))
     .map((l) => l.trim().split(/\s+/)[1]);
-
+  // ในฟังก์ชัน buildArff
+  if (isTrain && !cols.includes(CLASS_ATTR)) {
+    throw new Error(`Missing class attribute "${CLASS_ATTR}" in CSV`);
+  }
   // 4) Prepare ARFF path
   const arffPath = path.join(uploadDir, `${crypto.randomUUID()}.arff`);
 
@@ -194,14 +203,16 @@ function wekaPredict(arff: string, modelPath: string): Promise<Prediction> {
       console.log("=== WEKA STDERR ===\n", stderr);
 
       if (err || stderr.includes("Exception")) {
-        return reject(new Error(stderr || err?.message || "Weka execution failed"));
+        return reject(
+          new Error(stderr || err?.message || "Weka execution failed")
+        );
       }
 
       // Improved parsing logic
       try {
         const predictionLine = stdout
-          .split('\n')
-          .find(line => line.includes(':') && line.includes('distribution'));
+          .split("\n")
+          .find((line) => line.includes(":") && line.includes("distribution"));
 
         if (!predictionLine) {
           throw new Error("No prediction line found");
@@ -210,17 +221,21 @@ function wekaPredict(arff: string, modelPath: string): Promise<Prediction> {
         const parts = predictionLine
           .trim()
           .split(/\s+/)
-          .filter(p => p !== '');
-        
-        const label = parts[parts.length - 2].split(':').pop()!;
+          .filter((p) => p !== "");
+
+        const label = parts[parts.length - 2].split(":").pop()!;
         const distribution = parts[parts.length - 1]
-          .replace(/[\[\]]/g, '')
-          .split(',')
+          .replace(/[\[\]]/g, "")
+          .split(",")
           .map(parseFloat);
 
         resolve({ label, distribution });
       } catch (parseError) {
-        reject(new Error(`Failed to parse Weka output: ${parseError}\nOutput:\n${stdout}`));
+        reject(
+          new Error(
+            `Failed to parse Weka output: ${parseError}\nOutput:\n${stdout}`
+          )
+        );
       }
     });
   });
@@ -233,8 +248,10 @@ function wekaTrain(
   options: string[] = []
 ) {
   return new Promise<string>((ok, bad) => {
+    const javaPath = path.resolve(process.cwd(), "java/bin/java");
     // สร้างโฟลเดอร์เก็บโมเดลถ้ายังไม่มี
-    const modelDir = path.resolve("model");
+    const modelDir = path.dirname(MODEL);
+    const headerPath = path.join(modelDir, "header.arff");
     if (!existsSync(modelDir)) fs.mkdirSync(modelDir, { recursive: true });
 
     const outModel = path.join(modelDir, modelName);
@@ -250,8 +267,8 @@ function wekaTrain(
       ...options, // tuning options ถ้ามี
     ];
 
-    console.log("Training CMD:", ["java", ...args].join(" "));
-    execFile("java", args, { encoding: "utf8" }, (e, out, err) => {
+    console.log("Training CMD:", [javaPath, ...args].join(" "));
+    execFile(javaPath, args, { encoding: "utf8" }, (e, out, err) => {
       if (err) console.error("TRAIN-ERR\n", err);
       if (e) return bad(err || e.message);
       console.log("TRAIN-OUT\n", out);
@@ -272,7 +289,7 @@ app.post("/predict", upload.single("file"), async (req, res) => {
     return;
   }
 
-  const tmp = await buildArff(req.file.path, false); // isTrain = false
+  const tmp = await buildArff(req.file.path, false, path.dirname(MODEL)); // isTrain = false
 
   try {
     const brand = await wekaPredict(tmp, MODEL);
@@ -291,6 +308,18 @@ app.post("/predict", upload.single("file"), async (req, res) => {
     if (tmp) {
       await f.unlink(tmp).catch(console.error);
     }
+
+    const filesToDelete = [
+      req.file?.path,
+      tmp,
+      path.join(uploadDir, "empty.arff"),
+    ];
+
+    await Promise.all(
+      filesToDelete
+        .filter(Boolean)
+        .map((file) => f.unlink(file!).catch(console.error))
+    );
   }
 });
 
@@ -311,8 +340,14 @@ app.post("/train", upload.single("file"), async (req, res) => {
     const arffPath =
       ext === ".arff"
         ? path.resolve(req.file.path).replace(/\\/g, "/")
-        : await buildArff(req.file.path, true); // isTrain = true
+        : await buildArff(req.file.path, true, path.dirname(MODEL)); // isTrain = true
+    const actualHeader = fs
+      .readFileSync(arffPath, "utf8")
+      .split("@DATA")[0]
+      .trim();
 
+    const modelDir = path.dirname(MODEL);
+    fs.writeFileSync(path.join(modelDir, "header.arff"), actualHeader);
     // train
     const modelFile = modelName ?? crypto.randomUUID() + ".model";
     const modelPath = await wekaTrain(algorithm, arffPath, modelFile, options);
