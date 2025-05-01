@@ -8,15 +8,20 @@ import { execFile } from "node:child_process";
 import fs, { promises as f } from "node:fs";
 import { existsSync } from "node:fs";
 import path from "node:path";
+import { fileURLToPath } from 'url';
 import { log } from "node:console";
 import csvParser from "csv-parser";
 
-const PORT = process.env.PORT ?? 3000;
-const WEKA_JAR = process.env.WEKA_JAR ?? "model/weka.jar";
-const MTJ_JAR = process.env.MTJ_JAR ?? "model/mtj-1.0.4.jar";
-const MODEL = "./model/myJ48.model"; // ชื่อไฟล์โมเดลที่สร้างจากการเทรน
-const HEADER = fs.readFileSync("model/header.arff.tpl", "utf8");
 
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const PORT = process.env.PORT ?? 3000;
+const WEKA_JAR = process.env.WEKA_JAR || path.join(__dirname, '../model/weka.jar');
+const MTJ_JAR = process.env.MTJ_JAR ?? "model/mtj-1.0.4.jar";
+const MODEL = path.join(__dirname, '../model/myJ48.model');
+const HEADER = fs.readFileSync(
+  path.join(__dirname, '../model/header.arff.tpl'), 
+  "utf8"
+);
 const CLASS_ATTR = "Current_brand"; // ชื่อคอลัมน์ที่เป็น class label
 const WEKA_CP = [WEKA_JAR, MTJ_JAR].join(path.delimiter);
 
