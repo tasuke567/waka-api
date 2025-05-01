@@ -192,7 +192,10 @@ if (!existsSync(MODEL)) throw new Error("Model not found: " + MODEL);
 const app = express();
 
 app.post("/predict", upload.single("file"), async (req, res) => {
-  if (!req.file) return res.status(400).json({ error: "file missing" });
+  if (!req.file) {
+    res.status(400).json({ error: "file missing" });
+    return;
+  }
 
   const tmp = await buildArff(req.file.path, false); // isTrain = false
 
@@ -213,7 +216,10 @@ app.post("/predict", upload.single("file"), async (req, res) => {
 });
 
 app.post("/train", upload.single("file"), async (req, res) => {
-  if (!req.file) return res.status(400).json({ error: "file missing" });
+  if (!req.file) {
+    res.status(400).json({ error: "file missing" });
+    return;
+  }
 
   const { algorithm = "weka.classifiers.trees.J48", modelName } = req.body;
   const options = req.body.options
