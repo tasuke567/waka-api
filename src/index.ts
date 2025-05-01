@@ -283,7 +283,6 @@ function wekaTrain(
   });
 }
 
-
 function listFilesWithTime(dir: string) {
   if (!existsSync(dir)) return [];
   return readdirSync(dir)
@@ -314,27 +313,27 @@ app.post("/predict", upload.single("file"), async (req, res) => {
 
   try {
     // สร้างชื่อไฟล์แบบ debug-friendly
-    const sessionId = uuidv4(); // หรือใช้ req.ip, user id, etc.
-    const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
-    const debugFileName = `predict-${timestamp}-${sessionId}.arff`;
-    const debugPath = path.join(uploadDir, debugFileName);
 
     // 🔧 สร้าง .arff ปกติ
     const tmp = await buildArff(req.file.path, false, path.dirname(MODEL));
 
+    // ✅ คัดลอกสำเนาเพื่อให้ Weka ใช้ไฟล์นี้โดยตรง
+    const sessionId = uuidv4();
+    const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
+    const safeArffName = `predict-${timestamp}-${sessionId}.arff`;
+    const safeArffPath = path.join(uploadDir, safeArffName);
     // ✅ คัดลอกเก็บถาวร
-    fs.copyFileSync(tmp, debugPath);
+    fs.copyFileSync(tmp, safeArffPath);
 
     // 🔍 log เพื่อ confirm
-    console.log("📄 Saved ARFF copy to:", debugPath);
+    console.log("📄 Saved ARFF copy to:", safeArffPath);
 
     // ✅ ทำ prediction ปกติ
-    const brand = await wekaPredict(tmp, MODEL);
+    const brand = await wekaPredict(safeArffPath, MODEL);
     res.json({ brand });
 
     // ❌ ไม่ลบไฟล์
     // คุณสามารถใช้ระบบ cron หรือ admin endpoint มาลบทีหลัง
-
   } catch (e) {
     const errorMessage = `Prediction failed: ${String(e)}`;
     console.error(errorMessage);
@@ -347,7 +346,6 @@ app.post("/predict", upload.single("file"), async (req, res) => {
 
 const trainUploadDir = path.join(uploadDir, "train");
 if (!existsSync(trainUploadDir)) mkdirSync(trainUploadDir, { recursive: true });
-
 
 app.post("/train", upload.single("file"), async (req, res) => {
   if (!req.file) {
@@ -382,10 +380,18 @@ app.post("/train", upload.single("file"), async (req, res) => {
       .readFileSync(arffPath, "utf8")
       .split("@DATA")[0]
       .trim();
-    fs.writeFileSync(path.join(path.dirname(MODEL), "header.arff"), actualHeader);
+    fs.writeFileSync(
+      path.join(path.dirname(MODEL), "header.arff"),
+      actualHeader
+    );
 
     const finalModelFile = modelName ?? `${sessionId}.model`;
-    const modelPath = await wekaTrain(algorithm, arffPath, finalModelFile, options);
+    const modelPath = await wekaTrain(
+      algorithm,
+      arffPath,
+      finalModelFile,
+      options
+    );
 
     res.json({ model: modelPath });
   } catch (e: any) {
@@ -446,13 +452,10 @@ app.get("/system-check", (req, res) => {
   res.json(checks);
 });
 
-
-
-
 // 🔁 รายการไฟล์ prediction
 app.get("/predict-history", (req, res) => {
-  const files = listFilesWithTime(uploadDir).filter((f) =>
-    f.file.startsWith("predict-") && f.file.endsWith(".arff")
+  const files = listFilesWithTime(uploadDir).filter(
+    (f) => f.file.startsWith("predict-") && f.file.endsWith(".arff")
   );
   res.json(files);
 });
@@ -460,8 +463,8 @@ app.get("/predict-history", (req, res) => {
 // 🔁 รายการไฟล์ training
 app.get("/train-history", (req, res) => {
   const trainDir = path.join(uploadDir, "train");
-  const files = listFilesWithTime(trainDir).filter((f) =>
-    f.file.startsWith("train-") && f.file.endsWith(".arff")
+  const files = listFilesWithTime(trainDir).filter(
+    (f) => f.file.startsWith("train-") && f.file.endsWith(".arff")
   );
   res.json(files);
 });
@@ -480,5 +483,3 @@ requiredFiles.forEach((file) => {
   }
 });
 app.listen(PORT, () => console.log(`🚀  http://localhost:${PORT}`));
-
-
