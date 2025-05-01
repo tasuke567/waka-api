@@ -30,14 +30,19 @@ interface Prediction {
   distribution: number[]; // เช่น [0.10, 0.05, 0.40, 0.15, 0.30]
 }
 
+// Replace checkJava() with this version
 function checkJava() {
+  const javaPath = path.join(process.cwd(), 'java/bin/java');
+  
+  if (!existsSync(javaPath)) {
+    throw new Error(`Java not found at ${javaPath}`);
+  }
+
   try {
-    execSync("java -version", { stdio: "inherit" });
+    execSync(`"${javaPath}" -version 2>&1`);
+    console.log('✅ Java found at:', javaPath);
   } catch (e) {
-    throw new Error(
-      "Java Runtime Environment (JRE) is required but not found.\n" +
-        "Install with: sudo apt-get install openjdk-17-jre"
-    );
+    throw new Error(`Java verification failed: ${e.message}`);
   }
 }
 /* ---------- multer ---------- */
@@ -166,8 +171,9 @@ async function buildArff(csvPath: string, isTrain: boolean): Promise<string> {
 }
 
 function wekaPredict(arff: string, modelPath: string): Promise<Prediction> {
+  const javaPath = path.resolve(process.cwd(), 'java/bin/java');
   return new Promise((resolve, reject) => {
-    const javaPath = "/usr/bin/java";
+   
     const args = [
       "-Xmx1G",
       "-cp",
