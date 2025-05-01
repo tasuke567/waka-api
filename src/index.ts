@@ -293,9 +293,11 @@ app.post("/predict", upload.single("file"), async (req, res) => {
     return;
   }
 
-  const tmp = await buildArff(req.file.path, false, path.dirname(MODEL)); // isTrain = false
+  let tmp: string | null = null;
 
   try {
+    tmp = await buildArff(req.file.path, false, path.dirname(MODEL)); // isTrain = false
+
     const brand = await wekaPredict(tmp, MODEL);
     res.json({ brand });
   } catch (e) {
@@ -306,26 +308,17 @@ app.post("/predict", upload.single("file"), async (req, res) => {
       details: e instanceof Error ? e.stack : undefined,
     });
   } finally {
-    if (req.file?.path) {
-      await f.unlink(req.file.path).catch(console.error);
-    }
-    if (tmp) {
-      await f.unlink(tmp).catch(console.error);
-    }
+    const filesToDelete = [req.file?.path, tmp]
+      .filter(Boolean) // ลบ null/undefined
+      .map((file) => path.resolve(file!)); // normalize path
 
-    const filesToDelete = [
-      req.file?.path,
-      tmp,
-      path.join(uploadDir, "empty.arff"),
-    ].filter(Boolean);
-
-    await Promise.all(
-      filesToDelete.map(async (file) => {
-        if (await f.access(file).catch(() => false)) {
-          await f.unlink(file).catch(console.error);
-        }
-      })
-    );
+    for (const file of filesToDelete) {
+      try {
+        await f.unlink(file);
+      } catch (e) {
+        console.warn("❌ Failed to delete:", file, e.message);
+      }
+    }
   }
 });
 
@@ -340,13 +333,15 @@ app.post("/train", upload.single("file"), async (req, res) => {
     ? (req.body.options as string).trim().split(/\s+/)
     : [];
 
+  let arffPath: string | null = null;
+
   try {
-    // prepare ARFF
     const ext = path.extname(req.file.originalname).toLowerCase();
-    const arffPath =
+    arffPath =
       ext === ".arff"
         ? path.resolve(req.file.path).replace(/\\/g, "/")
         : await buildArff(req.file.path, true, path.dirname(MODEL)); // isTrain = true
+
     const actualHeader = fs
       .readFileSync(arffPath, "utf8")
       .split("@DATA")[0]
@@ -354,7 +349,7 @@ app.post("/train", upload.single("file"), async (req, res) => {
 
     const modelDir = path.dirname(MODEL);
     fs.writeFileSync(path.join(modelDir, "header.arff"), actualHeader);
-    // train
+
     const modelFile = modelName ?? crypto.randomUUID() + ".model";
     const modelPath = await wekaTrain(algorithm, arffPath, modelFile, options);
 
@@ -362,11 +357,17 @@ app.post("/train", upload.single("file"), async (req, res) => {
   } catch (e: any) {
     res.status(500).json({ error: e.message });
   } finally {
-    // cleanup upload and temp ARFF
-    await f.rm(req.file.path, { force: true });
-    // if buildArff created a different path, remove it too
-    // await f.rm(tmp, { force: true }); // not needed if we return the path from buildArff
-    // (you could track and remove inside buildArff instead)
+    const filesToDelete = [req.file?.path, arffPath]
+      .filter(Boolean)
+      .map((file) => path.resolve(file!));
+
+    for (const file of filesToDelete) {
+      try {
+        await f.unlink(file);
+      } catch (e) {
+        console.warn("❌ Failed to delete:", file, e.message);
+      }
+    }
   }
 });
 
