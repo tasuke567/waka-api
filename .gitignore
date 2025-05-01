@@ -40,9 +40,7 @@ coverage/
 # ===== Weka / Models / Uploads =====
 uploads/
 model/*.model
-model/*.arff.tpl
-model/weka.jar
-model/mtj-*.jar
+
 
 # ===== Misc =====
 *.swp
