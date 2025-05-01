@@ -40,7 +40,7 @@ coverage/
 # ===== Weka / Models / Uploads =====
 uploads/
 model/*.model
-
+!model/header.arff
 
 # ===== Misc =====
 *.swp

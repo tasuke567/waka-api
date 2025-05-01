@@ -7,7 +7,8 @@
     "build": "tsc && cp -r model/ dist/model/",
     "start": "node dist/index.js",
     "test:java": "java -version",
-    "dev": "nodemon --exec ts-node src/index.ts"
+    "dev": "nodemon --exec ts-node src/index.ts",
+    "generate-header": "cp model/header.arff.tpl model/header.arff"
   },
   "keywords": [],
   "author": "",

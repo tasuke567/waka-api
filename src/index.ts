@@ -394,4 +394,16 @@ app.get("/model-info", (req, res) => {
   );
 });
 checkJava();
+// เพิ่มก่อน app.listen()
+const requiredFiles = [
+  path.join(__dirname, "../model/header.arff"),
+  path.join(__dirname, "../model/header.arff.tpl"),
+  MODEL
+];
+
+requiredFiles.forEach(file => {
+  if (!existsSync(file)) {
+    throw new Error(`Missing required file: ${file}`);
+  }
+});
 app.listen(PORT, () => console.log(`🚀  http://localhost:${PORT}`));
