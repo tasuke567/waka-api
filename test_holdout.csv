@@ -1,0 +1,173 @@
+Gender,Age_range,Status,Top3_smartphone_activities,Frequent_apps,Daily_usage_duration,Smartphone_importance,Current_brand,Key_factor_online_purchase,Brand_satisfaction,Purchase_problem,Monthly_income,Occupation
+Female,18-25,Student,"TikTok, Livestream, Search information",TikTok,>5 hours,Highly essential,Apple,Brand,5,Insufficient storage,Less than 15000,Student
+Female,18-25,Student,"TikTok, Livestream, Search information",TikTok,>5 hours,Highly essential,Apple,Brand,5,Insufficient storage,Less than 15000,Student
+Male,18-25,Single,"Play games, Take photos/videos, Social media","Instagram, Facebook, YouTube, Facebook Messenger, TikTok",>5 hours,Highly essential,Apple,Product reviews,5,Warranty or service concerns,Less than 15000,Student
+Female,18-25,Single,"Watch movies/listen to music, Play games, Communication/meetings","Instagram, Facebook, YouTube, Spotify, TikTok",>5 hours,Highly essential,Apple,Price,4,Unable to inspect product,Less than 15000,Student
+Female,18-25,Single,"Watch movies/listen to music, Social media",YouTube,>5 hours,Essential,Apple,Product features,4,Warranty or service concerns,Less than 15000,Student
+Female,18-25,Single,"Communication/meetings, Social media",Instagram,1-3 hours,Essential,Apple,Product features,4,Unable to inspect product,15001-20000,Student
+Male,26-32,Single,"Take photos/videos, Communication/meetings, Social media","Facebook, Facebook Messenger, Line",3-5 hours,Highly essential,Apple,Product features,5,Warranty or service concerns,30001-40000,Business owner
+Female,18-25,Single,"Take photos/videos, Communication/meetings, Social media","Facebook, Facebook Messenger, Line",3-5 hours,Highly essential,Apple,Product features,5,Warranty or service concerns,30001-40000,Business owner
+Female,18-25,Student,"TikTok, Livestream, Search information",TikTok,>5 hours,Highly essential,Apple,Brand,5,Insufficient storage,Less than 15000,Student
+Male,18-25,Single,"Watch movies/listen to music, Play games, Social media","Instagram, Facebook, YouTube, Facebook Messenger, Spotify, WhatsApp, TikTok, Telegram",>5 hours,Highly essential,Apple,Price,4,Concerns about payment security,Less than 15000,Student
+Female,18-25,Student,"TikTok, Livestream, Search information",TikTok,>5 hours,Highly essential,Apple,Brand,5,Insufficient storage,Less than 15000,Student
+Male,18-25,Single,"Play games, Take photos/videos, Social media","Instagram, Facebook, YouTube, Facebook Messenger, TikTok",>5 hours,Highly essential,Apple,Product reviews,5,Warranty or service concerns,Less than 15000,Student
+Male,18-25,Single,"Play games, Take photos/videos, Social media","Facebook, Facebook Messenger, Spotify, TikTok",3-5 hours,Highly essential,Apple,Product features,5,Unable to inspect product,20001-30000,Student
+Female,18-25,Single,"Watch movies/listen to music, Play games, Social media",Instagram,3-5 hours,Highly essential,Apple,Product features,5,Unable to inspect product,15001-20000,Student
+Male,18-25,Single,Watch movies/listen to music,"Instagram, Facebook, YouTube, Snapchat, Facebook Messenger, Spotify, WhatsApp, TikTok",3-5 hours,Highly essential,Apple,Price,3,Concerns about payment security,Less than 15000,Student
+Male,18-25,Single,Watch movies/listen to music,"YouTube, Facebook Messenger, Discord, Wise",>5 hours,Essential,Apple,Product features,4,Unable to inspect product, 50001 ,Business owner
+Male,18-25,Single,"Watch movies/listen to music, Play games, Take photos/videos","Instagram, Facebook, YouTube, Facebook Messenger, Spotify, TikTok",3-5 hours,Essential,Apple,Price,5,Concerns about payment security,Less than 15000,Student
+Female,18-25,Single,"Watch movies/listen to music, Take photos/videos, Social media",TikTok,3-5 hours,Highly essential,Apple,Product reviews,3,Warranty or service concerns,Less than 15000,Student
+Male,18-25,Single,"Watch movies/listen to music, Play games, Social media","Instagram, Facebook, YouTube, Facebook Messenger, TikTok",>5 hours,Highly essential,Apple,Product features,5,Warranty or service concerns,Less than 15000,Student
+Male,18-25,Single,"Watch movies/listen to music, Play games, Social media","Instagram, Facebook Messenger, TikTok",>5 hours,Essential,Apple,Product features,4,Concerns about payment security,Less than 15000,Student
+Female,26-32,Single,"Take photos/videos, Communication/meetings, Social media","Facebook, Facebook Messenger, Line",3-5 hours,Highly essential,Apple,Product features,5,Warranty or service concerns,30001-40000,Business owner
+Male,18-25,Single,"Watch movies/listen to music, Play games, Social media","Instagram, Facebook, YouTube, Facebook Messenger, TikTok",>5 hours,Essential,Apple,Product reviews,5,Warranty or service concerns,Less than 15000,Student
+Female,26-32,Single,"Take photos/videos, Communication/meetings, Social media","Facebook, Facebook Messenger, Line",3-5 hours,Highly essential,Apple,Product features,5,Warranty or service concerns,30001-40000,Business owner
+Female,26-32,Married,"Watch movies/listen to music, Communication/meetings, Social media","Instagram, Facebook, YouTube, Facebook Messenger",3-5 hours,Highly essential,Apple,Price,5,Unable to inspect product,20001-30000,Business owner
+Female,26-35,Single,"Online meetings, Schedule management, Email",Microsoft Teams,3-5 hours,Highly essential,Apple,Ecosystem,5,Product is too expensive,50001-100000,Manager
+Female,18-25,Single,"Watch movies/listen to music, Play games, Social media",TikTok,3-5 hours,Essential,Apple,Product reviews,4,Concerns about payment security,Less than 15000,Student
+Female,18-25,Single,"Cloud apps, Communication/meetings, Social media","Instagram, Facebook, Facebook Messenger, TikTok, LINE",>5 hours,Highly essential,Apple,Price,5,Unable to inspect product,20001-30000,Student
+Male,26-32,Married,Play games,YouTube,>5 hours,Highly essential,Apple,Price,5,Unable to inspect product,30001-40000,Business owner
+Female,18-25,Single,Watch movies/listen to music,"Instagram, YouTube, TikTok",3-5 hours,Highly essential,Apple,Product features,4,Concerns about payment security,Less than 15000,Student
+Female,18-25,Student,"TikTok, Livestream, Search information",TikTok,>5 hours,Highly essential,Apple,Brand,5,Insufficient storage,Less than 15000,Student
+Male,18-25,Student,"Watch movies/listen to music, Play games, Take photos/videos",TikTok,0-1 hours,Highly essential,Apple,Price,5,Concerns about payment security,Less than 15000,Student
+Female,26-32,Single,"Take photos/videos, Communication/meetings, Social media","Instagram, Facebook, YouTube, Facebook Messenger, Spotify, TikTok",>5 hours,Essential,Apple,Product reviews,4,Unable to inspect product,20001-30000,Business owner
+Male,18-25,Single,Watch movies/listen to music,YouTube,1-3 hours,Essential,Apple,Price,3,Warranty or service concerns,20001-30000,Private company employee
+LGBTQ+,18-25,Single,"Watch movies/listen to music, Take photos/videos, Social media","Instagram, Facebook, Facebook Messenger, Spotify, TikTok",>5 hours,Highly essential,Apple,Product features,5,Unable to inspect product,15001-20000,Student
+Male,26-32,Married,Play games,YouTube,>5 hours,Highly essential,Apple,Price,5,Unable to inspect product,30001-40000,Business owner
+Female,18-25,Single,"Watch movies/listen to music, Communication/meetings, Social media","Instagram, YouTube, TikTok",>5 hours,Highly essential,Apple,Product features,5,Unable to inspect product,Less than 15000,Student
+Male,26-32,Single,"Take photos/videos, Communication/meetings, Social media","Facebook, Facebook Messenger, Line",3-5 hours,Highly essential,Apple,Product features,5,Warranty or service concerns,30001-40000,Business owner
+Male,18-25,Single,"Watch movies/listen to music, Play games","Instagram, Facebook, YouTube, Facebook Messenger, TikTok",>5 hours,Highly essential,Apple,Product features,5,Unable to inspect product,Less than 15000,Student
+Female,18-25,Single,"Watch movies/listen to music, Play games, Communication/meetings",Instagram,>5 hours,Essential,Apple,Product features,3,Unable to inspect product,Less than 15000,Student
+Female,26-35,Single,"Online meetings, Schedule management, Email",Microsoft Teams,3-5 hours,Highly essential,Apple,Ecosystem,5,Product is too expensive,50001-100000,Manager
+Female,26-35,Single,"Online meetings, Schedule management, Email",Microsoft Teams,3-5 hours,Highly essential,Apple,Ecosystem,5,Product is too expensive,50001-100000,Manager
+Female,26-32,Single,"Take photos/videos, Communication/meetings, Social media","Facebook, Facebook Messenger, Line",3-5 hours,Highly essential,Apple,Product features,5,Warranty or service concerns,30001-40000,Business owner
+Female,18-25,Single,"Watch movies/listen to music, Play games, Social media",Instagram,3-5 hours,Highly essential,Apple,Product features,5,Unable to inspect product,15001-20000,Student
+Male,18-25,Single,"Watch movies/listen to music, Communication/meetings, Social media","Instagram, Facebook, YouTube, Facebook Messenger, Spotify, TikTok, Telegram",1-3 hours,Highly essential,Calculator,Product features,5,Concerns about payment security,15001-20000,Student
+Female,18-25,Married,"Watch movies/listen to music, Take photos/videos, Social media","Instagram, Facebook, Facebook Messenger, Spotify, TikTok",>5 hours,Highly essential,Huawei,Price,5,Unable to inspect product,Less than 15000,Student
+Male,18-25,Single,"Watch movies/listen to music, Play games, Social media","Instagram, Facebook, YouTube, Facebook Messenger, Spotify, TikTok",>5 hours,Highly essential,Infinix,Product features,4,Warranty or service concerns,Less than 15000,Student
+Male,46-55,Married,"Read news, Check stocks, Finance",SET,0-1 hours,Not important,Oppo,Simplicity,3,Outdated system,100001-150000,Investor
+Female,36-45,Married,"Track delivery, Customer chat, Email",Shopee,1-3 hours,Essential,Oppo,Stability,3,System crashes frequently,15001-20000,Logistics staff
+Male,46-55,Married,"Read news, Check stocks, Finance",SET,0-1 hours,Not important,Oppo,Simplicity,3,Outdated system,100001-150000,Investor
+Female,26-35,Working,"Watch movies, Take photos, Listen to music",TikTok,1-3 hours,Essential,Oppo,Price,3,Uncertainty about warranty,15001-20000,Employee
+Male,46-55,Married,"Read news, Check stocks, Finance",SET,0-1 hours,Not important,Oppo,Simplicity,3,Outdated system,100001-150000,Investor
+Male,46-55,Married,"Read news, Check stocks, Finance",SET,0-1 hours,Not important,Oppo,Simplicity,3,Outdated system,100001-150000,Investor
+Female,36-45,Married,"Track delivery, Customer chat, Email",Shopee,1-3 hours,Essential,Oppo,Stability,3,System crashes frequently,15001-20000,Logistics staff
+Female,36-45,Married,"/, Email, Finance",LINE,1-3 hours,Somewhat important,Oppo,Price,3,Difficult to compare prices,30001-50000,Business owner
+Female,36-45,Married,"/, Email, Finance",LINE,1-3 hours,Somewhat important,Oppo,Price,3,Difficult to compare prices,30001-50000,Business owner
+Male,46-55,Married,"Read news, Check stocks, Finance",SET,0-1 hours,Not important,Oppo,Simplicity,3,Outdated system,100001-150000,Investor
+Male,46-55,Married,"Email, , Finance",Gmail,0-1 hours,Not important,Oppo,Durability,2,No problems,50001-100000,Civil servant
+Female,36-45,Married,"Track delivery, Customer chat, Email",Shopee,1-3 hours,Essential,Oppo,Stability,3,System crashes frequently,15001-20000,Logistics staff
+Male,46-55,Married,"Email, , Finance",Gmail,0-1 hours,Not important,Oppo,Durability,2,No problems,50001-100000,Civil servant
+Female,18-25,Student,"Watch movies, Take photos, Listen to music",TikTok,0-1 hours,Essential,Oppo,Price,3,Uncertainty about warranty,Less than 15000,Student
+Male,18-25,Student,"Play games, Take photos, Watch movies",Instagram,1-3 hours,Essential,Oppo,Product features,4,Unable to inspect product,Less than 15000,Student
+Female,18-25,Student,"Watch movies, Listen to music, Take photos",Instagram,0-1 hours,Highly essential,Oppo,Price,3,Unable to inspect product,Less than 15000,Student
+Male,46-55,Married,"Read news, Check stocks, Finance",SET,0-1 hours,Not important,Oppo,Simplicity,3,Outdated system,100001-150000,Investor
+Male,18-25,Single,"Play games, Watch movies, Take photos",Instagram,1-3 hours,Essential,Oppo,Product features,4,Complex payment process,Less than 15000,Student
+Male,18-25,Single,"Watch movies/listen to music, Play games, Social media","Instagram, Facebook, Facebook Messenger, TikTok, Telegram",>5 hours,Essential,Oppo,Product features,3,Warranty or service concerns,Less than 15000,Student
+Male,46-55,Married,"Email, , Finance",Gmail,0-1 hours,Not important,Oppo,Durability,2,No problems,50001-100000,Civil servant
+Female,36-45,Married,"/, Email, Finance",LINE,1-3 hours,Somewhat important,Oppo,Price,3,Difficult to compare prices,30001-50000,Business owner
+Male,46-55,Married,"Read news, Check stocks, Finance",SET,0-1 hours,Not important,Oppo,Simplicity,3,Outdated system,100001-150000,Investor
+Female,36-45,Married,"Track delivery, Customer chat, Email",Shopee,1-3 hours,Essential,Oppo,Stability,3,System crashes frequently,15001-20000,Logistics staff
+Female,36-45,Married,"/, Email, Finance",LINE,1-3 hours,Somewhat important,Oppo,Price,3,Difficult to compare prices,30001-50000,Business owner
+Female,36-45,Married,"Track delivery, Customer chat, Email",Shopee,1-3 hours,Essential,Oppo,Stability,3,System crashes frequently,15001-20000,Logistics staff
+Female,36-45,Married,"/, Email, Finance",LINE,1-3 hours,Somewhat important,Oppo,Price,3,Difficult to compare prices,30001-50000,Business owner
+Male,46-55,Married,"Read news, Check stocks, Finance",SET,0-1 hours,Not important,Oppo,Simplicity,3,Outdated system,100001-150000,Investor
+Female,56+,Married,"Chat with family, Read e-books, Listen to radio",Facebook,0-1 hours,Not important,Other,Price,2,No problems,Less than 15000,Retired
+Female,56+,Married,"Chat with family, Read e-books, Listen to radio",Facebook,0-1 hours,Not important,Other,Price,2,No problems,Less than 15000,Retired
+Female,56+,Married,"Chat with family, Read e-books, Listen to radio",Facebook,0-1 hours,Not important,Other,Price,2,No problems,Less than 15000,Retired
+Female,56+,Married,"Chat with family, Read e-books, Listen to radio",Facebook,0-1 hours,Not important,Other,Price,2,No problems,Less than 15000,Retired
+Female,56+,Married,"Chat with family, Read e-books, Listen to radio",Facebook,0-1 hours,Not important,Other,Price,2,No problems,Less than 15000,Retired
+Male,18-25,Student,"Play esports, Stream games, Community chat",Discord,>5 hours,Highly essential,Realme,Performance,4,Device overheats,Less than 15000,Student
+Female,26-35,Married,"Online shopping, Social media, Finance",Facebook,1-3 hours,Somewhat important,Realme,Battery,4,Difficult return process,20001-30000,Housewife
+Female,18-25,Single,Watch movies/listen to music,Instagram,>5 hours,Highly essential,Realme,Product features,5,Unable to inspect product,Less than 15000,Student
+Male,26-35,Working,"Play games, Take photos, Watch movies",Facebook,>5 hours,Essential,Realme,Price,3,Payment issues,15001-20000,Employee
+Male,18-25,Student,"Play esports, Stream games, Community chat",Discord,>5 hours,Highly essential,Realme,Performance,4,Device overheats,Less than 15000,Student
+Female,26-35,Married,"Online shopping, Social media, Finance",Facebook,1-3 hours,Somewhat important,Realme,Battery,4,Difficult return process,20001-30000,Housewife
+Male,26-35,Working,"Play games, Watch movies, Take photos",TikTok,1-3 hours,Essential,Realme,Price,3,Uncertainty about warranty,15001-20000,Employee
+Male,18-25,Student,"Play games, Streaming, Social media",TikTok,>5 hours,Highly essential,Realme,Performance,4,Delivery delays,Less than 15000,Student
+Female,26-35,Married,"Online shopping, Social media, Finance",Facebook,1-3 hours,Somewhat important,Realme,Battery,4,Difficult return process,20001-30000,Housewife
+Male,18-25,Student,"Play games, Streaming, Social media",TikTok,>5 hours,Highly essential,Realme,Performance,4,Delivery delays,Less than 15000,Student
+Male,18-25,Student,"Play esports, Stream games, Community chat",Discord,>5 hours,Highly essential,Realme,Performance,4,Device overheats,Less than 15000,Student
+Female,26-35,Married,"Online shopping, Social media, Finance",Facebook,1-3 hours,Somewhat important,Realme,Battery,4,Difficult return process,20001-30000,Housewife
+Male,18-25,Single,"Watch movies/listen to music, Play games, Take photos/videos",Facebook,>5 hours,Highly essential,Realme,Product features,5,Warranty or service concerns,Less than 15000,Student
+Female,26-35,Working,"Watch movies, Take photos, Listen to music",Facebook,1-3 hours,Essential,Realme,Product features,4,Uncertainty about warranty,15001-20000,Employee
+Female,26-35,Married,"Online shopping, Social media, Finance",Facebook,1-3 hours,Somewhat important,Realme,Battery,4,Difficult return process,20001-30000,Housewife
+Male,18-25,Student,"Play games, Streaming, Social media",TikTok,>5 hours,Highly essential,Realme,Performance,4,Delivery delays,Less than 15000,Student
+Female,26-35,Married,"Online shopping, Social media, Finance",Facebook,1-3 hours,Somewhat important,Realme,Battery,4,Difficult return process,20001-30000,Housewife
+Male,18-25,Student,"Play games, Watch movies, Take photos",Instagram,0-1 hours,Essential,Realme,Price,3,Unable to inspect product,Less than 15000,Student
+Male,18-25,Single,"Watch movies/listen to music, Play games","Instagram, Facebook, YouTube, Facebook Messenger, TikTok",>5 hours,Essential,Realme,Product reviews,4,Concerns about payment security,Less than 15000,Student
+Male,18-25,Student,"Play esports, Stream games, Community chat",Discord,>5 hours,Highly essential,Realme,Performance,4,Device overheats,Less than 15000,Student
+Female,26-35,Married,"Online shopping, Social media, Finance",Facebook,1-3 hours,Somewhat important,Realme,Battery,4,Difficult return process,20001-30000,Housewife
+Male,18-25,Single,"Watch movies/listen to music, Take photos/videos, Communication/meetings","Instagram, Facebook, YouTube, Facebook Messenger, Telegram",1-3 hours,Essential,Realme 7 5G,Product features,3,Concerns about payment security,Less than 15000,Student
+Male,18-25,Single,"Watch movies/listen to music, Play games, Social media",Facebook,>5 hours,Highly essential,Redmi,Price,5,Issues with delivery,Less than 15000,Student
+Male,36-45,Married,"GPS navigation, Check car condition, Listen to podcasts",Google Maps,1-3 hours,Essential,Samsung,Durability,4,Dead pixels on screen,50001-100000,Delivery staff
+Male,18-25,Married,"Watch movies/listen to music, Social media","Instagram, Facebook, YouTube, Facebook Messenger, TikTok",1-3 hours,Highly essential,Samsung,Product reviews,4,Concerns about payment security,Less than 15000,Factory worker
+Male,18-25,Single,"Watch movies/listen to music, Play games, Social media",TikTok,>5 hours,Highly essential,Samsung,Product features,5,Concerns about payment security,Less than 15000,Student
+Female,33-40,Married,"Take photos/videos, Communication/meetings, Social media","Facebook, TikTok, Line",3-5 hours,Essential,Samsung,Product reviews,5,Concerns about payment security,30001-40000,Civil servant
+Female,18-25,Single,"Watch movies/listen to music, Play games, Communication/meetings",TikTok,>5 hours,Highly essential,Samsung,Price,5,Warranty or service concerns,Less than 15000,Student
+Female,33-40,Married,"Take photos/videos, Communication/meetings, Social media","Facebook, TikTok, Line",3-5 hours,Essential,Samsung,Product reviews,5,Concerns about payment security,30001-40000,Civil servant
+Female,36-45,Married,"Online shopping, Track delivery, Customer chat",LINE,1-3 hours,Essential,Samsung,Reliability,4,Difficult return process,30001-50000,Housewife
+Male,18-25,Single,"Watch movies/listen to music, Play games, Social media","Instagram, Facebook, YouTube, Facebook Messenger, TikTok",>5 hours,Highly essential,Samsung,Product reviews,3,Warranty or service concerns,Less than 15000,Student
+Female,18-25,Single,"Watch movies/listen to music, Play games, Social media","Instagram, Facebook, YouTube, Facebook Messenger, Spotify, TikTok",>5 hours,Highly essential,Samsung,Product reviews,4,Concerns about payment security,Less than 15000,Student
+Male,36-45,Married,"GPS navigation, Check car condition, Listen to podcasts",Google Maps,1-3 hours,Essential,Samsung,Durability,4,Dead pixels on screen,50001-100000,Delivery staff
+Male,36-45,Married,"GPS navigation, Check car condition, Listen to podcasts",Google Maps,1-3 hours,Essential,Samsung,Durability,4,Dead pixels on screen,50001-100000,Delivery staff
+Female,36-45,Married,"Online shopping, Track delivery, Customer chat",LINE,1-3 hours,Essential,Samsung,Reliability,4,Difficult return process,30001-50000,Housewife
+Female,36-45,Married,"Online shopping, Track delivery, Customer chat",LINE,1-3 hours,Essential,Samsung,Reliability,4,Difficult return process,30001-50000,Housewife
+Female,36-45,Married,"Online shopping, Track delivery, Customer chat",LINE,1-3 hours,Essential,Samsung,Reliability,4,Difficult return process,30001-50000,Housewife
+Male,18-25,Single,"Watch movies/listen to music, Play games, Social media","Instagram, Facebook, YouTube, Facebook Messenger, Spotify",>5 hours,Essential,Samsung,Product reviews,4,Unable to inspect product,Less than 15000,Student
+Male,18-25,Single,"Watch movies/listen to music, Play games, Social media",YouTube,3-5 hours,Essential,Samsung,Product features,1,Unable to inspect product,Less than 15000,Student
+Female,18-25,Single,"Watch movies/listen to music, Play games, Take photos/videos","Instagram, Facebook, YouTube, Facebook Messenger, Spotify, TikTok",>5 hours,Highly essential,Samsung,Price,5,Warranty or service concerns,Less than 15000,Student
+Male,36-45,Married,"GPS navigation, Check car condition, Listen to podcasts",Google Maps,1-3 hours,Essential,Samsung,Durability,4,Dead pixels on screen,50001-100000,Delivery staff
+LGBTQ+,18-25,Single,"Art photography, Video editing, Upload stories",VSCO,5-6 hours,Highly essential,Vivo,Sensor quality,5,No problems,20001-30000,Artist
+LGBTQ+,18-25,Single,"Art photography, Video editing, Upload stories",VSCO,5-6 hours,Highly essential,Vivo,Sensor quality,5,No problems,20001-30000,Artist
+Male,18-25,Student,"Play games, Take photos, Watch movies",TikTok,0-1 hours,Essential,Vivo,Price,3,Unable to inspect product,Less than 15000,Student
+LGBTQ+,18-25,Single,"Streaming, Take photos/videos, Edit video",CapCut,5-6 hours,Highly essential,Vivo,Camera,4,Limited warranty coverage,Less than 15000,Content creator
+Male,26-35,Single,"Play games, Streaming, Take photos/videos",YouTube,3-5 hours,Highly essential,Vivo,Features,4,Unable to inspect product,20001-30000,Office worker
+LGBTQ+,18-25,Single,"Art photography, Video editing, Upload stories",VSCO,5-6 hours,Highly essential,Vivo,Sensor quality,5,No problems,20001-30000,Artist
+Female,18-25,Student,"Social media, Take photos/videos, Watch movies/Listen to music",Instagram,>5 hours,Essential,Vivo,Design,5,Concerns about payment security,Less than 15000,Student
+Male,26-35,Single,"Play games, Streaming, Take photos/videos",YouTube,3-5 hours,Highly essential,Vivo,Features,4,Unable to inspect product,20001-30000,Office worker
+Male,18-25,Student,"Play games, Take photos, Watch movies",Instagram,0-1 hours,Essential,Vivo,Price,3,Concerns about safety,Less than 15000,Student
+Female,18-25,Single,"Watch movies, Listen to music, Take photos",TikTok,1-3 hours,Essential,Vivo,Product features,4,Cannot try product before buying,Less than 15000,Student
+LGBTQ+,18-25,Single,"Streaming, Take photos/videos, Edit video",CapCut,5-6 hours,Highly essential,Vivo,Camera,4,Limited warranty coverage,Less than 15000,Content creator
+Female,18-25,Student,"Watch movies, Listen to music, Take photos",TikTok,1-3 hours,Essential,Vivo,Product features,4,Cannot try product before buying,Less than 15000,Student
+Female,18-25,Student,"Social media, Take photos/videos, Watch movies/Listen to music",Instagram,>5 hours,Essential,Vivo,Design,5,Concerns about payment security,Less than 15000,Student
+LGBTQ+,18-25,Single,"Streaming, Take photos/videos, Edit video",CapCut,5-6 hours,Highly essential,Vivo,Camera,4,Limited warranty coverage,Less than 15000,Content creator
+Male,18-25,Single,"Watch movies/listen to music, Play games, Social media","Instagram, Facebook Messenger, TikTok",1-3 hours,Essential,Vivo,Product reviews,4,Unable to inspect product,15001-20000,Business owner
+Male,26-35,Working,"Play games, Watch movies, Take photos",TikTok,>5 hours,Essential,Vivo,Price,3,Unable to inspect product,15001-20000,Employee
+LGBTQ+,18-25,Single,"Streaming, Take photos/videos, Edit video",CapCut,5-6 hours,Highly essential,Vivo,Camera,4,Limited warranty coverage,Less than 15000,Content creator
+Male,18-25,Single,"Watch movies/listen to music, Play games, Social media","Instagram, Facebook, YouTube, Facebook Messenger, Spotify, TikTok",>5 hours,Essential,Vivo,Product features,4,Concerns about payment security,Less than 15000,Student
+LGBTQ+,18-25,Single,"Art photography, Video editing, Upload stories",VSCO,5-6 hours,Highly essential,Vivo,Sensor quality,5,No problems,20001-30000,Artist
+Female,26-35,Working,"Watch movies, Take photos, Listen to music",Facebook,1-3 hours,Essential,Vivo,Product features,4,Concerns about after-sales service,15001-20000,Employee
+Male,26-35,Single,"Play games, Streaming, Take photos/videos",YouTube,3-5 hours,Highly essential,Vivo,Features,4,Unable to inspect product,20001-30000,Office worker
+Male,26-35,Single,"Play games, Streaming, Take photos/videos",YouTube,3-5 hours,Highly essential,Vivo,Features,4,Unable to inspect product,20001-30000,Office worker
+LGBTQ+,18-25,Single,"Streaming, Take photos/videos, Edit video",CapCut,5-6 hours,Highly essential,Vivo,Camera,4,Limited warranty coverage,Less than 15000,Content creator
+Female,18-25,Student,"Social media, Take photos/videos, Watch movies/Listen to music",Instagram,>5 hours,Essential,Vivo,Design,5,Concerns about payment security,Less than 15000,Student
+LGBTQ+,18-25,Single,"Streaming, Take photos/videos, Edit video",CapCut,5-6 hours,Highly essential,Vivo,Camera,4,Limited warranty coverage,Less than 15000,Content creator
+Female,18-25,Student,"Social media, Take photos/videos, Watch movies/Listen to music",Instagram,>5 hours,Essential,Vivo,Design,5,Concerns about payment security,Less than 15000,Student
+Female,18-25,Single,"Watch movies/listen to music, Communication/meetings, Social media","Instagram, Facebook, YouTube, Facebook Messenger",>5 hours,Highly essential,Xiaomi,Product reviews,2,Warranty or service concerns,Less than 15000,Student
+Female,26-35,Single,"Take photos/videos, Watch movies/Listen to music, Online shopping",Shopee,3-5 hours,Essential,Xiaomi,Value for money,5,Product quality doesn't match ads,15001-20000,Freelancer
+Male,26-35,Single,"Product photography, Edit reviews, Online marketplace",Shopee,3-5 hours,Essential,Xiaomi,Value for money,4,Blurry camera,25001-35000,Online seller
+Female,26-35,Working,"Watch movies, Take photos, Listen to music",Instagram,1-3 hours,Essential,Xiaomi,Product features,2,After-sales service issues,15001-20000,Employee
+Male,26-35,Single,"Product photography, Edit reviews, Online marketplace",Shopee,3-5 hours,Essential,Xiaomi,Value for money,4,Blurry camera,25001-35000,Online seller
+Male,26-35,Single,"Product photography, Edit reviews, Online marketplace",Shopee,3-5 hours,Essential,Xiaomi,Value for money,4,Blurry camera,25001-35000,Online seller
+Male,18-25,Single,"Watch movies/listen to music, Play games, Take photos/videos","Instagram, Facebook, YouTube, Facebook Messenger, Spotify, TikTok",1-3 hours,Essential,Xiaomi,Product reviews,4,Warranty or service concerns,Less than 15000,Student
+Male,18-25,Student,"Play games, Take photos, Watch movies",TikTok,0-1 hours,Essential,Xiaomi,Price,3,Unable to inspect product,Less than 15000,Student
+Male,18-25,Student,"Play games, Take photos, Watch movies",TikTok,0-1 hours,Essential,Xiaomi,Price,3,Unable to inspect product,Less than 15000,Student
+Male,26-35,Single,"Product photography, Edit reviews, Online marketplace",Shopee,3-5 hours,Essential,Xiaomi,Value for money,4,Blurry camera,25001-35000,Online seller
+Female,26-35,Single,"Watch movies, Take photos, Listen to music",Facebook,1-3 hours,Essential,Xiaomi,Product features,2,Uncertainty about warranty,15001-20000,Office worker
+Female,26-35,Single,"Take photos/videos, Watch movies/Listen to music, Online shopping",Shopee,3-5 hours,Essential,Xiaomi,Value for money,5,Product quality doesn't match ads,15001-20000,Freelancer
+Female,26-35,Single,"Watch movies, Take photos, Listen to music",Facebook,1-3 hours,Essential,Xiaomi,Product features,2,Uncertainty about warranty,15001-20000,Office worker
+Female,18-25,Student,"Watch movies, Listen to music, Take photos",Instagram,0-1 hours,Essential,Xiaomi,Product features,2,After-sales service issues,Less than 15000,Student
+Male,18-25,Student,"Play games, Take photos, Watch movies",TikTok,0-1 hours,Essential,Xiaomi,Price,3,Unable to inspect product,Less than 15000,Student
+Female,18-25,Student,"Watch movies, Listen to music, Take photos",TikTok,0-1 hours,Essential,Xiaomi,Product features,2,Cannot try product before buying,Less than 15000,Student
+Male,26-35,Single,"Product photography, Edit reviews, Online marketplace",Shopee,3-5 hours,Essential,Xiaomi,Value for money,4,Blurry camera,25001-35000,Online seller
+Male,18-25,Student,"Play games, Take photos, Watch movies",TikTok,1-3 hours,Essential,Xiaomi,Price,3,Unable to inspect product,Less than 15000,Student
+Male,18-25,Single,"Watch movies/listen to music, Play games, Communication/meetings","Instagram, Facebook, YouTube, Facebook Messenger, TikTok",0-1 hours,Essential,Xiaomi,Product features,5,Unable to inspect product,Less than 15000,Student
+Female,26-35,Single,"Watch movies, Take photos, Listen to music",Facebook,1-3 hours,Essential,Xiaomi,Product features,2,Uncertainty about warranty,15001-20000,Office worker
+Male,18-25,Student,"Play games, Take photos, Watch movies",TikTok,0-1 hours,Essential,Xiaomi,Price,3,Unable to inspect product,Less than 15000,Student
+Male,26-35,Single,"Product photography, Edit reviews, Online marketplace",Shopee,3-5 hours,Essential,Xiaomi,Value for money,4,Blurry camera,25001-35000,Online seller
+Female,26-35,Single,"Take photos/videos, Watch movies/Listen to music, Online shopping",Shopee,3-5 hours,Essential,Xiaomi,Value for money,5,Product quality doesn't match ads,15001-20000,Freelancer
+Male,18-25,Student,"Play games, Take photos, Watch movies",TikTok,0-1 hours,Essential,Xiaomi,Price,3,Unable to inspect product,Less than 15000,Student
+Female,26-35,Single,"Take photos/videos, Watch movies/Listen to music, Online shopping",Shopee,3-5 hours,Essential,Xiaomi,Value for money,5,Product quality doesn't match ads,15001-20000,Freelancer
+Male,18-25,Single,"Watch movies/listen to music, Play games, Social media","Instagram, Facebook, YouTube, Facebook Messenger, Telegram",3-5 hours,Essential,Xiaomi,Price,4,Warranty or service concerns,Less than 15000,Student
+Male,26-35,Single,"Product photography, Edit reviews, Online marketplace",Shopee,3-5 hours,Essential,Xiaomi,Value for money,4,Blurry camera,25001-35000,Online seller
