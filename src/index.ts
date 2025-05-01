@@ -94,9 +94,8 @@ async function buildArff(
   isTrain: boolean,
   modelDir: string
 ): Promise<string> {
-  // Use absolute paths consistently
-  const __dirname = path.dirname(fileURLToPath(import.meta.url));
-  const uploadDir = path.join(__dirname, "uploads");
+  
+  
 
   // 0) Verify input file exists
   if (!existsSync(csvPath)) {
@@ -203,9 +202,12 @@ function wekaPredict(arff: string, modelPath: string): Promise<Prediction> {
       console.log("=== WEKA STDERR ===\n", stderr);
 
       if (err || stderr.includes("Exception")) {
-        return reject(
-          new Error(stderr || err?.message || "Weka execution failed")
-        );
+        console.error("Weka Execution Error:", {
+          args: [javaPath, ...args],
+          error: err?.message,
+          stderr
+        });
+        return reject(new Error("Weka execution failed"));
       }
 
       // Improved parsing logic
@@ -312,13 +314,15 @@ app.post("/predict", upload.single("file"), async (req, res) => {
     const filesToDelete = [
       req.file?.path,
       tmp,
-      path.join(uploadDir, "empty.arff"),
-    ];
-
+      path.join(uploadDir, "empty.arff")
+    ].filter(Boolean);
+    
     await Promise.all(
-      filesToDelete
-        .filter(Boolean)
-        .map((file) => f.unlink(file!).catch(console.error))
+      filesToDelete.map(async (file) => {
+        if (await f.access(file).catch(() => false)) {
+          await f.unlink(file).catch(console.error);
+        }
+      })
     );
   }
 });
