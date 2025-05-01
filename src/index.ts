@@ -42,7 +42,7 @@ function checkJava() {
     execSync(`"${javaPath}" -version 2>&1`);
     console.log('✅ Java found at:', javaPath);
   } catch (e) {
-    throw new Error(`Java verification failed: ${e.message}`);
+    throw new Error(`Java verification failed: ${e instanceof Error ? e.message : String(e)}`);
   }
 }
 /* ---------- multer ---------- */
