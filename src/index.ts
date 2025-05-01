@@ -32,17 +32,19 @@ interface Prediction {
 
 // Replace checkJava() with this version
 function checkJava() {
-  const javaPath = path.join(process.cwd(), 'java/bin/java');
-  
+  const javaPath = path.join(process.cwd(), "java/bin/java");
+
   if (!existsSync(javaPath)) {
     throw new Error(`Java not found at ${javaPath}`);
   }
 
   try {
     execSync(`"${javaPath}" -version 2>&1`);
-    console.log('✅ Java found at:', javaPath);
+    console.log("✅ Java found at:", javaPath);
   } catch (e) {
-    throw new Error(`Java verification failed: ${e instanceof Error ? e.message : String(e)}`);
+    throw new Error(
+      `Java verification failed: ${e instanceof Error ? e.message : String(e)}`
+    );
   }
 }
 /* ---------- multer ---------- */
@@ -171,9 +173,8 @@ async function buildArff(csvPath: string, isTrain: boolean): Promise<string> {
 }
 
 function wekaPredict(arff: string, modelPath: string): Promise<Prediction> {
-  const javaPath = path.resolve(process.cwd(), 'java/bin/java');
   return new Promise((resolve, reject) => {
-   
+    const javaPath = path.resolve(process.cwd(), "java/bin/java");
     const args = [
       "-Xmx1G",
       "-cp",
@@ -187,30 +188,40 @@ function wekaPredict(arff: string, modelPath: string): Promise<Prediction> {
       "0", // print คอลัมน์ last (class)
       "-distribution", // (เลือก) ให้โชว์เปอร์เซ็นต์
     ];
-
+    console.log("Executing Weka with:", [javaPath, ...args].join(" "));
     execFile(javaPath, args, { encoding: "utf8" }, (err, stdout, stderr) => {
-      if (err) {
-        return reject(new Error(stderr || err.message));
-      }
-      console.log("=== WEKA OUTPUT ===\n", stdout);
+      console.log("=== WEKA STDOUT ===\n", stdout);
+      console.log("=== WEKA STDERR ===\n", stderr);
 
-      // 1) ลองแมทช์แบบมี distribution
-      // แมทช์ distribution
-      let m = stdout.match(/^\s*\d+\s+\S+\s+(\S+)\s+\S+\s+\[([^\]]+)\]/m);
-      if (m) {
-        const label = m[1].split(":").pop()!;
-        const dist = m[2].split(",").map(parseFloat);
-        return resolve({ label, distribution: dist });
-      }
-      // ถ้าไม่มี distribution ก็ fallback แมทช์แค่ label
-      m = stdout.match(/^\s*\d+\s+\S+\s+(\S+)/m);
-
-      if (m) {
-        const raw = m[1].includes(":") ? m[1].split(":")[1] : m[1];
-        return resolve({ label: raw, distribution: [] });
+      if (err || stderr.includes("Exception")) {
+        return reject(new Error(stderr || err?.message || "Weka execution failed"));
       }
 
-      reject(new Error("No valid prediction found in Weka output"));
+      // Improved parsing logic
+      try {
+        const predictionLine = stdout
+          .split('\n')
+          .find(line => line.includes(':') && line.includes('distribution'));
+
+        if (!predictionLine) {
+          throw new Error("No prediction line found");
+        }
+
+        const parts = predictionLine
+          .trim()
+          .split(/\s+/)
+          .filter(p => p !== '');
+        
+        const label = parts[parts.length - 2].split(':').pop()!;
+        const distribution = parts[parts.length - 1]
+          .replace(/[\[\]]/g, '')
+          .split(',')
+          .map(parseFloat);
+
+        resolve({ label, distribution });
+      } catch (parseError) {
+        reject(new Error(`Failed to parse Weka output: ${parseError}\nOutput:\n${stdout}`));
+      }
     });
   });
 }
