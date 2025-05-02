@@ -14,6 +14,7 @@ import path from "node:path";
 import { fileURLToPath } from "url";
 import csvParser from "csv-parser";
 import { v4 as uuidv4 } from "uuid";
+import cors from "cors";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PORT = process.env.PORT ?? 3000;
@@ -60,14 +61,15 @@ const upload = multer({
   limits: { fileSize: MAX_MB * 1024 * 1024 },
   fileFilter: (_, file, cb) => {
     const allowed = [
-      'text/csv','text/plain',
-      'application/octet-stream','application/x-arff',
-      'application/zip'         // ถ้าจะให้รับ ZIP ด้วย
+      "text/csv",
+      "text/plain",
+      "application/octet-stream",
+      "application/x-arff",
+      "application/zip", // ถ้าจะให้รับ ZIP ด้วย
     ];
     cb(null, allowed.includes(file.mimetype));
   },
 });
-
 
 // ──────────────────────────────────────────────────────────────────────────
 // helpers
@@ -240,6 +242,15 @@ function wekaPredict(
 // ──────────────────────────────────────────────────────────────────────────
 // express routes
 const app = express();
+app.use(cors()); // 💥 ต้องอยู่บนสุด ก่อน route ใด ๆ
+
+// หรือตั้งให้ปลอดภัยขึ้นแบบเฉพาะ origin
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    methods: ["GET", "POST"],
+  })
+);
 
 app.post("/predict", upload.single("file"), async (req, res) => {
   try {
@@ -345,52 +356,71 @@ app.get("/model-info", (_, res) => {
     🆕  /predict-batch   (POST multipart/form-data, field = file)
     — รับไฟล์ test CSV/ARFF หลายแถว → คืน predictions[] + (option) dist
 -------------------------------------------------------------------*/
-app.post('/predict-batch', upload.single('file'), async (req, res) => {
+app.post("/predict-batch", upload.single("file"), async (req, res) => {
   try {
     // 1) สร้าง/ใช้ ARFF เหมือนเดิม แต่จะอ่านทุกแถว
-    const arffPath  = await buildArff(req.file!.path, false);
+    const arffPath = await buildArff(req.file!.path, false);
 
     // 2) สั่ง Weka ให้พ่น CSV Prediction “ทุกอินสแตนซ์”
     const args = [
-      '-Xmx2G', '-cp', WEKA_CP.replace(/\\/g, '/'),
-      'weka.classifiers.meta.FilteredClassifier',
-      '-l', MODEL.replace(/\\/g, '/'),
-      '-T', arffPath.replace(/\\/g, '/'),
-      '-c', 'last',
-      '-classifications',
+      "-Xmx2G",
+      "-cp",
+      WEKA_CP.replace(/\\/g, "/"),
+      "weka.classifiers.meta.FilteredClassifier",
+      "-l",
+      MODEL.replace(/\\/g, "/"),
+      "-T",
+      arffPath.replace(/\\/g, "/"),
+      "-c",
+      "last",
+      "-classifications",
       // -p 0 = output ทุกแถว  ;  -distribution = แจก probs
       '"weka.classifiers.evaluation.output.prediction.CSV -decimals 6 -distribution"',
-      '-p', '0'
+      "-p",
+      "0",
     ];
 
-    execFile(javaPath, args, { encoding: 'utf8', shell: true }, (err, stdout, stderr) => {
-      if (err || /Exception|Error/i.test(stderr)) {
-        return res.status(500).json({ error: stderr, stdout });
+    execFile(
+      javaPath,
+      args,
+      { encoding: "utf8", shell: true },
+      (err, stdout, stderr) => {
+        if (err || /Exception|Error/i.test(stderr)) {
+          return res.status(500).json({ error: stderr, stdout });
+        }
+        /* ── Parse ── */
+        const lines = stdout
+          .trim()
+          .split("\n")
+          .filter((l) => l.startsWith("inst#") || /^\d/.test(l));
+        const header = lines[0].split(",").map((s) => s.trim());
+        const idxPred = header.findIndex(
+          (h) => h.toLowerCase() === "predicted"
+        );
+        const probIdx = header
+          .map((h, i) =>
+            h.startsWith("prob_") ? [h.replace("prob_", ""), i] : null
+          )
+          .filter(Boolean) as [string, number][];
+
+        const preds = lines.slice(1).map((l) => {
+          const cols = l.split(",");
+          const raw = cols[idxPred] ?? "";
+          const label = raw.includes(":")
+            ? raw.split(":").slice(1).join(":").trim()
+            : raw.trim();
+          const dist: Record<string, number> = {};
+          probIdx.forEach(([k, i]) => (dist[k] = parseFloat(cols[i] ?? "0")));
+          return { label, distribution: dist };
+        });
+
+        res.json({ total: preds.length, predictions: preds });
       }
-      /* ── Parse ── */
-      const lines   = stdout.trim().split('\n').filter(l => l.startsWith('inst#') || /^\d/.test(l));
-      const header  = lines[0].split(',').map(s => s.trim());
-      const idxPred = header.findIndex(h => h.toLowerCase() === 'predicted');
-      const probIdx = header
-        .map((h, i) => h.startsWith('prob_') ? [h.replace('prob_', ''), i] : null)
-        .filter(Boolean) as [string, number][];
-
-      const preds = lines.slice(1).map(l => {
-        const cols = l.split(',');
-        const raw  = cols[idxPred] ?? '';
-        const label= raw.includes(':') ? raw.split(':').slice(1).join(':').trim() : raw.trim();
-        const dist : Record<string, number> = {};
-        probIdx.forEach(([k,i]) => dist[k] = parseFloat(cols[i] ?? '0'));
-        return { label, distribution: dist };
-      });
-
-      res.json({ total: preds.length, predictions: preds });
-    });
+    );
   } catch (e: any) {
     res.status(500).json({ error: String(e) });
   }
 });
-
 
 // ──────────────────────────────────────────────────────────────────────────
 checkJava();
