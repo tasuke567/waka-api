@@ -247,10 +247,14 @@ app.use(cors()); // 💥 ต้องอยู่บนสุด ก่อน ro
 // หรือตั้งให้ปลอดภัยขึ้นแบบเฉพาะ origin
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: [
+      "http://localhost:5173", // สำหรับ dev
+      "https://brand-predictor.netlify.app", // สำหรับ production
+    ],
     methods: ["GET", "POST"],
   })
 );
+
 
 app.post("/predict", upload.single("file"), async (req, res) => {
   try {
