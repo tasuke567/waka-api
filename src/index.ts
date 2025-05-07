@@ -256,6 +256,12 @@ app.use(
     methods: ["GET", "POST"],
   })
 );
+// ก่อนประกาศทุก route
+app.use(express.json());          // ✔️ parse application/json
+app.use(express.urlencoded({      // (เผื่อ form-urlencoded ธรรมดา)
+  extended: true,
+}));
+
 
 app.post("/predict", upload.single("file"), async (req, res) => {
   try {
@@ -442,7 +448,7 @@ interface FeedbackRes {
 app.post<FeedbackBody, FeedbackRes>(
   "/feedback",
   (req: Request<FeedbackBody, FeedbackRes>, res: Response<FeedbackRes>) => {
-    const { prediction, uiEase, satisfaction, clarity } = req.body;
+    const { prediction, uiEase, satisfaction, clarity } = req.body || {};
 
     // validate
     if (
