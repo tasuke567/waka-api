@@ -15,6 +15,7 @@ import { fileURLToPath } from "url";
 import csvParser from "csv-parser";
 import { v4 as uuidv4 } from "uuid";
 import cors from "cors";
+import type { Request, Response } from "express";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PORT = process.env.PORT ?? 3000;
@@ -28,6 +29,7 @@ const CLASS_ATTR = "Current_brand";
 
 const UPLOAD_DIR = path.join(process.cwd(), "uploads");
 const trainDir = path.join(UPLOAD_DIR, "train");
+const feedbackDir = path.join(UPLOAD_DIR, "feedback");
 const javaPath = process.env.JAVA_CMD ?? "java";
 
 // ──────────────────────────────────────────────────────────────────────────
@@ -255,7 +257,6 @@ app.use(
   })
 );
 
-
 app.post("/predict", upload.single("file"), async (req, res) => {
   try {
     const arff = await buildArff(req.file!.path, false);
@@ -365,7 +366,7 @@ app.post("/predict-batch", upload.single("file"), async (req, res) => {
     // 1) สร้าง/ใช้ ARFF เหมือนเดิม แต่จะอ่านทุกแถว
     const arffPath = await buildArff(req.file!.path, false);
 
-    // 2) สั่ง Weka ให้พ่น CSV Prediction “ทุกอินสแตนซ์”
+    // 2) สั่ง Weka ให้พ่น CSV Prediction "ทุกอินสแตนซ์"
     const args = [
       "-Xmx2G",
       "-cp",
@@ -424,6 +425,59 @@ app.post("/predict-batch", upload.single("file"), async (req, res) => {
   } catch (e: any) {
     res.status(500).json({ error: String(e) });
   }
+});
+
+interface FeedbackBody {
+  prediction: string;
+  uiEase: number;
+  satisfaction: number;
+  clarity: number;
+}
+
+interface FeedbackRes {
+  ok: true;
+  id: string;
+}
+
+app.post<FeedbackBody, FeedbackRes>(
+  "/feedback",
+  (req: Request<FeedbackBody, FeedbackRes>, res: Response<FeedbackRes>) => {
+    const { prediction, uiEase, satisfaction, clarity } = req.body;
+
+    // validate
+    if (
+      !prediction ||
+      [uiEase, satisfaction, clarity].some((n) => isNaN(Number(n)))
+    ) {
+      res.status(400).json({ error: "Invalid payload" } as any);
+      return;
+    }
+
+    const record = {
+      id: uuidv4(),
+      time: new Date().toISOString(),
+      prediction,
+      uiEase: +uiEase,
+      satisfaction: +satisfaction,
+      clarity: +clarity,
+    };
+
+    fs.writeFileSync(
+      path.join(feedbackDir, `${record.id}.json`),
+      JSON.stringify(record, null, 2)
+    );
+
+    res.json({ ok: true, id: record.id });
+  }
+);
+
+// simple GET feedback list (dev only)
+app.get("/feedback", (_, res) => {
+  const files = readdirSync(feedbackDir);
+  const list = files.map((f) =>
+    JSON.parse(fs.readFileSync(path.join(feedbackDir, f), "utf8"))
+  );
+  res.json(list);
 });
 
 // ──────────────────────────────────────────────────────────────────────────
