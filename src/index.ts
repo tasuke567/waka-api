@@ -15,7 +15,8 @@ import { fileURLToPath } from "url";
 import csvParser from "csv-parser";
 import { v4 as uuidv4 } from "uuid";
 import cors from "cors";
-import type { Request, Response } from "express";
+import type { RequestHandler } from "express";
+import type { ParsedQs } from "qs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PORT = process.env.PORT ?? 3000;
@@ -34,7 +35,7 @@ const javaPath = process.env.JAVA_CMD ?? "java";
 
 // ──────────────────────────────────────────────────────────────────────────
 // bootstrap dirs / java
-[UPLOAD_DIR, trainDir].forEach((d) => {
+[UPLOAD_DIR, trainDir, feedbackDir].forEach((d) => {
   if (!existsSync(d)) mkdirSync(d, { recursive: true });
 });
 
@@ -433,6 +434,7 @@ app.post("/predict-batch", upload.single("file"), async (req, res) => {
   }
 });
 
+/* ---------- ชนิด ---------- */
 interface FeedbackBody {
   prediction: string;
   uiEase: number;
@@ -440,49 +442,54 @@ interface FeedbackBody {
   clarity: number;
 }
 
-interface FeedbackRes {
-  ok: true;
-  id: string;
-}
+interface FeedbackOk  { ok: true; id: string }
+interface FeedbackErr { error: string }
+type FeedbackRes = FeedbackOk | FeedbackErr;
 
-app.post<FeedbackBody, FeedbackRes>(
-  "/feedback",
-  (req: Request<FeedbackBody, FeedbackRes>, res: Response<FeedbackRes>) => {
-    const { prediction, uiEase, satisfaction, clarity } = req.body || {};
+/* ---------- handler ---------- */
+const feedbackHandler: RequestHandler<
+  {},             // Params
+  FeedbackRes,    // Res body
+  FeedbackBody,   // Req body
+  ParsedQs        // Query (ไม่ใช้)
+> = (req, res) => {
+  const { prediction, uiEase, satisfaction, clarity } = req.body ?? {};
 
-    // validate
-    if (
-      !prediction ||
-      [uiEase, satisfaction, clarity].some((n) => isNaN(Number(n)))
-    ) {
-      res.status(400).json({ error: "Invalid payload" } as any);
-      return;
-    }
-
-    const record = {
-      id: uuidv4(),
-      time: new Date().toISOString(),
-      prediction,
-      uiEase: +uiEase,
-      satisfaction: +satisfaction,
-      clarity: +clarity,
-    };
-
-    fs.writeFileSync(
-      path.join(feedbackDir, `${record.id}.json`),
-      JSON.stringify(record, null, 2)
-    );
-
-    res.json({ ok: true, id: record.id });
+  // validate
+  if (
+    typeof prediction !== "string" ||
+    [uiEase, satisfaction, clarity].some(v => typeof v !== "number")
+  ) {
+    res.status(400).json({ error: "Invalid payload" });
+    return;                      // ← ทำให้ฟังก์ชันคืน void
   }
-);
+
+  if (!existsSync(feedbackDir)) mkdirSync(feedbackDir, { recursive: true });
+
+  const record = {
+    id: uuidv4(),
+    time: new Date().toISOString(),
+    prediction,
+    uiEase,
+    satisfaction,
+    clarity,
+  };
+  fs.writeFileSync(
+    path.join(feedbackDir, `${record.id}.json`),
+    JSON.stringify(record, null, 2)
+  );
+
+  res.json({ ok: true, id: record.id });
+};
+
+/* ---------- route ---------- */
+app.post("/feedback", feedbackHandler);
+
 
 // simple GET feedback list (dev only)
-app.get("/feedback", (_, res) => {
+app.get('/feedback', (_,res)=>{
   const files = readdirSync(feedbackDir);
-  const list = files.map((f) =>
-    JSON.parse(fs.readFileSync(path.join(feedbackDir, f), "utf8"))
-  );
+  const list = files.map(f=>JSON.parse(fs.readFileSync(path.join(feedbackDir,f),'utf8')));
   res.json(list);
 });
 
