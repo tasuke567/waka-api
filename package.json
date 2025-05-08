@@ -7,7 +7,7 @@
     "build": "tsc && shx mkdir -p dist/model dist/uploads && shx mkdir -p dist/model dist/uploads/feedback && shx cp -r model/* dist/model",
     "start": "export PATH=$PWD/java/bin:$PATH && node dist/index.js",
     "test:java": "java -version",
-    "dev": "nodemon --watch src --ext ts --exec \"node --loader ts-node/esm\" src/index.ts",
+    "dev": "tsx watch src/index.ts",
     "generate-header": "cp model/header.arff.tpl model/header.arff"
   },
   "keywords": [],
@@ -20,6 +20,7 @@
     "bcryptjs": "^3.0.2",
     "cors": "^2.8.5",
     "csv-parser": "^3.2.0",
+    "dotenv": "^16.5.0",
     "express": "^5.1.0",
     "form-data": "^4.0.2",
     "jsonwebtoken": "^9.0.2",
