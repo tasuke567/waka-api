@@ -33,6 +33,11 @@ const trainDir = path.join(UPLOAD_DIR, "train");
 const feedbackDir = path.join(UPLOAD_DIR, "feedback");
 const javaPath = process.env.JAVA_CMD ?? "java";
 
+import { authRouter } from "./routes/authRoutes";
+import { verifyToken } from "./middleware/verifyToken";
+import { prisma } from "./db";
+import "dotenv/config";
+
 // ──────────────────────────────────────────────────────────────────────────
 // bootstrap dirs / java
 [UPLOAD_DIR, trainDir, feedbackDir].forEach((d) => {
@@ -491,6 +496,16 @@ app.get('/feedback', (_,res)=>{
   const files = readdirSync(feedbackDir);
   const list = files.map(f=>JSON.parse(fs.readFileSync(path.join(feedbackDir,f),'utf8')));
   res.json(list);
+});
+
+// === Public ===
+app.use("/auth", authRouter);
+
+// === Protected example ===
+app.get("/profile", verifyToken, async (req, res) => {
+  const { id } = req.user!;                        // TS now knows it exists
+  const user = await prisma.user.findUnique({ where: { id } });
+  res.json(user);
 });
 
 // ──────────────────────────────────────────────────────────────────────────
