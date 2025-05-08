@@ -1,4 +1,6 @@
-import { RequestHandler } from "express";
+import express from "express";
+import type { RequestHandler, Request, Response, NextFunction } from "express";
+
 import jwt from "jsonwebtoken";
 
 export const verifyToken: RequestHandler = (req, res, next) => {

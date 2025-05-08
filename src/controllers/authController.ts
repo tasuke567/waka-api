@@ -1,7 +1,10 @@
-import { RequestHandler } from "express";
+import express from "express";
+import type { RequestHandler, Request, Response, NextFunction } from "express";
+
+
 import jwt from "jsonwebtoken";
-import { prisma } from "../db";
-import { hashPassword, comparePassword } from "../utils/hash";
+import { prisma } from "../db.js";
+import { hashPassword, comparePassword } from "../utils/hash.js";
 
 const signToken = (id: number, email: string) =>
   jwt.sign({ id, email }, process.env.JWT_SECRET!, { expiresIn: "7d" });

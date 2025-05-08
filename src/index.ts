@@ -1,6 +1,8 @@
 // Express + Weka API (STRING-friendly ✅)
 import crypto from "node:crypto";
 import express from "express";
+import type { RequestHandler, Request, Response, NextFunction } from "express";
+
 import multer from "multer";
 import { execFile, execSync } from "node:child_process";
 import fs, {
@@ -15,7 +17,6 @@ import { fileURLToPath } from "url";
 import csvParser from "csv-parser";
 import { v4 as uuidv4 } from "uuid";
 import cors from "cors";
-import type { RequestHandler } from "express";
 import type { ParsedQs } from "qs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -33,9 +34,9 @@ const trainDir = path.join(UPLOAD_DIR, "train");
 const feedbackDir = path.join(UPLOAD_DIR, "feedback");
 const javaPath = process.env.JAVA_CMD ?? "java";
 
-import { authRouter } from "./routes/authRoutes";
-import { verifyToken } from "./middleware/verifyToken";
-import { prisma } from "./db";
+import { authRouter } from "./routes/authRoutes.js";
+import { verifyToken } from "./middleware/verifyToken.js";
+import { prisma } from "./db.js";
 import "dotenv/config";
 
 // ──────────────────────────────────────────────────────────────────────────
