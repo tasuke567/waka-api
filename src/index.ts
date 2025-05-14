@@ -310,17 +310,16 @@ const predictHandler: RequestHandler = async (req, res) => {
 
 // ──────────────────────────────────────────────────────────────────────────
 // express routes
+const ALLOWED = [
+  "http://localhost:5173",
+  "https://brand-predictor.netlify.app",
+];
 const app = express();
-app.use(cors()); // 💥 ต้องอยู่บนสุด ก่อน route ใด ๆ
-
-// หรือตั้งให้ปลอดภัยขึ้นแบบเฉพาะ origin
 app.use(
   cors({
-    origin: [
-      "http://localhost:5173", // สำหรับ dev
-      "https://brand-predictor.netlify.app", // สำหรับ production
-    ],
-    methods: ["GET", "POST"],
+    origin: ALLOWED,
+    credentials: true,   // ⭐️ จำเป็น เมื่อส่ง cookie / auth header
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   })
 );
 // ก่อนประกาศทุก route
