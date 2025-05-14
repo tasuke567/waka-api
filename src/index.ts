@@ -100,6 +100,15 @@ const parseArffHeader = (txt: string) =>
     .filter((l) => l.trim().startsWith("@ATTRIBUTE"))
     .map((l) => l.trim().split(/\s+/)[1]);
 
+const CLASS_VALUES: string[] = (() => {
+  const txt = fs.readFileSync(HEADER_PATH, "utf8");
+  const line = txt
+    .split("\n")
+    .find((l) => l.startsWith(`@ATTRIBUTE ${CLASS_ATTR} `));
+  const m = line?.match(/\{(.+)\}/);
+  return m ? m[1].split(",").map((s) => s.trim()) : [];
+})();
+
 // build ARFF (train / predict) — keeps STRING everywhere
 async function buildArff(csvPath: string, isTrain: boolean): Promise<string> {
   const rows: Record<string, string>[] = [];
@@ -198,56 +207,63 @@ function wekaPredict(
   model: string
 ): Promise<{ label: string; distribution: Record<string, number> }> {
   const args = [
-    "-Xmx1G",
-    "-cp",
-    WEKA_CP.replace(/\\/g, "/"),
+    "-Xmx1G", "-cp", WEKA_CP.replace(/\\/g, "/"),
     "weka.classifiers.meta.FilteredClassifier",
-    "-l",
-    model.replace(/\\/g, "/"),
-    "-T",
-    arff.replace(/\\/g, "/"),
-    "-c",
-    "last",
+    "-l", model.replace(/\\/g, "/"),
+    "-T", arff.replace(/\\/g, "/"),
+    "-c", "last",
     "-classifications",
     "weka.classifiers.evaluation.output.prediction.CSV -decimals 6 -distribution",
   ];
 
   return new Promise((ok, err) => {
     execFile(javaPath, args, { encoding: "utf8" }, (e, stdout, stderr) => {
-      if (e || /Exception|Error/i.test(stderr)) {
+      if (e || /Exception|Error/i.test(stderr))
         return err(new Error(`Weka failed:\n${stderr}\n${stdout}`));
-      }
 
       const lines = stdout.trim().split("\n").filter(Boolean);
-      const idx = lines.findIndex((l) => l.startsWith("inst#"));
+      const idx   = lines.findIndex(l => l.startsWith("inst#"));
       if (idx === -1 || idx + 1 >= lines.length)
         return err(new Error("No prediction rows"));
 
-      const header = lines[idx].split(",").map((s) => s.trim().toLowerCase());
-      const data = lines[idx + 1].split(",");
+      const header = lines[idx].split(",").map(s => s.trim().toLowerCase());
+      const data   = lines[idx + 1].split(",");
 
-      const predIdx = header.findIndex((h) => h === "predicted");
+      /* -------- label -------- */
+      const predIdx = header.findIndex(h => h === "predicted");
       if (predIdx === -1) return err(new Error("Missing 'predicted' column"));
-
-      // Weka เก็บรูปแบบ "12:Xiaomi"
       const rawPred = data[predIdx] ?? "";
-      const label = rawPred.includes(":")
-        ? rawPred.split(":").slice(1).join(":").trim() // ทุกอย่างหลัง ':' = ชื่อแบรนด์
+      const label   = rawPred.includes(":")
+        ? rawPred.split(":").slice(1).join(":").trim()
         : rawPred.trim();
       if (!label) return err(new Error("Prediction label missing"));
 
+      /* -------- distribution -------- */
       const dist: Record<string, number> = {};
+
+      // A) pattern prob_ / prob:
       header.forEach((h, i) => {
-        const m = h.match(/^prob[:_(]?(.+?)[)_]?$/i); // จับ prob_, prob:, prob(  )
-        if (m) {
-          const k = m[1].trim();
-          dist[k] = parseFloat(data[i]);
-        }
+        const m = h.match(/^prob[:_(]?(.+?)[)_]?$/i);
+        if (m) dist[m[1].trim()] = parseFloat(data[i]);
       });
+
+      // B) pattern "distribution" + ค่าต่อท้าย
+      const distIdx = header.findIndex(h => h === "distribution");
+      if (distIdx !== -1 && CLASS_VALUES.length) {
+        const probs = data
+          .slice(distIdx + 1, distIdx + 1 + CLASS_VALUES.length)
+          .map(s => parseFloat(s.replace("*", "")));        // * = class ที่ทำนาย
+
+        probs.forEach((v, i) => {
+          if (!isNaN(v)) dist[CLASS_VALUES[i]] = v;
+        });
+      }
+
       ok({ label, distribution: dist });
     });
   });
 }
+
 // ────── Role guard (วางไว้เหนือ routes) ──────
 const adminOnly: RequestHandler = (req, res, next) => {
   if (!req.user || req.user.role !== "ADMIN") {
