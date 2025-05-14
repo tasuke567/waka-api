@@ -310,15 +310,23 @@ const predictHandler: RequestHandler = async (req, res) => {
 
 // ──────────────────────────────────────────────────────────────────────────
 // express routes
+
+const app = express();
 const ALLOWED = [
   "http://localhost:5173",
   "https://brand-predictor.netlify.app",
 ];
-const app = express();
+
 app.use(
   cors({
-    origin: ALLOWED,
-    credentials: true,   // ⭐️ จำเป็น เมื่อส่ง cookie / auth header
+    origin: (origin, callback) => {
+      // ถ้าไม่มี origin (เช่น postman) หรือ origin อยู่ใน whitelist → อนุญาต
+      if (!origin || ALLOWED.includes(origin)) {
+        return callback(null, true);
+      }
+      callback(new Error("Not allowed by CORS"));
+    },
+    credentials: true, // สำหรับ auth header / cookie
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   })
 );
