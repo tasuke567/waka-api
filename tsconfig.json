@@ -11,5 +11,9 @@
     "outDir": "./dist",
     "rootDir": "./src",
     "strict": true
-  }
+  },
+ "exclude": [
+    "node_modules",
+    "prisma/seed.ts"   // 👈 ซ่อน seed ออกจาก build
+  ]
 }
