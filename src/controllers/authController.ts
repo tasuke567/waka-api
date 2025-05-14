@@ -4,7 +4,7 @@ import type { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import { prisma } from "../db.js";
 import { hashPassword, comparePassword } from "../utils/hash.js";
-
+import type { JwtPayload } from "jsonwebtoken";
 const signToken = (id: number, email: string, role: "USER" | "ADMIN") =>
   jwt.sign({ id, email, role }, process.env.JWT_SECRET!, { expiresIn: "7d" });
 
@@ -54,9 +54,31 @@ export const login = async (req: Request, res: Response): Promise<void> => {
       sameSite: "none",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     })
-    .json({ message: "Logged in" });
+    .json({
+      message: "Logged in",
+      user: { id: user.id, email: user.email, role: user.role }, // 👈
+    });
 };
 
-export const logout = (req: Request, res: Response) : void =>  {
+export const logout = (req: Request, res: Response): void => {
   res.clearCookie("jwt").json({ message: "Logged out" });
+};
+
+export const me = (req: Request, res: Response): void => {
+  const token = req.cookies.jwt as string | undefined;
+  if (!token) {
+    res.status(401).json({ message: "Unauthenticated" });
+    return;
+  }
+
+  try {
+    const payload = jwt.verify(token, process.env.JWT_SECRET!) as JwtPayload & {
+      id: number;
+      email: string;
+      role: "USER" | "ADMIN";
+    };
+    res.json({ id: payload.id, email: payload.email, role: payload.role });
+  } catch (_) {
+    res.status(401).json({ message: "Invalid token" });
+  }
 };
