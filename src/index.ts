@@ -100,6 +100,7 @@ const parseArffHeader = (txt: string) =>
     .filter((l) => l.trim().startsWith("@ATTRIBUTE"))
     .map((l) => l.trim().split(/\s+/)[1]);
 
+/*  ตำแหน่งคลาสตาม header.arff — ทำครั้งเดียวข้างบนไฟล์ */
 const CLASS_VALUES: string[] = (() => {
   const txt = fs.readFileSync(HEADER_PATH, "utf8");
   const line = txt
@@ -207,11 +208,16 @@ function wekaPredict(
   model: string
 ): Promise<{ label: string; distribution: Record<string, number> }> {
   const args = [
-    "-Xmx1G", "-cp", WEKA_CP.replace(/\\/g, "/"),
+    "-Xmx1G",
+    "-cp",
+    WEKA_CP.replace(/\\/g, "/"),
     "weka.classifiers.meta.FilteredClassifier",
-    "-l", model.replace(/\\/g, "/"),
-    "-T", arff.replace(/\\/g, "/"),
-    "-c", "last",
+    "-l",
+    model.replace(/\\/g, "/"),
+    "-T",
+    arff.replace(/\\/g, "/"),
+    "-c",
+    "last",
     "-classifications",
     "weka.classifiers.evaluation.output.prediction.CSV -decimals 6 -distribution",
   ];
@@ -222,18 +228,18 @@ function wekaPredict(
         return err(new Error(`Weka failed:\n${stderr}\n${stdout}`));
 
       const lines = stdout.trim().split("\n").filter(Boolean);
-      const idx   = lines.findIndex(l => l.startsWith("inst#"));
+      const idx = lines.findIndex((l) => l.startsWith("inst#"));
       if (idx === -1 || idx + 1 >= lines.length)
         return err(new Error("No prediction rows"));
 
-      const header = lines[idx].split(",").map(s => s.trim().toLowerCase());
-      const data   = lines[idx + 1].split(",");
+      const header = lines[idx].split(",").map((s) => s.trim().toLowerCase());
+      const data = lines[idx + 1].split(",");
 
       /* -------- label -------- */
-      const predIdx = header.findIndex(h => h === "predicted");
+      const predIdx = header.findIndex((h) => h === "predicted");
       if (predIdx === -1) return err(new Error("Missing 'predicted' column"));
       const rawPred = data[predIdx] ?? "";
-      const label   = rawPred.includes(":")
+      const label = rawPred.includes(":")
         ? rawPred.split(":").slice(1).join(":").trim()
         : rawPred.trim();
       if (!label) return err(new Error("Prediction label missing"));
@@ -248,15 +254,13 @@ function wekaPredict(
       });
 
       // B) pattern "distribution" + ค่าต่อท้าย
-      const distIdx = header.findIndex(h => h === "distribution");
+      const distIdx = header.findIndex((h) => h === "distribution");
       if (distIdx !== -1 && CLASS_VALUES.length) {
-        const probs = data
-          .slice(distIdx + 1, distIdx + 1 + CLASS_VALUES.length)
-          .map(s => parseFloat(s.replace("*", "")));        // * = class ที่ทำนาย
-
-        probs.forEach((v, i) => {
-          if (!isNaN(v)) dist[CLASS_VALUES[i]] = v;
-        });
+        for (let i = 0; i < CLASS_VALUES.length; i++) {
+          const raw = (data[distIdx + i] || "").replace("*", "");
+          const num = parseFloat(raw);
+          if (!isNaN(num)) dist[CLASS_VALUES[i]] = num;
+        }
       }
 
       ok({ label, distribution: dist });
