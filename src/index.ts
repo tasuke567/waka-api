@@ -238,10 +238,10 @@ function wekaPredict(
 
       const dist: Record<string, number> = {};
       header.forEach((h, i) => {
-        if (h.startsWith("prob_")) {
-          const k = h.replace("prob_", "").trim();
-          const v = parseFloat(data[i]);
-          dist[k] = isNaN(v) ? 0 : v;
+        const m = h.match(/^prob[:_(]?(.+?)[)_]?$/i); // จับ prob_, prob:, prob(  )
+        if (m) {
+          const k = m[1].trim();
+          dist[k] = parseFloat(data[i]);
         }
       });
       ok({ label, distribution: dist });
@@ -263,7 +263,11 @@ const predictHandler: RequestHandler = async (req, res) => {
     /* 1) สร้าง ARFF + ทำนาย */
     const arff = await buildArff(req.file!.path, false);
     const fname =
-      "predict-" + new Date().toISOString().replace(/[:.]/g, "-") + "-" + uuidv4() + ".arff";
+      "predict-" +
+      new Date().toISOString().replace(/[:.]/g, "-") +
+      "-" +
+      uuidv4() +
+      ".arff";
     const final = path.join(UPLOAD_DIR, fname);
     fs.copyFileSync(arff, final);
 
@@ -272,7 +276,7 @@ const predictHandler: RequestHandler = async (req, res) => {
     /* 2) เตรียม payload สำหรับ Prisma */
     const data: Prisma.QuestionnaireUncheckedCreateInput = {
       rawCsvPath: final,
-      userId: req.user?.id ?? null,            // ถ้าไม่มี token ⇒ null
+      userId: req.user?.id ?? null, // ถ้าไม่มี token ⇒ null
       prediction: {
         create: {
           label: result.label,
@@ -290,7 +294,6 @@ const predictHandler: RequestHandler = async (req, res) => {
     res.status(500).json({ error: "Weka error", message: String(e) });
   }
 };
-
 
 // ──────────────────────────────────────────────────────────────────────────
 // express routes
