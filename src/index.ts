@@ -13,7 +13,7 @@ import { v4 as uuidv4 } from "uuid";
 import cors from "cors";
 import type { ParsedQs } from "qs";
 import { Prisma } from "@prisma/client";
-
+import cookieParser from "cookie-parser";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PORT = process.env.PORT ?? 3000;
 
@@ -312,6 +312,7 @@ const predictHandler: RequestHandler = async (req, res) => {
 // express routes
 
 const app = express();
+app.use(cookieParser());
 const ALLOWED = [
   "http://localhost:5173",
   "https://brand-predictor.netlify.app",
