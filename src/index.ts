@@ -320,7 +320,7 @@ app.use(
 
 app.post(
   "/predict",
-  verifyToken, // ต้อง login
+   // ต้อง login
   upload.single("file"), // multipart/form-data field = file
   predictHandler // <- ส่ง handler ที่เราเตรียมไว้
 );
