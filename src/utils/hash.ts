@@ -1,3 +1,4 @@
+// src/utils/hash.ts  
 import bcrypt from "bcryptjs";
 
 export const hashPassword = (plain: string) => bcrypt.hashSync(plain, 10);

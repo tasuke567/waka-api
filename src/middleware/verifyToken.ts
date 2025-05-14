@@ -4,17 +4,21 @@ import type { RequestHandler, Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 
 export const verifyToken: RequestHandler = (req, res, next) => {
-  const header = req.headers.authorization;          // "Bearer <token>"
-  if (!header) {
-    res.status(401).json({ message: "No token bro 😢" });
-    return;                                          // <- ไม่ return Response
+  const auth = req.headers.authorization;
+  if (!auth?.startsWith("Bearer ")) {
+    res.status(401).json({ error: "Missing token" });
+    return;                // ⬅️  return void
   }
 
-  const [, token] = header.split(" ");
   try {
-    req.user = jwt.verify(token, process.env.JWT_SECRET!) as any;
-    next();                                          // ผ่าน!
+    const payload = jwt.verify(
+      auth.slice(7),
+      process.env.JWT_SECRET!
+    ) as { id: number; email: string; role: "USER" | "ADMIN" };
+
+    req.user = { id: payload.id, email: payload.email, role: payload.role };
+    next();
   } catch {
-    res.status(403).json({ message: "Invalid token 🫠" });
+    res.status(401).json({ error: "Invalid token" });
   }
 };

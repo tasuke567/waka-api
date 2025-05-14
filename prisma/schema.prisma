@@ -12,5 +12,41 @@ model User {
   email     String   @unique
   password  String
   name      String
+  role      Role     @default(USER)
   createdAt DateTime @default(now())
+  questionnaires Questionnaire[]
+}
+
+model Questionnaire {
+  id            Int                @id @default(autoincrement())
+  userId        Int?
+  rawCsvPath    String
+  createdAt     DateTime           @default(now())
+  user          User?               @relation(fields: [userId], references: [id])
+  prediction    PredictionResult?
+  feedbacks     Feedback[]
+}
+
+model PredictionResult {
+  id               Int               @id @default(autoincrement())
+  questionnaireId  Int               @unique
+  label            String
+  distribution     Json
+  createdAt        DateTime          @default(now())
+  questionnaire    Questionnaire     @relation(fields: [questionnaireId], references: [id])
+}
+
+model Feedback {
+  id               Int               @id @default(autoincrement())
+  questionnaireId  Int
+  uiEase           Int
+  satisfaction     Int
+  clarity          Int
+  createdAt        DateTime          @default(now())
+  questionnaire    Questionnaire     @relation(fields: [questionnaireId], references: [id])
+}
+
+enum Role {
+  USER
+  ADMIN
 }

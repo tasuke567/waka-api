@@ -2,7 +2,7 @@
 import crypto from "node:crypto";
 import express from "express";
 import type { RequestHandler, Request, Response, NextFunction } from "express";
-
+import { Parser } from "json2csv";
 import multer from "multer";
 import { execFile, execSync } from "node:child_process";
 import fs, {
@@ -18,6 +18,7 @@ import csvParser from "csv-parser";
 import { v4 as uuidv4 } from "uuid";
 import cors from "cors";
 import type { ParsedQs } from "qs";
+import { Prisma } from "@prisma/client";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PORT = process.env.PORT ?? 3000;
@@ -247,6 +248,51 @@ function wekaPredict(
     });
   });
 }
+// ────── Role guard (วางไว้เหนือ routes) ──────
+const adminOnly: RequestHandler = (req, res, next) => {
+  if (!req.user || req.user.role !== "ADMIN") {
+    res.status(403).json({ error: "Admin only 🔒" });
+    return;
+  }
+  next();
+};
+
+/* ---------- PREDICT HANDLER ---------- */
+const predictHandler: RequestHandler = async (req, res) => {
+  try {
+    const arff = await buildArff(req.file!.path, false);
+    const fname =
+      "predict-" +
+      new Date().toISOString().replace(/[:.]/g, "-") +
+      "-" +
+      uuidv4() +
+      ".arff";
+    const final = path.join(UPLOAD_DIR, fname);
+    fs.copyFileSync(arff, final);
+
+    const result = await wekaPredict(final, MODEL);
+
+    const q = await prisma.questionnaire.create({
+      data: {
+        rawCsvPath: final,
+        user: { connect: { id: req.user!.id } }, // ต้องมี verifyToken ก่อน route
+        prediction: {
+          create: {
+            label: result.label,
+            distribution: result.distribution as any,
+          },
+        },
+      },
+    });
+
+    res.json({ questionnaireId: q.id, prediction: result });
+    return; // ✅ explicit void
+  } catch (e: any) {
+    console.error(e);
+    res.status(500).json({ error: "Weka error", message: String(e) });
+    return; // ✅ explicit void
+  }
+};
 
 // ──────────────────────────────────────────────────────────────────────────
 // express routes
@@ -264,29 +310,20 @@ app.use(
   })
 );
 // ก่อนประกาศทุก route
-app.use(express.json());          // ✔️ parse application/json
-app.use(express.urlencoded({      // (เผื่อ form-urlencoded ธรรมดา)
-  extended: true,
-}));
+app.use(express.json()); // ✔️ parse application/json
+app.use(
+  express.urlencoded({
+    // (เผื่อ form-urlencoded ธรรมดา)
+    extended: true,
+  })
+);
 
-
-app.post("/predict", upload.single("file"), async (req, res) => {
-  try {
-    const arff = await buildArff(req.file!.path, false);
-    const fname = `predict-${new Date()
-      .toISOString()
-      .replace(/[:.]/g, "-")}-${uuidv4()}.arff`;
-    const final = path.join(UPLOAD_DIR, fname);
-    fs.copyFileSync(arff, final);
-
-    const result = await wekaPredict(final, MODEL);
-    res.json({ prediction: result });
-  } catch (e: any) {
-    console.error(e);
-    res.status(500).json({ error: "Weka error", message: String(e) });
-  }
-});
-
+app.post(
+  "/predict",
+  verifyToken, // ต้อง login
+  upload.single("file"), // multipart/form-data field = file
+  predictHandler // <- ส่ง handler ที่เราเตรียมไว้
+);
 app.post("/train", upload.single("file"), async (req, res) => {
   try {
     const arff = await buildArff(req.file!.path, true);
@@ -448,65 +485,139 @@ interface FeedbackBody {
   clarity: number;
 }
 
-interface FeedbackOk  { ok: true; id: string }
-interface FeedbackErr { error: string }
+interface FeedbackOk {
+  ok: true;
+  id: string;
+}
+interface FeedbackErr {
+  error: string;
+}
 type FeedbackRes = FeedbackOk | FeedbackErr;
 
 /* ---------- handler ---------- */
 const feedbackHandler: RequestHandler<
-  {},             // Params
-  FeedbackRes,    // Res body
-  FeedbackBody,   // Req body
-  ParsedQs        // Query (ไม่ใช้)
-> = (req, res) => {
-  const { prediction, uiEase, satisfaction, clarity } = req.body ?? {};
+  {},
+  FeedbackRes,
+  FeedbackBody,
+  ParsedQs
+> = async (req, res) => {
+  const { prediction, uiEase, satisfaction, clarity } = req.body;
 
-  // validate
   if (
     typeof prediction !== "string" ||
-    [uiEase, satisfaction, clarity].some(v => typeof v !== "number")
+    [uiEase, satisfaction, clarity].some((v) => typeof v !== "number")
   ) {
     res.status(400).json({ error: "Invalid payload" });
-    return;                      // ← ทำให้ฟังก์ชันคืน void
+    return;
   }
 
-  if (!existsSync(feedbackDir)) mkdirSync(feedbackDir, { recursive: true });
+  const q = await prisma.predictionResult.findFirst({
+    where: { label: prediction },
+    orderBy: { createdAt: "desc" },
+  });
+  if (!q) {
+    res.status(404).json({ error: "No prediction found" });
+    return;
+  }
 
-  const record = {
-    id: uuidv4(),
-    time: new Date().toISOString(),
-    prediction,
-    uiEase,
-    satisfaction,
-    clarity,
-  };
-  fs.writeFileSync(
-    path.join(feedbackDir, `${record.id}.json`),
-    JSON.stringify(record, null, 2)
-  );
+  const fb = await prisma.feedback.create({
+    data: {
+      questionnaireId: q.questionnaireId,
+      uiEase,
+      satisfaction,
+      clarity,
+    },
+  });
 
-  res.json({ ok: true, id: record.id });
+  res.json({ ok: true, id: fb.id.toString() });
 };
 
 /* ---------- route ---------- */
 app.post("/feedback", feedbackHandler);
 
-
 // simple GET feedback list (dev only)
-app.get('/feedback', (_,res)=>{
+app.get("/feedback", (_, res) => {
   const files = readdirSync(feedbackDir);
-  const list = files.map(f=>JSON.parse(fs.readFileSync(path.join(feedbackDir,f),'utf8')));
+  const list = files.map((f) =>
+    JSON.parse(fs.readFileSync(path.join(feedbackDir, f), "utf8"))
+  );
   res.json(list);
 });
 
 // === Public ===
 app.use("/auth", authRouter);
+app.get("/stats/brands", async (_, res) => {
+  const agg = await prisma.predictionResult.groupBy({
+    by: ["label"],
+    _count: { _all: true },
+  });
+
+  const sorted = agg
+    .sort((a, b) => (b._count._all ?? 0) - (a._count._all ?? 0))
+    .map((a) => ({ brand: a.label, total: a._count._all }));
+
+  res.json(sorted);
+});
 
 // === Protected example ===
 app.get("/profile", verifyToken, async (req, res) => {
-  const { id } = req.user!;                        // TS now knows it exists
+  const { id } = req.user!; // TS now knows it exists
   const user = await prisma.user.findUnique({ where: { id } });
   res.json(user);
+});
+
+// กลุ่ม /admin/*
+const admin = express.Router();
+app.use("/admin", verifyToken, adminOnly, admin);
+
+// --- 1) list questionnaire + prediction ---
+admin.get("/questionnaire", async (_, res) => {
+  const list = await prisma.questionnaire.findMany({
+    include: { prediction: true, feedbacks: true, user: true },
+    orderBy: { createdAt: "desc" },
+  });
+  res.json(list);
+});
+
+// --- 2) delete questionnaire ---
+admin.delete("/questionnaire/:id", async (req, res) => {
+  const id = Number(req.params.id);
+  await prisma.questionnaire.delete({ where: { id } });
+  res.json({ ok: true });
+});
+
+// --- 3) export CSV report ---
+// npm i json2csv
+admin.get("/report/export", async (_, res) => {
+  const data = await prisma.predictionResult.findMany({
+    include: { questionnaire: { include: { user: true } } },
+  });
+  const parser = new Parser();
+  const csv = parser.parse(
+    data.map((d) => ({
+      qId: d.questionnaireId,
+      brand: d.label,
+      createdAt: d.createdAt,
+      ...(d.distribution as Record<string, number>),
+    }))
+  );
+  res.setHeader("Content-Type", "text/csv");
+  res.setHeader("Content-Disposition", `attachment; filename=report.csv`);
+  res.send(csv);
+});
+
+// --- 4) hot-swap model ---
+admin.post("/model", upload.single("file"), (req, res) => {
+  try {
+    fs.copyFileSync(req.file!.path, MODEL);
+    res.json({ ok: true, note: "Model replaced ✅" });
+  } catch (e) {
+    res.status(500).json({ error: String(e) });
+  }
+});
+admin.delete("/model", (_, res) => {
+  if (existsSync(MODEL)) fs.unlinkSync(MODEL);
+  res.json({ ok: true, note: "Model deleted" });
 });
 
 // ──────────────────────────────────────────────────────────────────────────
