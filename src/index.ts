@@ -1,17 +1,11 @@
-// Express + Weka API (STRING-friendly ✅)
+// Express + Weka API (STRING‑friendly ✅)
 import crypto from "node:crypto";
 import express from "express";
-import type { RequestHandler, Request, Response, NextFunction } from "express";
+import type { RequestHandler } from "express";
 import { Parser } from "json2csv";
 import multer from "multer";
 import { execFile, execSync } from "node:child_process";
-import fs, {
-  promises as fsp,
-  existsSync,
-  mkdirSync,
-  statSync,
-  readdirSync,
-} from "node:fs";
+import fs, { existsSync, mkdirSync, statSync, readdirSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "url";
 import csvParser from "csv-parser";
@@ -23,6 +17,7 @@ import { Prisma } from "@prisma/client";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PORT = process.env.PORT ?? 3000;
 
+// ────────── paths / consts ──────────
 const MODEL = path.join(__dirname, "../model/myJ48.model");
 const HEADER_PATH = path.join(__dirname, "../model/header.arff");
 const WEKA_JAR = path.join(__dirname, "../model/weka.jar");
@@ -40,8 +35,7 @@ import { verifyToken } from "./middleware/verifyToken.js";
 import { prisma } from "./db.js";
 import "dotenv/config";
 
-// ──────────────────────────────────────────────────────────────────────────
-// bootstrap dirs / java
+// ────────── bootstrap ──────────
 [UPLOAD_DIR, trainDir, feedbackDir].forEach((d) => {
   if (!existsSync(d)) mkdirSync(d, { recursive: true });
 });
@@ -51,39 +45,34 @@ function checkJava() {
     execSync("java -version");
     console.log("Java found ✅");
   } catch (e) {
-    throw new Error(
-      `Java check failed: ${e instanceof Error ? e.message : String(e)}`
-    );
+    throw new Error(`Java check failed: ${e}`);
   }
 }
 
-// ──────────────────────────────────────────────────────────────────────────
-// multer
+// ────────── multer ──────────
 const storage = multer.diskStorage({
   destination: (_, __, cb) => cb(null, UPLOAD_DIR),
-  filename: (_, file, cb) =>
-    cb(null, `${crypto.randomUUID()}${path.extname(file.originalname)}`),
+  filename: (_, f, cb) =>
+    cb(null, `${crypto.randomUUID()}${path.extname(f.originalname)}`),
 });
-const MAX_MB = Number(process.env.MAX_UPLOAD_MB ?? 50); // default 50 MB
-
 const upload = multer({
   storage,
-  limits: { fileSize: MAX_MB * 1024 * 1024 },
-  fileFilter: (_, file, cb) => {
-    const allowed = [
-      "text/csv",
-      "text/plain",
-      "application/octet-stream",
-      "application/x-arff",
-      "application/zip", // ถ้าจะให้รับ ZIP ด้วย
-    ];
-    cb(null, allowed.includes(file.mimetype));
-  },
+  limits: { fileSize: Number(process.env.MAX_UPLOAD_MB ?? 50) * 1024 * 1024 },
+  fileFilter: (_, file, cb) =>
+    cb(
+      null,
+      [
+        "text/csv",
+        "text/plain",
+        "application/octet-stream",
+        "application/x-arff",
+        "application/zip",
+      ].includes(file.mimetype)
+    ),
 });
 
-// ──────────────────────────────────────────────────────────────────────────
-// helpers
-const esc = (v: string): string => {
+// ────────── helpers ──────────
+const esc = (v: string) => {
   let s = (v ?? "?")
     .trim()
     .replace(/\u00A0/g, " ")
@@ -93,14 +82,14 @@ const esc = (v: string): string => {
   s = s.replace(/'/g, "\\'");
   return /[\s,{}]/.test(s) ? `'${s}'` : s;
 };
-
 const parseArffHeader = (txt: string) =>
   txt
     .split("\n")
     .filter((l) => l.trim().startsWith("@ATTRIBUTE"))
     .map((l) => l.trim().split(/\s+/)[1]);
+const clean = (s: string) => s.replace(/^'+|'+$/g, "").trim();
 
-/*  ตำแหน่งคลาสตาม header.arff — ทำครั้งเดียวข้างบนไฟล์ */
+// ────────── CLASS_VALUES once ──────────
 const CLASS_VALUES: string[] = (() => {
   const txt = fs.readFileSync(HEADER_PATH, "utf8");
   const line = txt
@@ -110,7 +99,7 @@ const CLASS_VALUES: string[] = (() => {
   return m ? m[1].split(",").map((s) => s.trim()) : [];
 })();
 
-// build ARFF (train / predict) — keeps STRING everywhere
+// ────────── buildArff ──────────
 async function buildArff(csvPath: string, isTrain: boolean): Promise<string> {
   const rows: Record<string, string>[] = [];
   await new Promise<void>((ok, err) => {
@@ -141,22 +130,22 @@ async function buildArff(csvPath: string, isTrain: boolean): Promise<string> {
         .filter((k) => k !== CLASS_ATTR)
         .concat(CLASS_ATTR)
     : parseArffHeader(fs.readFileSync(HEADER_PATH, "utf8"));
-
   const headerText = isTrain
-    ? generateHeader(rows, cols) // new header
-    : fs.readFileSync(HEADER_PATH, "utf8"); // use stored header (STRING)
+    ? generateHeader(rows, cols)
+    : fs.readFileSync(HEADER_PATH, "utf8");
 
-  // attribute lookup for predict validity
-  const attrMap: Record<string, Set<string>> = {};
+  const attrMap: Record<string, Set<string>> = {} as Record<
+    string,
+    Set<string>
+  >;
   if (!isTrain) {
     headerText
       .split("\n")
       .filter((l) => l.startsWith("@ATTRIBUTE"))
       .forEach((l) => {
         const name = l.split(/\s+/)[1];
-        const match = l.match(/\{(.+)\}/);
-        if (match)
-          attrMap[name] = new Set(match[1].split(",").map((s) => s.trim()));
+        const m = l.match(/\{(.+)\}/);
+        if (m) attrMap[name] = new Set(m[1].split(",").map((s) => s.trim()));
       });
   }
 
@@ -164,26 +153,25 @@ async function buildArff(csvPath: string, isTrain: boolean): Promise<string> {
   await new Promise<void>((ok, err) => {
     const ws = fs.createWriteStream(out);
     ws.on("error", err).on("finish", ok);
-
     ws.write(headerText.trim());
     if (!headerText.toLowerCase().includes("@data")) ws.write("\n@DATA");
     ws.write("\n");
     rows.forEach((r) => {
-      const line = cols
-        .map((c) => {
-          const raw = c === CLASS_ATTR && !isTrain ? "?" : r[c] ?? "?";
-          const val = esc(raw);
-          return !isTrain && attrMap[c] && !attrMap[c].has(val) ? "?" : val;
-        })
-        .join(",");
-      ws.write(line + "\n");
+      ws.write(
+        cols
+          .map((c) => {
+            const raw = c === CLASS_ATTR && !isTrain ? "?" : r[c] ?? "?";
+            const val = esc(raw);
+            return !isTrain && attrMap[c] && !attrMap[c].has(val) ? "?" : val;
+          })
+          .join(",") + "\n"
+      );
     });
     ws.end();
   });
   return out;
 }
 
-// header generator (forces some cols → STRING)
 function generateHeader(
   rows: Record<string, string>[],
   cols: string[],
@@ -194,7 +182,8 @@ function generateHeader(
     if (forceString.has(col)) {
       lines.push(`@ATTRIBUTE ${col} STRING`);
     } else {
-      const vals = [...new Set(rows.map((r) => esc(r[col] ?? "?")))].sort();
+      const uniq = Array.from(new Set(rows.map((r) => esc(r[col] ?? "?"))));
+      const vals = uniq.filter((v: string) => v !== "?").sort();
       lines.push(`@ATTRIBUTE ${col} {${vals.join(",")}}`);
     }
   }
@@ -202,7 +191,7 @@ function generateHeader(
   return lines.join("\n");
 }
 
-// run prediction
+// ────────── wekaPredict (keep 6‑decimals) ──────────
 function wekaPredict(
   arff: string,
   model: string
@@ -219,14 +208,12 @@ function wekaPredict(
     "-c",
     "last",
     "-classifications",
-    "weka.classifiers.evaluation.output.prediction.CSV -decimals 6 -distribution",
+    "weka.classifiers.evaluation.output.prediction.CSV -decimals 8 -distribution",
   ];
-
   return new Promise((ok, err) => {
     execFile(javaPath, args, { encoding: "utf8" }, (e, stdout, stderr) => {
       if (e || /Exception|Error/i.test(stderr))
         return err(new Error(`Weka failed:\n${stderr}\n${stdout}`));
-
       const lines = stdout.trim().split("\n").filter(Boolean);
       const idx = lines.findIndex((l) => l.startsWith("inst#"));
       if (idx === -1 || idx + 1 >= lines.length)
@@ -235,7 +222,7 @@ function wekaPredict(
       const header = lines[idx].split(",").map((s) => s.trim().toLowerCase());
       const data = lines[idx + 1].split(",");
 
-      /* -------- label -------- */
+      // ── predicted label ──
       const predIdx = header.findIndex((h) => h === "predicted");
       if (predIdx === -1) return err(new Error("Missing 'predicted' column"));
       const rawPred = data[predIdx] ?? "";
@@ -244,25 +231,31 @@ function wekaPredict(
         : rawPred.trim();
       if (!label) return err(new Error("Prediction label missing"));
 
-      /* -------- distribution -------- */
+      // ── probability distribution ──
       const dist: Record<string, number> = {};
 
-      // A) pattern prob_ / prob:
+      // A) columns starting with prob_ / prob:
       header.forEach((h, i) => {
         const m = h.match(/^prob[:_(]?(.+?)[)_]?$/i);
-        if (m) dist[m[1].trim()] = parseFloat(data[i]);
+        if (m) {
+          const v = parseFloat(data[i]);
+          dist[clean(m[1])] = Number.isNaN(v) ? 0 : Number(v.toFixed(6));
+        }
       });
 
-      // B) pattern "distribution" + ค่าต่อท้าย
-      const distIdx = header.findIndex((h) => h === "distribution");
-      if (distIdx !== -1 && CLASS_VALUES.length) {
+      // B) following the "distribution" marker
+      const dIdx = header.findIndex((h) => h === "distribution");
+      if (dIdx !== -1 && CLASS_VALUES.length) {
+        const start = dIdx ;
         for (let i = 0; i < CLASS_VALUES.length; i++) {
-          const raw = (data[distIdx + i] || "").replace("*", "");
-          const num  = parseFloat(raw.replace("*", ""));
-          if (!isNaN(num)) dist[CLASS_VALUES[i]] = num;
+          const num = parseFloat((data[start + i] || "").replace("*", ""));
+          if (!isNaN(num))
+            dist[clean(CLASS_VALUES[i])] = Number(num.toFixed(6));
         }
       }
-      console.log(dist)
+      console.log(header, data);
+      console.log({ header, data, CLASS_VALUES });
+
       ok({ label, distribution: dist });
     });
   });
@@ -362,20 +355,24 @@ app.post("/train", upload.single("file"), async (req, res) => {
       "-cp",
       WEKA_CP.replace(/\\/g, "/"),
       "weka.classifiers.meta.FilteredClassifier",
+
       "-F",
       "weka.filters.unsupervised.attribute.StringToNominal -R first-last",
+
       "-W",
-      "weka.classifiers.trees.J48",
+      "weka.classifiers.trees.RandomForest",
+
       "-t",
-      final,
+      final, // <-- training file
       "-d",
-      MODEL,
+      MODEL, // บันทึกโมเดล
       "-c",
       "last",
       "-x",
       "10",
       "-o",
     ];
+
     await new Promise<void>((ok, err) => {
       execFile(javaPath, args, { encoding: "utf8" }, (e, stdout, stderr) => {
         if (e || /Exception/i.test(stderr)) return err(new Error(stderr));

@@ -11,5 +11,5 @@
 @ATTRIBUTE Purchase_problem {'After-sales service issues','Blurry camera','Cannot try product before buying','Complex payment process','Concerns about after-sales service','Concerns about payment security','Concerns about safety','Concerns about warranty','Dead pixels on screen','Delivery delays','Device overheats','Difficult return process','Difficult to compare prices','Insufficient storage','Issues with delivery','Limited warranty coverage','No problems','Outdated system','Payment issues','Payment security concerns','Product is too expensive','Product quality doesn\'t match ads','System crashes frequently','Unable to inspect product','Uncertainty about after-sales service','Uncertainty about warranty','Warranty or service concerns'}
 @ATTRIBUTE Monthly_income {'Less than 15000',100001-150000,15001-20000,20001-30000,25001-35000,30001-40000,30001-50000,50001,50001-100000}
 @ATTRIBUTE Occupation {'Business owner','Civil servant','Content creator','Delivery staff','Factory worker','Logistics staff','Office worker','Online seller','Private company employee',Artist,Employee,Freelancer,Housewife,Investor,Manager,Retired,Student}
-@ATTRIBUTE Current_brand {'Realme 7 5G',Apple,Calculator,Huawei,Infinix,Oppo,Other,Realme,Redmi,Samsung,Vivo,Xiaomi}
+@ATTRIBUTE Current_brand {'Realme 7 5G',Apple,Huawei,Infinix,Oppo,Realme,Redmi,Samsung,Vivo,Xiaomi}
 
