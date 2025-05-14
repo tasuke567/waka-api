@@ -258,7 +258,7 @@ function wekaPredict(
       if (distIdx !== -1 && CLASS_VALUES.length) {
         for (let i = 0; i < CLASS_VALUES.length; i++) {
           const raw = (data[distIdx + i] || "").replace("*", "");
-          const num = parseFloat(raw);
+          const num  = parseFloat(raw.replace("*", ""));
           if (!isNaN(num)) dist[CLASS_VALUES[i]] = num;
         }
       }
