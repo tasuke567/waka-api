@@ -260,39 +260,37 @@ const adminOnly: RequestHandler = (req, res, next) => {
 /* ---------- PREDICT HANDLER ---------- */
 const predictHandler: RequestHandler = async (req, res) => {
   try {
+    /* 1) สร้าง ARFF + ทำนาย */
     const arff = await buildArff(req.file!.path, false);
     const fname =
-      "predict-" +
-      new Date().toISOString().replace(/[:.]/g, "-") +
-      "-" +
-      uuidv4() +
-      ".arff";
+      "predict-" + new Date().toISOString().replace(/[:.]/g, "-") + "-" + uuidv4() + ".arff";
     const final = path.join(UPLOAD_DIR, fname);
     fs.copyFileSync(arff, final);
 
     const result = await wekaPredict(final, MODEL);
 
-    const q = await prisma.questionnaire.create({
-      data: {
-        rawCsvPath: final,
-        user: { connect: { id: req.user!.id } }, // ต้องมี verifyToken ก่อน route
-        prediction: {
-          create: {
-            label: result.label,
-            distribution: result.distribution as any,
-          },
+    /* 2) เตรียม payload สำหรับ Prisma */
+    const data: Prisma.QuestionnaireUncheckedCreateInput = {
+      rawCsvPath: final,
+      userId: req.user?.id ?? null,            // ถ้าไม่มี token ⇒ null
+      prediction: {
+        create: {
+          label: result.label,
+          distribution: result.distribution as any,
         },
       },
-    });
+    };
+
+    /* 3) บันทึกลง DB */
+    const q = await prisma.questionnaire.create({ data });
 
     res.json({ questionnaireId: q.id, prediction: result });
-    return; // ✅ explicit void
-  } catch (e: any) {
+  } catch (e) {
     console.error(e);
     res.status(500).json({ error: "Weka error", message: String(e) });
-    return; // ✅ explicit void
   }
 };
+
 
 // ──────────────────────────────────────────────────────────────────────────
 // express routes
@@ -320,7 +318,6 @@ app.use(
 
 app.post(
   "/predict",
-   // ต้อง login
   upload.single("file"), // multipart/form-data field = file
   predictHandler // <- ส่ง handler ที่เราเตรียมไว้
 );
