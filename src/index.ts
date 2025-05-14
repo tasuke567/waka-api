@@ -262,7 +262,7 @@ function wekaPredict(
           if (!isNaN(num)) dist[CLASS_VALUES[i]] = num;
         }
       }
-
+      console.log(dist)
       ok({ label, distribution: dist });
     });
   });
