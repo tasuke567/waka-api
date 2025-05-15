@@ -716,23 +716,51 @@ admin.delete("/questionnaire/:id", async (req, res) => {
 });
 
 // --- 3) export CSV report ---
+// --- 3) export CSV report ---
 admin.get("/report/export", async (_, res) => {
+  /* 1️⃣  ดึงข้อมูลทั้งหมด */
   const data = await prisma.predictionResult.findMany({
     include: { questionnaire: { include: { user: true } } },
+    orderBy: { questionnaireId: "asc" },
   });
-  const parser = new Parser();
-  const csv = parser.parse(
-    data.map((d) => ({
-      qId: d.questionnaireId,
-      brand: d.label,
-      createdAt: d.createdAt,
-      ...(d.distribution as Record<string, number>),
-    }))
-  );
-  res.setHeader("Content-Type", "text/csv");
-  res.setHeader("Content-Disposition", `attachment; filename=report.csv`);
+
+  /* 2️⃣  รวม key distribution ทั้งหมด แล้ว sort & unique */
+  const allKeys = Array.from(
+    new Set(
+      data.flatMap((d) => Object.keys(d.distribution ?? {}))
+            .map((k) => k.replace(/^'+|'+$/g, ""))            // ตัด ‘ ’
+    )
+  ).sort((a, b) => a.localeCompare(b, "en"));                 // A-Z
+
+  /* helper เติม 0 ถ้าไม่มีค่า */
+  const fillZero = (dist: Record<string, number>) =>
+    allKeys.reduce<Record<string, number>>((obj, k) => {
+      obj[k] = +(dist[k] ?? 0).toFixed(6);                    // fixed 6 ทศนิยม
+      return obj;
+    }, {});
+
+  /* 3️⃣  แปลงเป็นแถว CSV */
+  const rows = data.map((d) => ({
+    qId       : d.questionnaireId,
+    brand     : d.label,
+    createdAt : d.createdAt,
+    ...fillZero(d.distribution as Record<string, number>),
+  }));
+
+  /* 4️⃣  ใช้ json2csv พร้อม fields ที่เรียงแล้ว */
+  const parser = new Parser({
+    fields: ["qId", "brand", "createdAt", ...allKeys],        // คอลัมน์เรียงชัด
+    delimiter: ",",
+    quote: '"',
+  });
+  const csv = parser.parse(rows);
+
+  /* 5️⃣  ส่งออก */
+  res.header("Content-Type", "text/csv");
+  res.attachment(`report-${new Date().toISOString().slice(0,10)}.csv`);
   res.send(csv);
 });
+
 
 // --- 4) hot-swap model ---
 admin.post("/model", upload.single("file"), (req, res) => {
