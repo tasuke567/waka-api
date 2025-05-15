@@ -416,7 +416,7 @@ app.post("/train", upload.single("file"), async (req, res) => {
 
           // 👉 เขียน metrics.json
           await fsp.writeFile(
-            path.join(path.dirname(MODEL), "metrics.json"),
+            path.join(path.dirname(MODEL_DIR), "metrics.json"),
             JSON.stringify(
               { accuracy, kappa, updatedAt: Date.now() },
               null,
@@ -424,6 +424,7 @@ app.post("/train", upload.single("file"), async (req, res) => {
             )
           );
           ok();
+          console.log(stdout)
         }
       );
     });
