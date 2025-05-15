@@ -15,17 +15,20 @@ import type { ParsedQs } from "qs";
 import { Prisma } from "@prisma/client";
 import cookieParser from "cookie-parser";
 import type { Request, Response } from "express";
+import { promises as fsp } from "fs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PORT = process.env.PORT ?? 3000;
 
 // ────────── paths / consts ──────────
 const MODEL = path.join(__dirname, "../model/myJ48.model");
+const MODEL_DIR   = path.dirname("../model"); 
 const HEADER_PATH = path.join(__dirname, "../model/header.arff");
 const WEKA_JAR = path.join(__dirname, "../model/weka.jar");
 const MTJ_JAR = path.join(__dirname, "../model/mtj-1.0.4.jar");
 const WEKA_CP = [WEKA_JAR, MTJ_JAR].join(path.delimiter);
 const CLASS_ATTR = "Current_brand";
+const METRICS     = path.join(MODEL_DIR, "metrics.json");
 
 const UPLOAD_DIR = path.join(process.cwd(), "uploads");
 const trainDir = path.join(UPLOAD_DIR, "train");
@@ -384,11 +387,29 @@ app.post("/train", upload.single("file"), async (req, res) => {
     ];
 
     await new Promise<void>((ok, err) => {
-      execFile(javaPath, args, { encoding: "utf8" }, (e, stdout, stderr) => {
-        if (e || /Exception/i.test(stderr)) return err(new Error(stderr));
-        console.log(stdout);
-        ok();
-      });
+      execFile(
+        javaPath,
+        args,
+        { encoding: "utf8" },
+        /* ---------- mark callback async ---------- */
+        async (e, stdout, stderr) => {
+          if (e || /Exception/i.test(stderr)) return err(new Error(stderr));
+      
+          /* --- ดึง metric จาก stdout --- */
+          const acc   = +stdout.match(/Correctly Classified.*?([\d.]+)$/m)?.[1]!;
+          const kappa = +stdout.match(/Kappa statistic\s+([\d.]+)/)?.[1]!;
+      
+          /* ---------- เขียน metrics.json ---------- */
+          await fsp.writeFile(
+            path.join(MODEL_DIR, "metrics.json"),
+            JSON.stringify({ accuracy: acc, kappa, updatedAt: Date.now() }),
+            "utf8"
+          );
+      
+          ok();                       // resolve promise
+        }
+      );
+      
     });
 
     if (!existsSync(MODEL)) throw new Error(`Model not saved: ${MODEL}`);
@@ -420,51 +441,62 @@ app.get("/train-history", (_, res) => {
       }))
   );
 });
-const modelInfo: RequestHandler = (_req, res): void => {
+// --------------------------------------------------------------
+// GET /model-info
+// --------------------------------------------------------------
+const modelInfo: RequestHandler = (_req, res) => {
   try {
-    /* ---------- 1) header / class / values ---------- */
+    /* ---------- 1) ถ้า header ไม่เจอ -> ยังไม่มีโมเดล ---------- */
     if (!existsSync(HEADER_PATH)) {
-      res.json({ exists: false }); // ยังไม่มีโมเดล
-      return;
+     res.json({ exists: false });
+     return 
     }
 
+    /* ---------- 2) ดึง class + values จาก header ---------- */
     const header = fs.readFileSync(HEADER_PATH, "utf8");
-    const cols = parseArffHeader(header);
-    const cls = cols.at(-1)!;
+    const cols   = parseArffHeader(header);
+    const cls    = cols.at(-1)!;                              // ชื่อคลาส
 
-    const vals =
+    const values =
       header
         .split("\n")
         .find((l) => l.startsWith(`@ATTRIBUTE ${cls} `))
         ?.match(/\{(.*?)\}/)?.[1]
-        ?.split(",") ?? [];
+        ?.split(",")
+        .map((v) => v.trim()) ?? [];
 
-    /* ---------- 2) size & updatedAt ---------- */
-    let size = null;
-    let updatedAt = null;
+    /* ---------- 3) ขนาด & เวลาอัปเดต ---------- */
+    let size       : number | null = null;
+    let updatedAt  : string | null = null;
 
     if (existsSync(MODEL)) {
-      const stat = fs.statSync(MODEL);
-      size = stat.size; // bytes
-      updatedAt = stat.mtime; // Date
+      const { size: bytes, mtime } = fs.statSync(MODEL);
+      size      = bytes;
+      updatedAt = mtime.toISOString();
     }
 
-    /* ---------- 3) response ---------- */
+    /* ---------- 4) metrics (accuracy ฯลฯ) ---------- */
+    let metrics: unknown = null;
+    if (existsSync(METRICS)) {
+      metrics = JSON.parse(fs.readFileSync(METRICS, "utf8"));
+    }
+
+    /* ---------- 5) response ---------- */
     res.json({
-      exists: !!size, // true ถ้ามีไฟล์
+      exists: !!size,
       classAttr: cls,
-      values: vals,
-      size, // bytes (ให้ FE แปลง KB/MB เอง)
-      updatedAt, // ISO string ได้ auto
+      values,
+      size,          // bytes
+      updatedAt,     // ISO-string
+      metrics,       // อาจเป็น null
     });
-  } catch (e) {
-    console.error(e);
-    res.status(500).json({ error: String(e) });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: String(err) });
   }
 };
 
 app.get("/model-info", modelInfo);
-
 /* ------------------------------------------------------------------
     🆕  /predict-batch   (POST multipart/form-data, field = file)
     — รับไฟล์ test CSV/ARFF หลายแถว → คืน predictions[] + (option) dist
