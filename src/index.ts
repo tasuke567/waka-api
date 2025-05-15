@@ -334,6 +334,7 @@ app.use(
     },
     credentials: true, // สำหรับ auth header / cookie
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    exposedHeaders: ["Content-Disposition"],
   })
 );
 // ก่อนประกาศทุก route
@@ -715,7 +716,6 @@ admin.delete("/questionnaire/:id", async (req, res) => {
 });
 
 // --- 3) export CSV report ---
-// npm i json2csv
 admin.get("/report/export", async (_, res) => {
   const data = await prisma.predictionResult.findMany({
     include: { questionnaire: { include: { user: true } } },
