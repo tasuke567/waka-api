@@ -14,6 +14,8 @@ import cors from "cors";
 import type { ParsedQs } from "qs";
 import { Prisma } from "@prisma/client";
 import cookieParser from "cookie-parser";
+import type { Request, Response } from "express";
+
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PORT = process.env.PORT ?? 3000;
 
@@ -246,7 +248,7 @@ function wekaPredict(
       // B) following the "distribution" marker
       const dIdx = header.findIndex((h) => h === "distribution");
       if (dIdx !== -1 && CLASS_VALUES.length) {
-        const start = dIdx ;
+        const start = dIdx;
         for (let i = 0; i < CLASS_VALUES.length; i++) {
           const num = parseFloat((data[start + i] || "").replace("*", ""));
           if (!isNaN(num))
@@ -418,19 +420,50 @@ app.get("/train-history", (_, res) => {
       }))
   );
 });
+const modelInfo: RequestHandler = (_req, res): void => {
+  try {
+    /* ---------- 1) header / class / values ---------- */
+    if (!existsSync(HEADER_PATH)) {
+      res.json({ exists: false }); // ยังไม่มีโมเดล
+      return;
+    }
 
-app.get("/model-info", (_, res) => {
-  const header = fs.readFileSync(HEADER_PATH, "utf8");
-  const cols = parseArffHeader(header);
-  const cls = cols.at(-1)!;
-  const vals =
-    header
-      .split("\n")
-      .find((l) => l.startsWith(`@ATTRIBUTE ${cls} `))
-      ?.match(/\{(.*?)\}/)?.[1]
-      ?.split(",") ?? [];
-  res.json({ classAttr: cls, values: vals });
-});
+    const header = fs.readFileSync(HEADER_PATH, "utf8");
+    const cols = parseArffHeader(header);
+    const cls = cols.at(-1)!;
+
+    const vals =
+      header
+        .split("\n")
+        .find((l) => l.startsWith(`@ATTRIBUTE ${cls} `))
+        ?.match(/\{(.*?)\}/)?.[1]
+        ?.split(",") ?? [];
+
+    /* ---------- 2) size & updatedAt ---------- */
+    let size = null;
+    let updatedAt = null;
+
+    if (existsSync(MODEL)) {
+      const stat = fs.statSync(MODEL);
+      size = stat.size; // bytes
+      updatedAt = stat.mtime; // Date
+    }
+
+    /* ---------- 3) response ---------- */
+    res.json({
+      exists: !!size, // true ถ้ามีไฟล์
+      classAttr: cls,
+      values: vals,
+      size, // bytes (ให้ FE แปลง KB/MB เอง)
+      updatedAt, // ISO string ได้ auto
+    });
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ error: String(e) });
+  }
+};
+
+app.get("/model-info", modelInfo);
 
 /* ------------------------------------------------------------------
     🆕  /predict-batch   (POST multipart/form-data, field = file)
@@ -609,7 +642,7 @@ admin.get("/questionnaire", async (req, res) => {
   if (from || to) {
     where.createdAt = {
       ...(from && { gte: new Date(from + "T00:00:00.000Z") }),
-      ...(to   && { lte: new Date(to   + "T23:59:59.999Z") }),
+      ...(to && { lte: new Date(to + "T23:59:59.999Z") }),
     };
   }
 
@@ -617,15 +650,14 @@ admin.get("/questionnaire", async (req, res) => {
     where,
     include: {
       prediction: true,
-      feedbacks:  true,
-      user:       true,
+      feedbacks: true,
+      user: true,
     },
     orderBy: { createdAt: "desc" },
   });
 
   res.json(list);
 });
-
 
 // --- 2) delete questionnaire ---
 admin.delete("/questionnaire/:id", async (req, res) => {
