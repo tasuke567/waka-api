@@ -1,21 +1,19 @@
-/* ----- utils/parseWeka.ts ----------------------------------------- */
-export function parseWekaStats(stdout: string) {
-    let accuracy: number | null = null;
-    let kappa:    number | null = null;
+export function parseWekaStats(out: string) {
+    // ดึงเฉพาะบล็อก cross-validation
+    const cvBlock = out
+      .split("=== Stratified cross-validation ===")[1]      // หลังหัวข้อนี้
+      ?.split("=== Detailed Accuracy By Class ===")[0]      // ก่อนหัวข้อถัดไป
+      ?? "";
   
-    stdout.split("\n").forEach((l) => {
-      // ex. "Correctly Classified Instances          95               95      95.0000 %"
-      if (/Correctly\s+Classified\s+Instances/i.test(l)) {
-        const parts = l.trim().split(/\s+/);
-        const last  = parts.at(-2) ?? "";      // คอลัมน์ก่อนเครื่องหมาย %
-        accuracy = parseFloat(last);           // 95.0000
-      }
-      // ex. "Kappa statistic                          0.72"
-      if (/Kappa statistic/i.test(l)) {
-        const val = l.trim().split(/\s+/).at(-1);
-        kappa = val ? parseFloat(val) : null;
-      }
-    });
+    // Accuracy
+    const accMatch = cvBlock.match(
+      /Correctly\s+Classified\s+Instances\s+(\d+)\s+([\d.]+)\s+%/i
+    );
+    const accuracy = accMatch ? parseFloat(accMatch[2]) / 100 : null;
+  
+    // Kappa
+    const kappaMatch = cvBlock.match(/Kappa statistic\s+([\d.\-]+)/i);
+    const kappa = kappaMatch ? parseFloat(kappaMatch[1]) : null;
   
     return { accuracy, kappa };
   }

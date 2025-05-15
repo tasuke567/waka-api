@@ -356,7 +356,7 @@ app.post("/train", upload.single("file"), async (req, res) => {
        1) เตรียมไฟล์ ARFF  (ถ้าอัปโหลด .arff มาแล้ว ก็ใช้เลย)
     ----------------------------------------------------------- */
     const uploaded = req.file!;
-    const isArff   =
+    const isArff =
       uploaded.originalname.toLowerCase().endsWith(".arff") ||
       uploaded.mimetype === "text/arff";
 
@@ -393,9 +393,9 @@ app.post("/train", upload.single("file"), async (req, res) => {
       "-W",
       "weka.classifiers.trees.RandomForest",
       "-t",
-      final,          // ใช้ไฟล์ที่เพิ่งเซฟ
+      final, // ใช้ไฟล์ที่เพิ่งเซฟ
       "-d",
-      MODEL,          // บันทึกโมเดล
+      MODEL, // บันทึกโมเดล
       "-c",
       "last",
       "-x",
@@ -415,16 +415,14 @@ app.post("/train", upload.single("file"), async (req, res) => {
           const { accuracy, kappa } = parseWekaStats(stdout);
 
           // 👉 เขียน metrics.json
+          const metricsPath = path.join(path.dirname(MODEL), "metrics.json");
           await fsp.writeFile(
-            path.join(path.dirname(MODEL_DIR), "metrics.json"),
-            JSON.stringify(
-              { accuracy, kappa, updatedAt: Date.now() },
-              null,
-              2
-            )
+            metricsPath,
+            JSON.stringify({ accuracy, kappa, updatedAt: Date.now() }, null, 2)
           );
+
           ok();
-          console.log(stdout)
+          console.log(stdout);
         }
       );
     });
@@ -436,7 +434,6 @@ app.post("/train", upload.single("file"), async (req, res) => {
     res.status(500).json({ error: String(e) });
   }
 });
-
 
 // util endpoints
 app.get("/predict-history", (_, res) => {
@@ -495,10 +492,10 @@ const modelInfo: RequestHandler = (_req, res) => {
     }
 
     /* ---------- 4) metrics (accuracy ฯลฯ) ---------- */
-    let metrics: unknown = null;
-    if (existsSync(METRICS)) {
-      metrics = JSON.parse(fs.readFileSync(METRICS, "utf8"));
-    }
+    const metricsPath = path.join(path.dirname(MODEL), "metrics.json");
+    const metrics = existsSync(metricsPath)
+      ? JSON.parse(fs.readFileSync(metricsPath, "utf8"))
+      : null;
 
     /* ---------- 5) response ---------- */
     res.json({
