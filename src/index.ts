@@ -595,14 +595,37 @@ app.get("/profile", verifyToken, async (req, res) => {
 const admin = express.Router();
 app.use("/admin", verifyToken, adminOnly, admin);
 
-// --- 1) list questionnaire + prediction ---
-admin.get("/questionnaire", async (_, res) => {
+// ───────────────────────────────────────────────────────
+// GET /admin/questionnaire?from=2025-05-14&to=2025-05-15
+//   - from / to เป็นวันที่รูปแบบ YYYY-MM-DD (optional)
+//   - รวม prediction, feedbacks, user
+//   - เรียงล่าสุดก่อน
+// ───────────────────────────────────────────────────────
+admin.get("/questionnaire", async (req, res) => {
+  const { from, to } = req.query as { from?: string; to?: string };
+
+  /* สร้าง where ตามช่วงวันที่ถ้ามีส่งมา */
+  const where: any = {};
+  if (from || to) {
+    where.createdAt = {
+      ...(from && { gte: new Date(from + "T00:00:00.000Z") }),
+      ...(to   && { lte: new Date(to   + "T23:59:59.999Z") }),
+    };
+  }
+
   const list = await prisma.questionnaire.findMany({
-    include: { prediction: true, feedbacks: true, user: true },
+    where,
+    include: {
+      prediction: true,
+      feedbacks:  true,
+      user:       true,
+    },
     orderBy: { createdAt: "desc" },
   });
+
   res.json(list);
 });
+
 
 // --- 2) delete questionnaire ---
 admin.delete("/questionnaire/:id", async (req, res) => {
