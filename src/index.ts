@@ -16,19 +16,19 @@ import { Prisma } from "@prisma/client";
 import cookieParser from "cookie-parser";
 import type { Request, Response } from "express";
 import { promises as fsp } from "fs";
-
+import { parseWekaStats } from "./utils/parseWeka.js";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PORT = process.env.PORT ?? 3000;
 
 // ────────── paths / consts ──────────
 const MODEL = path.join(__dirname, "../model/myJ48.model");
-const MODEL_DIR   = path.dirname("../model"); 
+const MODEL_DIR = path.dirname("../model");
 const HEADER_PATH = path.join(__dirname, "../model/header.arff");
 const WEKA_JAR = path.join(__dirname, "../model/weka.jar");
 const MTJ_JAR = path.join(__dirname, "../model/mtj-1.0.4.jar");
 const WEKA_CP = [WEKA_JAR, MTJ_JAR].join(path.delimiter);
 const CLASS_ATTR = "Current_brand";
-const METRICS     = path.join(MODEL_DIR, "metrics.json");
+const METRICS = path.join(MODEL_DIR, "metrics.json");
 
 const UPLOAD_DIR = path.join(process.cwd(), "uploads");
 const trainDir = path.join(UPLOAD_DIR, "train");
@@ -391,25 +391,23 @@ app.post("/train", upload.single("file"), async (req, res) => {
         javaPath,
         args,
         { encoding: "utf8" },
-        /* ---------- mark callback async ---------- */
         async (e, stdout, stderr) => {
           if (e || /Exception/i.test(stderr)) return err(new Error(stderr));
-      
-          /* --- ดึง metric จาก stdout --- */
-          const acc   = +stdout.match(/Correctly Classified.*?([\d.]+)$/m)?.[1]!;
-          const kappa = +stdout.match(/Kappa statistic\s+([\d.]+)/)?.[1]!;
-      
-          /* ---------- เขียน metrics.json ---------- */
+
+          // 👉 1) ดึงสถิติ
+          const { accuracy, kappa } = parseWekaStats(stdout);
+
+          // 👉 2) เขียน metrics.json ข้าง ๆ โมเดล
+          const metricsPath = path.join(path.dirname(MODEL), "metrics.json");
           await fsp.writeFile(
-            path.join(MODEL_DIR, "metrics.json"),
-            JSON.stringify({ accuracy: acc, kappa, updatedAt: Date.now() }),
-            "utf8"
+            metricsPath,
+            JSON.stringify({ accuracy, kappa, updatedAt: Date.now() }, null, 2)
           );
-      
-          ok();                       // resolve promise
+
+          console.log("✔️  Training done – metrics saved:", metricsPath);
+          ok(); // <-- อย่าลืม resolve promise
         }
       );
-      
     });
 
     if (!existsSync(MODEL)) throw new Error(`Model not saved: ${MODEL}`);
@@ -448,14 +446,14 @@ const modelInfo: RequestHandler = (_req, res) => {
   try {
     /* ---------- 1) ถ้า header ไม่เจอ -> ยังไม่มีโมเดล ---------- */
     if (!existsSync(HEADER_PATH)) {
-     res.json({ exists: false });
-     return 
+      res.json({ exists: false });
+      return;
     }
 
     /* ---------- 2) ดึง class + values จาก header ---------- */
     const header = fs.readFileSync(HEADER_PATH, "utf8");
-    const cols   = parseArffHeader(header);
-    const cls    = cols.at(-1)!;                              // ชื่อคลาส
+    const cols = parseArffHeader(header);
+    const cls = cols.at(-1)!; // ชื่อคลาส
 
     const values =
       header
@@ -466,12 +464,12 @@ const modelInfo: RequestHandler = (_req, res) => {
         .map((v) => v.trim()) ?? [];
 
     /* ---------- 3) ขนาด & เวลาอัปเดต ---------- */
-    let size       : number | null = null;
-    let updatedAt  : string | null = null;
+    let size: number | null = null;
+    let updatedAt: string | null = null;
 
     if (existsSync(MODEL)) {
       const { size: bytes, mtime } = fs.statSync(MODEL);
-      size      = bytes;
+      size = bytes;
       updatedAt = mtime.toISOString();
     }
 
@@ -486,9 +484,9 @@ const modelInfo: RequestHandler = (_req, res) => {
       exists: !!size,
       classAttr: cls,
       values,
-      size,          // bytes
-      updatedAt,     // ISO-string
-      metrics,       // อาจเป็น null
+      size, // bytes
+      updatedAt, // ISO-string
+      metrics, // อาจเป็น null
     });
   } catch (err) {
     console.error(err);
