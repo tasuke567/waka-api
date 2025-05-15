@@ -352,33 +352,50 @@ app.post(
 );
 app.post("/train", upload.single("file"), async (req, res) => {
   try {
-    const arff = await buildArff(req.file!.path, true);
+    /* -----------------------------------------------------------
+       1) เตรียมไฟล์ ARFF  (ถ้าอัปโหลด .arff มาแล้ว ก็ใช้เลย)
+    ----------------------------------------------------------- */
+    const uploaded = req.file!;
+    const isArff   =
+      uploaded.originalname.toLowerCase().endsWith(".arff") ||
+      uploaded.mimetype === "text/arff";
+
+    // 👉 ถ้าเป็น .arff อยู่แล้ว ไม่ต้อง build
+    const arffPath = isArff
+      ? uploaded.path
+      : await buildArff(uploaded.path, /*singleRow*/ true);
+
+    /* -----------------------------------------------------------
+       2) เซฟสำเนาไว้ใน  uploads/train/<timestamp>.arff
+    ----------------------------------------------------------- */
     const fname = `train-${new Date()
       .toISOString()
       .replace(/[:.]/g, "-")}-${uuidv4()}.arff`;
     const final = path.join(trainDir, fname);
-    fs.copyFileSync(arff, final);
+    fs.copyFileSync(arffPath, final);
 
-    // update header for future predictions
-    const header = fs.readFileSync(arff, "utf8").split("@DATA")[0];
+    /* -----------------------------------------------------------
+       3) อัปเดต HEADER สำหรับ prediction ในอนาคต
+    ----------------------------------------------------------- */
+    const header = fs.readFileSync(arffPath, "utf8").split("@DATA")[0];
     fs.writeFileSync(HEADER_PATH, header);
 
+    /* -----------------------------------------------------------
+       4) เรียก Weka train + เก็บ metrics
+    ----------------------------------------------------------- */
     const args = [
       "-Xmx1G",
       "-cp",
       WEKA_CP.replace(/\\/g, "/"),
       "weka.classifiers.meta.FilteredClassifier",
-
       "-F",
       "weka.filters.unsupervised.attribute.StringToNominal -R first-last",
-
       "-W",
       "weka.classifiers.trees.RandomForest",
-
       "-t",
-      final, // <-- training file
+      final,          // ใช้ไฟล์ที่เพิ่งเซฟ
       "-d",
-      MODEL, // บันทึกโมเดล
+      MODEL,          // บันทึกโมเดล
       "-c",
       "last",
       "-x",
@@ -394,28 +411,31 @@ app.post("/train", upload.single("file"), async (req, res) => {
         async (e, stdout, stderr) => {
           if (e || /Exception/i.test(stderr)) return err(new Error(stderr));
 
-          // 👉 1) ดึงสถิติ
+          // 👉 ดึง accuracy / kappa จาก stdout
           const { accuracy, kappa } = parseWekaStats(stdout);
 
-          // 👉 2) เขียน metrics.json ข้าง ๆ โมเดล
-          const metricsPath = path.join(path.dirname(MODEL), "metrics.json");
+          // 👉 เขียน metrics.json
           await fsp.writeFile(
-            metricsPath,
-            JSON.stringify({ accuracy, kappa, updatedAt: Date.now() }, null, 2)
+            path.join(path.dirname(MODEL), "metrics.json"),
+            JSON.stringify(
+              { accuracy, kappa, updatedAt: Date.now() },
+              null,
+              2
+            )
           );
-
-          console.log("✔️  Training done – metrics saved:", metricsPath);
-          ok(); // <-- อย่าลืม resolve promise
+          ok();
         }
       );
     });
 
     if (!existsSync(MODEL)) throw new Error(`Model not saved: ${MODEL}`);
-    res.json({ saved: final, model: MODEL });
+    res.json({ saved: final, model: MODEL, usedUploadedArff: isArff });
   } catch (e: any) {
+    console.error(e);
     res.status(500).json({ error: String(e) });
   }
 });
+
 
 // util endpoints
 app.get("/predict-history", (_, res) => {
