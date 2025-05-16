@@ -21,16 +21,17 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PORT = process.env.PORT ?? 3000;
 
 // ────────── paths / consts ──────────
-const MODEL = path.join(__dirname, "../model/myJ48.model");
-const MODEL_DIR = path.dirname("../model");
-const HEADER_PATH = path.join(__dirname, "../model/header.arff");
-const WEKA_JAR = path.join(__dirname, "../model/weka.jar");
-const MTJ_JAR = path.join(__dirname, "../model/mtj-1.0.4.jar");
+const MODEL_DIR = path.resolve(__dirname, "../model");
+const MODEL = path.join(MODEL_DIR, "myJ48.model");
+const HEADER_PATH = path.join(MODEL_DIR, "header.arff");
+const WEKA_JAR = path.join(MODEL_DIR, "weka.jar");
+const MTJ_JAR = path.join(MODEL_DIR, "mtj-1.0.4.jar");
 const WEKA_CP = [WEKA_JAR, MTJ_JAR].join(path.delimiter);
+
+const UPLOAD_DIR = path.resolve(__dirname, "../uploads");
 const CLASS_ATTR = "Current_brand";
 const METRICS = path.join(MODEL_DIR, "metrics.json");
 
-const UPLOAD_DIR = path.join(process.cwd(), "uploads");
 const trainDir = path.join(UPLOAD_DIR, "train");
 const feedbackDir = path.join(UPLOAD_DIR, "feedback");
 const javaPath = process.env.JAVA_CMD ?? "java";
@@ -727,29 +728,30 @@ admin.get("/report/export", async (_, res) => {
   /* 2️⃣  รวม key distribution ทั้งหมด แล้ว sort & unique */
   const allKeys = Array.from(
     new Set(
-      data.flatMap((d) => Object.keys(d.distribution ?? {}))
-            .map((k) => k.replace(/^'+|'+$/g, ""))            // ตัด ‘ ’
+      data
+        .flatMap((d) => Object.keys(d.distribution ?? {}))
+        .map((k) => k.replace(/^'+|'+$/g, "")) // ตัด ‘ ’
     )
-  ).sort((a, b) => a.localeCompare(b, "en"));                 // A-Z
+  ).sort((a, b) => a.localeCompare(b, "en")); // A-Z
 
   /* helper เติม 0 ถ้าไม่มีค่า */
   const fillZero = (dist: Record<string, number>) =>
     allKeys.reduce<Record<string, number>>((obj, k) => {
-      obj[k] = +(dist[k] ?? 0).toFixed(6);                    // fixed 6 ทศนิยม
+      obj[k] = +(dist[k] ?? 0).toFixed(6); // fixed 6 ทศนิยม
       return obj;
     }, {});
 
   /* 3️⃣  แปลงเป็นแถว CSV */
   const rows = data.map((d) => ({
-    qId       : d.questionnaireId,
-    brand     : d.label,
-    createdAt : d.createdAt,
+    qId: d.questionnaireId,
+    brand: d.label,
+    createdAt: d.createdAt,
     ...fillZero(d.distribution as Record<string, number>),
   }));
 
   /* 4️⃣  ใช้ json2csv พร้อม fields ที่เรียงแล้ว */
   const parser = new Parser({
-    fields: ["qId", "brand", "createdAt", ...allKeys],        // คอลัมน์เรียงชัด
+    fields: ["qId", "brand", "createdAt", ...allKeys], // คอลัมน์เรียงชัด
     delimiter: ",",
     quote: '"',
   });
@@ -757,10 +759,9 @@ admin.get("/report/export", async (_, res) => {
 
   /* 5️⃣  ส่งออก */
   res.header("Content-Type", "text/csv");
-  res.attachment(`report-${new Date().toISOString().slice(0,10)}.csv`);
+  res.attachment(`report-${new Date().toISOString().slice(0, 10)}.csv`);
   res.send(csv);
 });
-
 
 // --- 4) hot-swap model ---
 admin.post("/model", upload.single("file"), (req, res) => {
