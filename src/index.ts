@@ -217,6 +217,9 @@ function wekaPredict(
     "weka.classifiers.evaluation.output.prediction.CSV -decimals 8 -distribution",
   ];
   return new Promise((ok, err) => {
+    console.table({ MODEL, HEADER_PATH, WEKA_CP, arff });
+    console.log("args:", args);
+
     execFile(javaPath, args, { encoding: "utf8" }, (e, stdout, stderr) => {
       if (e || /Exception|Error/i.test(stderr))
         return err(new Error(`Weka failed:\n${stderr}\n${stdout}`));
@@ -279,7 +282,7 @@ const adminOnly: RequestHandler = (req, res, next) => {
 /* ---------- PREDICT HANDLER ---------- */
 const predictHandler: RequestHandler = async (req, res) => {
   try {
-    /* 1) สร้าง ARFF + ทำนาย */
+   
     const arff = await buildArff(req.file!.path, false);
     const fname =
       "predict-" +
@@ -292,10 +295,10 @@ const predictHandler: RequestHandler = async (req, res) => {
 
     const result = await wekaPredict(final, MODEL);
 
-    /* 2) เตรียม payload สำหรับ Prisma */
+
     const data: Prisma.QuestionnaireUncheckedCreateInput = {
       rawCsvPath: final,
-      userId: req.user?.id ?? null, // ถ้าไม่มี token ⇒ null
+      userId: req.user?.id ?? null, 
       prediction: {
         create: {
           label: result.label,
@@ -304,7 +307,7 @@ const predictHandler: RequestHandler = async (req, res) => {
       },
     };
 
-    /* 3) บันทึกลง DB */
+
     const q = await prisma.questionnaire.create({ data });
 
     res.json({ questionnaireId: q.id, prediction: result });
