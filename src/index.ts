@@ -657,18 +657,33 @@ app.get("/feedback", (_, res) => {
 
 // === Public ===
 app.use("/auth", authRouter);
-app.get("/stats/brands", async (_, res) => {
+//  GET /stats/brands?from=YYYY-MM-DD&to=YYYY-MM-DD
+app.get("/stats/brands", async (req, res) => {
+  const { from, to } = req.query as { from?: string; to?: string };
+
+  // ── where เฉพาะช่วงวันที่บนตาราง Questionnaire ──
+  const where: Prisma.PredictionResultWhereInput = from || to ? {
+    questionnaire: {
+      createdAt: {
+        ...(from && { gte: new Date(from + "T00:00:00.000Z") }),
+        ...(to   && { lte: new Date(to   + "T23:59:59.999Z") }),
+      },
+    },
+  } : {};
+
   const agg = await prisma.predictionResult.groupBy({
     by: ["label"],
+    where,                 // 👈 new
     _count: { _all: true },
   });
 
   const sorted = agg
     .sort((a, b) => (b._count._all ?? 0) - (a._count._all ?? 0))
-    .map((a) => ({ brand: a.label, total: a._count._all }));
+    .map(({ label, _count }) => ({ brand: label, total: _count._all }));
 
   res.json(sorted);
 });
+
 
 // === Protected example ===
 app.get("/profile", verifyToken, async (req, res) => {
