@@ -205,7 +205,7 @@ function wekaPredict(
   const args = [
     "-Xmx1G",
     "-cp",
-    WEKA_CP.replace(/\\/g, "/"),
+    WEKA_CP,
     "weka.classifiers.meta.FilteredClassifier",
     "-l",
     model.replace(/\\/g, "/"),
