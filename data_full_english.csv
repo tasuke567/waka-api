@@ -103,7 +103,7 @@ Male,60+,Married,"Communication, Take photos, Social media","Instagram, Spotify,
 Male,36-45,Student,"Product photography, Edit reviews, Online marketplace",Microsoft Teams,5-6 hours,Essential,Realme,Battery,5,Insufficient storage,Less than 15000,Online seller
 Female,18-25,Student,"Play games, Take photos/videos, Cloud apps","Instagram, Facebook, YouTube, Facebook Messenger, Spotify",0-1 hours,Not necessary,Huawei,Camera,2,Payment security concerns,Less than 15000,Online seller
 LGBTQ+,46-55,Married,"Take photos, Listen to music, Social media","Instagram, Facebook, YouTube",3-5 hours,Somewhat important,Realme,Product features,3,Unable to inspect product,Less than 15000,Student
-Male,26-35,Single,"Social media, Take photos/videos, Watch movies/Listen to music","Instagram, Facebook, YouTube, Facebook Messenger, TikTok",>5 hours,Highly essential,Apple,Product reviews,1,Insufficient storage,Less than 15000,Manager
+Male,26-35,Single,"Social media, Take photos/videos, Watch movies/Listen to music","Instagram, Facebook, YouTube, Facebook Messenger, TikTok",>5 hours,Highly essential,Apple,Product reviews,1,Insufficient storage,20001-30000,Student
 Female,26-35,Married,"Watch movies/listen to music, Social media",VSCO,1-3 hours,Not necessary,Oppo,Price,3,Difficult return process,30001-50000,Factory worker
 Male,26-32,Working,"Communication, Take photos, Social media","Instagram, Facebook, TikTok",5-6 hours,Not important,Redmi,Product features,5,Outdated system,Less than 15000,Logistics staff
 Female,60+,Married,"/, Email, Finance","Instagram, Facebook, YouTube",5-6 hours,Not important,Huawei,Price,2,Device overheats,20001-30000,Student
@@ -113,10 +113,12 @@ LGBTQ+,36-45,Married,"Watch movies/listen to music, Take photos/videos, Social m
 Female,60+,Working,"Watch movies/listen to music, Communication/meetings, Social media","Instagram, Facebook, YouTube, Facebook Messenger, TikTok, Line, X",1-3 hours,Essential,Vivo,Stability,4,Concerns about warranty,20001-30000,Delivery staff
 Female,36-45,Single,Play games,"Facebook, YouTube",>5 hours,Not important,Xiaomi,Stability,1,Complex payment process,15001-20000,Manager
 Female,36-45,Married,"Track delivery, Customer chat, Email",Shopee,1-3 hours,Essential,Oppo,Stability,3,System crashes frequently,15001-20000,Logistics staff
+Male,26-35,Single,"Social media, Take photos/videos, Watch movies/Listen to music","Instagram, Facebook, YouTube, Facebook Messenger, TikTok",>5 hours,Highly essential,Apple,Product reviews,1,Insufficient storage,20001-30000,Student
 Male,46-55,Single,"Chat with family, Read e-books, Listen to radio","Facebook, YouTube",1-3 hours,Somewhat important,Xiaomi,Battery,4,After-sales service issues,15001-20000,Investor
 Male,33-40,Married,"Watch movies/listen to music, Play games","Instagram, Facebook Messenger, TikTok",0-1 hours,Essential,Apple,Battery,3,Payment issues,Less than 15000,Logistics staff
 Male,36-45,Single,Play games,"Instagram, YouTube, Facebook Messenger, TikTok",1-3 hours,Essential,Apple,Reliability,3,Outdated system,Less than 15000,Logistics staff
 LGBTQ+,26-35,Single,"/, Email, Finance","Instagram, YouTube, Spotify, Telegram",5-6 hours,Not important,Vivo,Stability,4,Delivery delays,Less than 15000,Office worker
+Male,26-35,Single,"Social media, Take photos/videos, Watch movies/Listen to music","Instagram, Facebook, YouTube, Facebook Messenger, TikTok",>5 hours,Highly essential,Apple,Product reviews,1,Insufficient storage,20001-30000,Student
 LGBTQ+,36-45,Student,"Watch movies/listen to music, Take photos/videos, Communication/meetings","Instagram, YouTube, Facebook Messenger, Spotify, TikTok",5-6 hours,Highly essential,Huawei,Performance,1,Product is too expensive,Less than 15000,Content creator
 LGBTQ+,46-55,Single,"Communication, Take photos, Social media","Facebook, Facebook Messenger, Spotify",>5 hours,Not necessary,Huawei,Ecosystem,3,Payment issues,20001-30000,Business owner
 Female,18-25,Married,"Email, , Finance","Instagram, Facebook, YouTube, Facebook Messenger, Spotify",1-3 hours,Not necessary,Infinix,Price,3,No problems,Less than 15000,Online seller
@@ -157,6 +159,7 @@ Female,18-25,Student,"Social media, Take photos/videos, Watch movies/Listen to m
 Male,46-55,Married,"Email, , Finance",Facebook,3-5 hours,Somewhat important,Infinix,Brand,3,Concerns about safety,Less than 15000,Online seller
 Female,18-25,Married,"Email, , Finance","Instagram, Facebook, YouTube, Facebook Messenger, Spotify",1-3 hours,Not necessary,Infinix,Price,3,No problems,Less than 15000,Online seller
 Male,56+,Working,"Take photos/videos, Communication/meetings, Social media","Instagram, Facebook, YouTube, Snapchat, Facebook Messenger, Spotify, TikTok",>5 hours,Highly essential,Huawei,Camera,5,Uncertainty about after-sales service,Less than 15000,Retired
+Male,26-35,Single,"Social media, Take photos/videos, Watch movies/Listen to music","Instagram, Facebook, YouTube, Facebook Messenger, TikTok",>5 hours,Highly essential,Apple,Product reviews,1,Insufficient storage,20001-30000,Student
 Female,36-45,Student,"/, Email, Finance",Instagram,5-6 hours,Highly essential,Redmi,Ecosystem,1,Cannot try product before buying,Less than 15000,Artist
 Male,26-35,Student,"Chat with family, Read e-books, Listen to radio","YouTube, TikTok",>5 hours,Somewhat important,Apple,Brand,4,Payment issues,Less than 15000,Delivery staff
 Male,26-32,Married,"Watch movies/listen to music, Take photos/videos","Facebook, YouTube, Facebook Messenger, Spotify",1-3 hours,Highly essential,Samsung,Design,2,Product is too expensive,Less than 15000,Manager
@@ -287,6 +290,7 @@ Male,26-32,Working,"Play esports, Stream games, Community chat",TikTok,1-3 hours
 Female,26-35,Married,"Communication/meetings, Social media",VSCO,1-3 hours,Not necessary,Realme,Product reviews,1,Product is too expensive,Less than 15000,Online seller
 LGBTQ+,18-25,Working,"Read news, Check stocks, Finance",WhatsApp,>5 hours,Not important,Oppo,Stability,5,Payment security concerns,Less than 15000,Artist
 Female,56+,Working,"Watch movies/listen to music, Communication/meetings, Social media","Instagram, YouTube, Facebook Messenger, TikTok",0-1 hours,Highly essential,Vivo,Design,2,Insufficient storage,Less than 15000,Artist
+Male,26-35,Single,"Social media, Take photos/videos, Watch movies/Listen to music","Instagram, Facebook, YouTube, Facebook Messenger, TikTok",>5 hours,Highly essential,Apple,Product reviews,1,Insufficient storage,20001-30000,Student
 LGBTQ+,46-55,Single,"Communication, Take photos, Social media",Google Maps,>5 hours,Somewhat important,Xiaomi,Features,3,Difficult to compare prices,25001-35000,Artist
 Male,33-40,Student,"Play games, Take photos/videos","Instagram, Facebook, YouTube, Facebook Messenger, TikTok, Telegram",>5 hours,Not important,Xiaomi,Simplicity,3,Uncertainty about after-sales service,Less than 15000,Delivery staff
 Female,36-45,Student,"Online shopping, Social media, Finance","Instagram, YouTube, Spotify, TikTok",3-5 hours,Not necessary,Huawei,Durability,4,Difficult to compare prices,Less than 15000,Civil servant
@@ -430,6 +434,7 @@ Male,26-32,Working,"GPS navigation, Check car condition, Listen to podcasts","In
 LGBTQ+,26-35,Student,"Watch movies/listen to music, Play games",Instagram,0-1 hours,Essential,Huawei,Price,4,Product is too expensive,20001-30000,Investor
 LGBTQ+,26-35,Student,"Communication, Take photos, Social media",Google Maps,1-3 hours,Highly essential,Realme 7 5G,Reliability,4,Concerns about safety,Less than 15000,Business owner
 LGBTQ+,26-35,Student,"Online shopping, Social media, Finance","Facebook, TikTok, Line",3-5 hours,Highly essential,Xiaomi,Product reviews,1,Payment issues,15001-20000,Retired
+Male,26-35,Single,"Social media, Take photos/videos, Watch movies/Listen to music","Instagram, Facebook, YouTube, Facebook Messenger, TikTok",>5 hours,Highly essential,Apple,Product reviews,1,Insufficient storage,20001-30000,Student
 LGBTQ+,18-25,Student,"Watch movies, Listen to music, Take photos",Gmail,>5 hours,Not important,Infinix,Reliability,1,Concerns about safety,Less than 15000,Employee
 LGBTQ+,36-45,Student,"Watch movies/listen to music, Play games, Take photos/videos","Instagram, Facebook, YouTube, Facebook Messenger, TikTok, Telegram",5-6 hours,Not necessary,Redmi,Reliability,2,Product quality doesn't match ads,Less than 15000,Office worker
 LGBTQ+,56+,Student,"Social media, Take photos/videos, Watch movies/Listen to music",Discord,5-6 hours,Essential,Vivo,Product features,5,Unable to inspect product,Less than 15000,Delivery staff
@@ -603,6 +608,7 @@ LGBTQ+,46-55,Married,"Track delivery, Customer chat, Email","Instagram, YouTube,
 Male,46-55,Single,"Email, , Finance","Instagram, Facebook, Facebook Messenger, TikTok, LINE",5-6 hours,Highly essential,Vivo,Reliability,2,Difficult to compare prices,Less than 15000,Content creator
 Male,60+,Single,"Watch movies/listen to music, Take photos/videos, Communication/meetings","Facebook, YouTube, Facebook Messenger, TikTok",1-3 hours,Not necessary,Apple,Performance,4,Limited warranty coverage,Less than 15000,Content creator
 Male,56+,Married,"/, Email, Finance",VSCO,3-5 hours,Somewhat important,Redmi,Simplicity,5,Blurry camera,Less than 15000,Retired
+Male,26-35,Single,"Social media, Take photos/videos, Watch movies/Listen to music","Instagram, Facebook, YouTube, Facebook Messenger, TikTok",>5 hours,Highly essential,Apple,Product reviews,1,Insufficient storage,20001-30000,Student
 Female,46-55,Single,"Watch movies, Take photos, Listen to music","Instagram, YouTube, Facebook Messenger, Spotify, TikTok",0-1 hours,Somewhat important,Realme 7 5G,Reliability,4,Limited warranty coverage,Less than 15000,Private company employee
 LGBTQ+,26-32,Single,"Watch movies/listen to music, Social media","Instagram, YouTube, Facebook Messenger, TikTok",5-6 hours,Not important,Vivo,Sensor quality,1,Issues with delivery,15001-20000,Online seller
 LGBTQ+,26-35,Single,"Play games, Take photos/videos",Microsoft Teams,0-1 hours,Highly essential,Realme,Performance,5,Concerns about warranty,20001-30000,Investor
@@ -729,6 +735,7 @@ LGBTQ+,56+,Student,Watch movies/listen to music,"Instagram, YouTube, TikTok",1-3
 LGBTQ+,60+,Married,"Read news, Check stocks, Finance","Facebook, YouTube, Facebook Messenger",0-1 hours,Not necessary,Apple,Sensor quality,3,Delivery delays,Less than 15000,Retired
 Female,18-25,Married,"Watch movies/listen to music, Take photos/videos, Communication/meetings","Instagram, YouTube, TikTok",1-3 hours,Not necessary,Apple,Camera,1,Device overheats,Less than 15000,Retired
 Male,36-45,Single,"Communication, Take photos, Social media","YouTube, TikTok",5-6 hours,Not important,Infinix,Sensor quality,4,Complex payment process,Less than 15000,Business owner
+Male,26-35,Single,"Social media, Take photos/videos, Watch movies/Listen to music","Instagram, Facebook, YouTube, Facebook Messenger, TikTok",>5 hours,Highly essential,Apple,Product reviews,1,Insufficient storage,20001-30000,Student
 Male,60+,Married,"Watch movies/listen to music, Play games, Cloud apps",CapCut,1-3 hours,Essential,Vivo,Performance,1,No problems,Less than 15000,Manager
 Female,26-32,Student,"Cloud apps, Communication/meetings, Social media","Instagram, Facebook, YouTube, Snapchat, Facebook Messenger, Spotify, WhatsApp, TikTok",1-3 hours,Highly essential,Apple,Product features,4,Product is too expensive,20001-30000,Factory worker
 LGBTQ+,60+,Single,"Watch movies/listen to music, Social media",Google Maps,>5 hours,Not important,Realme 7 5G,Value for money,3,Delivery delays,Less than 15000,Business owner
@@ -822,6 +829,7 @@ LGBTQ+,36-45,Single,"Watch movies/listen to music, Communication/meetings, Socia
 LGBTQ+,46-55,Married,"Track delivery, Customer chat, Email","Instagram, YouTube, Spotify, TikTok",3-5 hours,Not necessary,Infinix,Durability,2,Complex payment process,Less than 15000,Freelancer
 Female,36-45,Married,"/, Email, Finance",LINE,1-3 hours,Somewhat important,Oppo,Price,3,Difficult to compare prices,30001-50000,Business owner
 Male,46-55,Student,"Watch movies/listen to music, Play games, Take photos","Instagram, Facebook, YouTube",1-3 hours,Not important,Samsung,Features,3,Concerns about warranty,50001-100000,Manager
+Male,26-35,Single,"Social media, Take photos/videos, Watch movies/Listen to music","Instagram, Facebook, YouTube, Facebook Messenger, TikTok",>5 hours,Highly essential,Apple,Product reviews,1,Insufficient storage,20001-30000,Student
 LGBTQ+,60+,Married,"Art photography, Video editing, Upload stories",Facebook,1-3 hours,Essential,Realme 7 5G,Sensor quality,4,Payment security concerns,Less than 15000,Business owner
 Female,56+,Student,"Watch movies/listen to music, Take photos/videos, Communication/meetings","Instagram, Spotify, TikTok",5-6 hours,Essential,Apple,Brand,2,Unable to inspect product,Less than 15000,Private company employee
 Female,36-45,Single,"Watch movies, Take photos, Listen to music","Facebook, Facebook Messenger, Line",5-6 hours,Not necessary,Apple,Simplicity,4,Unable to inspect product,Less than 15000,Manager
@@ -921,6 +929,7 @@ Female,46-55,Student,"Watch movies/listen to music, Communication/meetings, Soci
 Male,18-25,Single,"Watch movies/listen to music, Play games, Social media","Instagram, Facebook, YouTube, Facebook Messenger, Spotify, TikTok",>5 hours,Highly essential,Infinix,Product features,4,Warranty or service concerns,Less than 15000,Student
 Male,26-35,Single,"Email, , Finance",SET,3-5 hours,Highly essential,Huawei,Simplicity,5,Product quality doesn't match ads,Less than 15000,Private company employee
 Male,18-25,Working,"Play games, Take photos, Watch movies","Instagram, Facebook, Facebook Messenger, TikTok",5-6 hours,Somewhat important,Realme,Design,5,Cannot try product before buying,20001-30000,Office worker
+Male,26-35,Single,"Social media, Take photos/videos, Watch movies/Listen to music","Instagram, Facebook, YouTube, Facebook Messenger, TikTok",>5 hours,Highly essential,Apple,Product reviews,1,Insufficient storage,20001-30000,Student
 LGBTQ+,33-40,Student,"Social media, Take photos/videos, Watch movies/Listen to music","Instagram, Facebook, Facebook Messenger, TikTok, Telegram",>5 hours,Highly essential,Vivo,Battery,5,Concerns about safety,Less than 15000,Factory worker
 Male,46-55,Student,"Social media, Take photos/videos, Watch movies/Listen to music","Facebook, Facebook Messenger, Line",3-5 hours,Essential,Samsung,Battery,5,Outdated system,Less than 15000,Investor
 Female,18-25,Working,"Play games, Streaming, Take photos/videos",Discord,>5 hours,Not necessary,Samsung,Design,1,Insufficient storage,Less than 15000,Housewife
