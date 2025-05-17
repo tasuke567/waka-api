@@ -298,7 +298,7 @@ const predictHandler: RequestHandler = async (req, res) => {
 
     const data: Prisma.QuestionnaireUncheckedCreateInput = {
       rawCsvPath: final,
-      userId: req.user?.id ?? null, 
+      userId: req.user?.id ?? 8, 
       prediction: {
         create: {
           label: result.label,
