@@ -282,7 +282,6 @@ const adminOnly: RequestHandler = (req, res, next) => {
 /* ---------- PREDICT HANDLER ---------- */
 const predictHandler: RequestHandler = async (req, res) => {
   try {
-   
     const arff = await buildArff(req.file!.path, false);
     const fname =
       "predict-" +
@@ -295,10 +294,9 @@ const predictHandler: RequestHandler = async (req, res) => {
 
     const result = await wekaPredict(final, MODEL);
 
-
     const data: Prisma.QuestionnaireUncheckedCreateInput = {
       rawCsvPath: final,
-      userId: req.user?.id ?? 8, 
+      userId: req.user?.id ?? 8,
       prediction: {
         create: {
           label: result.label,
@@ -306,7 +304,6 @@ const predictHandler: RequestHandler = async (req, res) => {
         },
       },
     };
-
 
     const q = await prisma.questionnaire.create({ data });
 
@@ -388,25 +385,44 @@ app.post("/train", upload.single("file"), async (req, res) => {
     /* -----------------------------------------------------------
        4) เรียก Weka train + เก็บ metrics
     ----------------------------------------------------------- */
+    // ➜ แปลง path ให้เป็น forward-slash
+    const toWekaPath = (p: string) => path.resolve(p).replace(/\\/g, "/");
+
     const args = [
+      /* JVM */
       "-Xmx1G",
-      "-cp",
-      WEKA_CP.replace(/\\/g, "/"),
+      "-cp", WEKA_CP.replace(/\\/g, "/"),
+    
+      /* Meta-classifier */
       "weka.classifiers.meta.FilteredClassifier",
+    
+      /* Evaluation-level */
+      "-t", final.replace(/\\/g, "/"),
+      "-d", MODEL.replace(/\\/g, "/"),
+      "-c", "last",
+      "-x", "10",
+      "-o",
+    
+      /* Filter (แค่ String→Nominal) */
       "-F",
       "weka.filters.unsupervised.attribute.StringToNominal -R first-last",
-      "-W",
-      "weka.classifiers.trees.RandomForest",
-      "-t",
-      final, // ใช้ไฟล์ที่เพิ่งเซฟ
-      "-d",
-      MODEL, // บันทึกโมเดล
-      "-c",
-      "last",
-      "-x",
-      "10",
-      "-o",
+    
+      /* Base learner */
+      "-W", "weka.classifiers.trees.RandomForest",
+      "--",
+      "-I", "150",   // #Trees
+      "-K", "0",     // √features
+      "-depth", "20",
+      "-print",
     ];
+    
+    
+    
+
+    /* จุดสำคัญ
+       -  ทั้งสตริง filter ต้องรวมใน element เดียว ไม่แตกเป็นคำ ๆ
+       -  `--` บอก Weka ว่า option ต่อจากนี้เป็นของ RandomForest
+    */
 
     await new Promise<void>((ok, err) => {
       execFile(
@@ -662,18 +678,21 @@ app.get("/stats/brands", async (req, res) => {
   const { from, to } = req.query as { from?: string; to?: string };
 
   // ── where เฉพาะช่วงวันที่บนตาราง Questionnaire ──
-  const where: Prisma.PredictionResultWhereInput = from || to ? {
-    questionnaire: {
-      createdAt: {
-        ...(from && { gte: new Date(from + "T00:00:00.000Z") }),
-        ...(to   && { lte: new Date(to   + "T23:59:59.999Z") }),
-      },
-    },
-  } : {};
+  const where: Prisma.PredictionResultWhereInput =
+    from || to
+      ? {
+          questionnaire: {
+            createdAt: {
+              ...(from && { gte: new Date(from + "T00:00:00.000Z") }),
+              ...(to && { lte: new Date(to + "T23:59:59.999Z") }),
+            },
+          },
+        }
+      : {};
 
   const agg = await prisma.predictionResult.groupBy({
     by: ["label"],
-    where,                 // 👈 new
+    where, // 👈 new
     _count: { _all: true },
   });
 
@@ -683,7 +702,6 @@ app.get("/stats/brands", async (req, res) => {
 
   res.json(sorted);
 });
-
 
 // === Protected example ===
 app.get("/profile", verifyToken, async (req, res) => {
